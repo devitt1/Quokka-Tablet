@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MvvmCross" Version="7.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Rest\" />
+    <Folder Include="Rest\Interfaces\" />
+    <Folder Include="Rest\Implementations\" />
+    <Folder Include="Service\" />
+    <Folder Include="Service\Interfaces\" />
+    <Folder Include="Service\Implementations\" />
+    <Folder Include="DataModel\" />
+  </ItemGroup>
+</Project>
