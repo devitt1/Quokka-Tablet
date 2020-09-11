@@ -1,10 +1,8 @@
 using System;
 namespace TheQTablet.Core.Service.Interfaces
 {
-    public class ISimulatorService
+    public interface ISimulatorService
     {
-        public ISimulatorService()
-        {
-        }
+       
     }
 }

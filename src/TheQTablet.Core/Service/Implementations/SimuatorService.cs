@@ -3,9 +3,9 @@ using TheQTablet.Core.Service.Interfaces;
 
 namespace TheQTablet.Core.Service.Implementations
 {
-    public class SimulatorService : ISimulatorService
+    public class SimuatorService : ISimulatorService
     {
-        public SimulatorService()
+        public SimuatorService()
         {
         }
     }
