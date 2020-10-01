@@ -35,6 +35,6 @@ namespace TheQTablet.Core.DataModel
     public class QsimApiResult_DestroyRegister
     {
         public string error { get; set; }
-        public int result { get; set; }
+        public bool result { get; set; }
     }
 }
