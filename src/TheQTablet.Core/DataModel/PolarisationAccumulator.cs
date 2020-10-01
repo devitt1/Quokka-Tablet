@@ -5,6 +5,14 @@ using MvvmCross.ViewModels;
 
 namespace TheQTablet.Core.DataModel
 {
+    // TODO: separate into data and functional class
+    public class DataResult
+    {
+
+    }
+
+    //look at linq
+
     public class PolarisationAccumulator
     {
         /* PolarisationAccumulator
