@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using MvvmCross.Logging;
 
@@ -120,7 +121,8 @@ namespace TheQTablet.Core.ViewModels.Main
             }
 
             /*
-             * TODO: Do the Experimenting thing
+             * TODO: Do the Experimenting thing, how to set a timer calling the Tick function
+             * 
              * */
 
 
@@ -147,5 +149,18 @@ namespace TheQTablet.Core.ViewModels.Main
             * TODO: Stop the Experimenting thing
             * */
         }
+
+        /*
+        private async Task Tick()
+        {
+            // This is the function to execute ONE (1) experiment
+             // 
+             //
+            _polarisationSimulatorService.Run()
+        // send the event here about variable change state.
+        }
+        */
+             
+    
     }
 }
