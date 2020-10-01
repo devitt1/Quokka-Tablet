@@ -21,7 +21,7 @@ namespace TheQTablet.Core.Rest.Implementations
 
         public async Task<TResult> MakeApiCallAsync<TResult>(string url, HttpMethod method, object data = null) where TResult : class
         {
-            url = url.Replace("http://", "https://");
+            //url = url.Replace("http://", "https://");
 
             using (var httpClient = new HttpClient())
             {
@@ -34,6 +34,7 @@ namespace TheQTablet.Core.Rest.Implementations
                         request.Content = new StringContent(json, Encoding.UTF8, "application/json");
                     }
 
+                    //_mvxLog.Trace("RestClient:MakeApiCallAsync: Creating HttpResponseMessage");
                     var response = new HttpResponseMessage();
                     try
                     {
@@ -42,11 +43,16 @@ namespace TheQTablet.Core.Rest.Implementations
                     catch (Exception ex)
                     {
                         _mvxLog.ErrorException("MakeApiCall failed", ex);
+                        _mvxLog.Trace("MakeApiCall failed", ex);
                     }
 
+                    //_mvxLog.Trace("RestClient:MakeApiCallAsync: awaiting response...");
                     var stringSerialized = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
+                    //_mvxLog.Trace("RestClient:MakeApiCallAsync to :"+url+" with data:"+ _jsonConverter.SerializeObject(data).ToString() + " response is: "+ stringSerialized);
+
                     // deserialize content
+                    //_mvxLog.Trace("RestClient:MakeApiCallAsync: deserializing response...");
                     return _jsonConverter.DeserializeObject<TResult>(stringSerialized);
                 }
             }
