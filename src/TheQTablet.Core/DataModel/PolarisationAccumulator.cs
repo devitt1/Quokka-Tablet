@@ -20,24 +20,24 @@ namespace TheQTablet.Core.DataModel
          * Convention: Value is set to 0 if no experiment results are known
          * */
 
-        private int _AccumulatedPhotons;
-        private int _NumberOfExperiment;
+        private int _accumulatedPhotons;
+        private int _numberOfExperiment;
 
         public float Value {
             get
             {
-                if (_NumberOfExperiment > 0)
-                    return _AccumulatedPhotons / _NumberOfExperiment;
+                if (_numberOfExperiment > 0)
+                    return _accumulatedPhotons / _numberOfExperiment;
                 return (float)0;
             }
         }
-        public int AccumulatedPhotons { get => _AccumulatedPhotons; }
-        public int NumberOfExperiment { get => _NumberOfExperiment; }
+        public int AccumulatedPhotons { get => _accumulatedPhotons; }
+        public int NumberOfExperiment { get => _numberOfExperiment; }
 
         public PolarisationAccumulator()
         {
-            _AccumulatedPhotons = 0;
-            _NumberOfExperiment = 0;
+            _accumulatedPhotons = 0;
+            _numberOfExperiment = 0;
         }
 
         public void AddExperimentResult ( int result)
@@ -46,8 +46,8 @@ namespace TheQTablet.Core.DataModel
             {
                 throw new ArgumentOutOfRangeException("Out of range provided result " + result + " (must be 0 or 1)");
             }
-            _AccumulatedPhotons += result;
-            _NumberOfExperiment++;
+            _accumulatedPhotons += result;
+            _numberOfExperiment++;
 
             //Todo: workout of to signal a property change, maybe this should be done from the ViewModel?
             //RaisePropertyChanged(() => Value);
