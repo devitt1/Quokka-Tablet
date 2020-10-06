@@ -25,9 +25,11 @@ namespace TheQTablet.Core
                 .RegisterAsLazySingleton();
 
             Mvx.IoCProvider.RegisterType<ISimulatorService, SimulatorService>();
+            Mvx.IoCProvider.RegisterType<IResultAccumulatorService, ResultAccumulatorService>();
             Mvx.IoCProvider.RegisterType<IRestClient, RestClient>();
 
-            RegisterAppStart<RootViewModel>();
+            //RegisterAppStart<RootViewModel>();
+            RegisterAppStart<PolarisationExperimentViewModel>();
         }
     }
 }

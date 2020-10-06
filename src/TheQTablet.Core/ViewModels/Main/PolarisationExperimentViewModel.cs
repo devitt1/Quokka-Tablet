@@ -91,6 +91,7 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private async Task RunOnePolarisationSimulation()
         {
+            _log.Trace("PolarisationExperimentViewModel:RunOnePolarisationSimulation()");
             bool result = await _polarisationSimulatorService.Run();
             _resultAccumulatorService.AddExperimentResult(_accumulators[_currentTelescopePolarisation_deg], result);
 
@@ -98,7 +99,9 @@ namespace TheQTablet.Core.ViewModels.Main
             await RaisePropertyChanged(() => ExperimentAccumulators);
         }
 
-        public void Init(int RotationStep_deg, int AtmosphericPolarisation_deg, int InitialTelescopePolarisation_deg)
+
+        // Apparently, Init is a special fuciton name because it get called by an unknown thread with all parameters being 0
+        public void Init2(int RotationStep_deg, int AtmosphericPolarisation_deg, int InitialTelescopePolarisation_deg)
         {
             // The aim of this function is to set everything up ready to call StartExperimenting()
             // Can only be called ONCE
@@ -107,6 +110,10 @@ namespace TheQTablet.Core.ViewModels.Main
             if (_initited)
             {
                 throw new Exception("Init() failed because the object has already been inited");
+            }
+            if (RotationStep_deg == 0)
+            {
+                throw new Exception("Init() failed because provided RotationStep_deg is 0, and that will cause a divide by zero exception on the next line of code");
             }
             if ((360 % RotationStep_deg) != 0)
             {

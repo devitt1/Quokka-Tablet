@@ -12,9 +12,11 @@ using UIKit;
 namespace TheQTablet.iOS.Views.Main
 {
     [MvxRootPresentation(WrapInNavigationController = true)]
-    public partial class RootViewController : BaseViewController<RootViewModel>
+    //    public partial class RootViewController : BaseViewController<RootViewModel>
+    public partial class RootViewController : BaseViewController<PolarisationExperimentViewModel>
     {
         private UILabel _labelWelcome, _labelMessage;
+        private UIButton _btnRunSimulation;
 
         protected override void CreateView()
         {
@@ -31,8 +33,23 @@ namespace TheQTablet.iOS.Views.Main
                 TextAlignment = UITextAlignment.Center
             };
             Add(_labelMessage);
-        }
 
+            // Initialise the ViewModel
+            //((PolarisationExperimentViewModel)BindingContext).Init2(5, 0, 0);
+
+            _btnRunSimulation = new UIButton
+            {
+                BackgroundColor = UIColor.Red
+            };
+            _btnRunSimulation.Layer.CornerRadius = 8f;
+            _btnRunSimulation.SetTitle("Do One Single Simulation", UIControlState.Normal);
+            _btnRunSimulation.SetTitleColor(UIColor.White, UIControlState.Normal);
+            _btnRunSimulation.SetTitleColor(UIColor.LightGray, UIControlState.Selected);
+            Add(_btnRunSimulation);
+
+
+
+        }
         protected override void LayoutView()
         {
             View.AddConstraints(new FluentLayout[]
@@ -41,8 +58,20 @@ namespace TheQTablet.iOS.Views.Main
                 _labelWelcome.WithSameCenterY(View),
 
                 _labelMessage.Below(_labelWelcome, 10f),
-                _labelMessage.WithSameWidth(View)
+                _labelMessage.WithSameWidth(View),
+
+                _btnRunSimulation.Below(_labelMessage, 10f),
+                _btnRunSimulation.WithSameWidth(View)
+
            });
+        }
+
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+            var set = this.CreateBindingSet();
+            set.Bind(_btnRunSimulation).To(vm => vm.StartOnePolarisationSimulationCommand);
+
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 
 using TheQTablet.Core.DataModel;
+using TheQTablet.Core.Service.Interfaces;
+
 
 namespace TheQTablet.Core.Service.Implementations
 {
-    public class ResultAccumulatorService
+    public class ResultAccumulatorService : IResultAccumulatorService
     {
         public ResultAccumulatorService()
         {
