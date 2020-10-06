@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using MvvmCross.Logging;
+using MvvmCross.Commands;
 
 using TheQTablet.Core.Service.Interfaces;
 using TheQTablet.Core.DataModel;
@@ -13,9 +14,10 @@ namespace TheQTablet.Core.ViewModels.Main
     {
         private readonly IMvxLog _log;
         private readonly ISimulatorService _polarisationSimulatorService;
+        private readonly IResultAccumulatorService _resultAccumulatorService;
 
-        private Dictionary<int, PolarisationAccumulator> _Accumulators;
-        private float _FrequencyOfExperiment = 1; // in Hz
+        private Dictionary<int, PolarisationDataAccumulatedResult> _accumulators;
+        private float _frequencyOfExperiment = 1; // in Hz
         private int _currentTelescopePolarisation_deg = 0;
         private int _atmosphericPolarisation_deg = 0;
         private int _rotationStep_deg = 5;
@@ -23,10 +25,14 @@ namespace TheQTablet.Core.ViewModels.Main
         private bool _initited = false;
         private bool _experimenting = false;
 
+        // MVVM Commands
+        public IMvxCommand StartOnePolarisationSimulationCommand { get; private set; }
+
         // To be bound to the ViewController:
         //  * Experimenting
         //  * ExperimentAccumulators
         //  * TelescopePolarisation
+        //  * StartOnePolarisationSimulationCommand
         public bool Experimenting {
             get => _experimenting;
             set
@@ -41,7 +47,7 @@ namespace TheQTablet.Core.ViewModels.Main
                 }
             }
         }
-        public Dictionary<int, PolarisationAccumulator> ExperimentAccumulators { get => _Accumulators; }
+        public Dictionary<int, PolarisationDataAccumulatedResult> ExperimentAccumulators { get => _accumulators; }
         public int TelescopePolarisation {
             get => _currentTelescopePolarisation_deg;
             set
@@ -57,17 +63,21 @@ namespace TheQTablet.Core.ViewModels.Main
         }
 
 
-        public PolarisationExperimentViewModel(IMvxLog log, ISimulatorService polarisationSimulatorService)
+        public PolarisationExperimentViewModel(IMvxLog log, ISimulatorService polarisationSimulatorService, IResultAccumulatorService resultAccumulatorService)
         {
             _log = log;
             _log.Trace("PolarisationExperimentViewModel:PolarisationExperimentViewModel()");
-            _FrequencyOfExperiment = 1;
+            _frequencyOfExperiment = 1;
 
             _initited = false;
             _experimenting = false;
 
             _polarisationSimulatorService = polarisationSimulatorService;
-            _Accumulators = new Dictionary<int, PolarisationAccumulator>();
+            _accumulators = new Dictionary<int, PolarisationDataAccumulatedResult>();
+
+            _resultAccumulatorService = resultAccumulatorService;
+
+            StartOnePolarisationSimulationCommand = new MvxAsyncCommand(RunOnePolarisationSimulation);
 
         }
 
@@ -78,6 +88,15 @@ namespace TheQTablet.Core.ViewModels.Main
 
         }
         */
+
+        private async Task RunOnePolarisationSimulation()
+        {
+            bool result = await _polarisationSimulatorService.Run();
+            _resultAccumulatorService.AddExperimentResult(_accumulators[_currentTelescopePolarisation_deg], result);
+
+            // Raising the property change event for the accumulators
+            await RaisePropertyChanged(() => ExperimentAccumulators);
+        }
 
         public void Init(int RotationStep_deg, int AtmosphericPolarisation_deg, int InitialTelescopePolarisation_deg)
         {
@@ -99,10 +118,10 @@ namespace TheQTablet.Core.ViewModels.Main
             TelescopePolarisation = InitialTelescopePolarisation_deg;
 
             // Initialise the dictionary of PolarisationAccumulator
-            _Accumulators = new Dictionary<int, PolarisationAccumulator>();
+            _accumulators = new Dictionary<int, PolarisationDataAccumulatedResult>();
             for (int i=0; i<360; i+= RotationStep_deg)
             {
-                _Accumulators[i] = new PolarisationAccumulator();
+                _accumulators[i] = new PolarisationDataAccumulatedResult();
             }
 
             _initited = true;
@@ -129,7 +148,7 @@ namespace TheQTablet.Core.ViewModels.Main
         }
         public void StartExperimenting(float Frequency)
         {
-            _FrequencyOfExperiment = Frequency;
+            _frequencyOfExperiment = Frequency;
             StartExperimenting();
         }
 
