@@ -13,6 +13,13 @@ namespace TheQTablet.Core.Rest.Implementations
         private readonly IMvxJsonConverter _jsonConverter;
         private readonly IMvxLog _mvxLog;
 
+#if DEBUG
+        private const string BASE_URL = "http://127.0.0.1:5002/qsim/";
+#else
+
+        private const string BASE_URL = "http://127.0.0.1:5002/qsim/"; // Production URL goes here
+#endif
+
         public RestClient(IMvxJsonConverter jsonConverter, IMvxLog mvxLog)
         {
             _jsonConverter = jsonConverter;
@@ -21,7 +28,7 @@ namespace TheQTablet.Core.Rest.Implementations
 
         public async Task<TResult> MakeApiCallAsync<TResult>(string url, HttpMethod method, object data = null) where TResult : class
         {
-            //url = url.Replace("http://", "https://");
+            url = string.Format("{0}{1}", BASE_URL, url);
 
             using (var httpClient = new HttpClient())
             {
@@ -38,22 +45,39 @@ namespace TheQTablet.Core.Rest.Implementations
                     var response = new HttpResponseMessage();
                     try
                     {
+                        response.EnsureSuccessStatusCode();
                         response = await httpClient.SendAsync(request).ConfigureAwait(false);
                     }
                     catch (Exception ex)
                     {
                         _mvxLog.ErrorException("MakeApiCall failed", ex);
                         _mvxLog.Trace("MakeApiCall failed", ex);
+
+                        //TODO Handle Error Networks show error to user
+                        throw ex;
                     }
+
+                    
 
                     //_mvxLog.Trace("RestClient:MakeApiCallAsync: awaiting response...");
                     var stringSerialized = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                    //_mvxLog.Trace("RestClient:MakeApiCallAsync to :"+url+" with data:"+ _jsonConverter.SerializeObject(data).ToString() + " response is: "+ stringSerialized);
+                    _mvxLog.Trace("RestClient:MakeApiCallAsync to :" + url + " with data:" + _jsonConverter.SerializeObject(data).ToString() + " response is: " + stringSerialized);
 
-                    // deserialize content
-                    //_mvxLog.Trace("RestClient:MakeApiCallAsync: deserializing response...");
-                    return _jsonConverter.DeserializeObject<TResult>(stringSerialized);
+                    try
+                    {
+                        var result = _jsonConverter.DeserializeObject<TResult>(stringSerialized);
+                        return result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _mvxLog.ErrorException("Parsing result error", ex);
+                        _mvxLog.Trace("Parsing result error", ex.Message);
+
+                        //TODO Handle Parsing Errors show error to user
+                        throw ex;
+                    }
+
                 }
             }
         }
