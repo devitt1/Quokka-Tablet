@@ -26,7 +26,7 @@ namespace TheQTablet.Core.ViewModels.Main
         private bool _experimenting = false;
 
         // MVVM Commands
-        public IMvxCommand StartOnePolarisationSimulationCommand { get; private set; }
+        public MvxAsyncCommand StartOnePolarisationSimulationCommand { get; private set; }
 
         // To be bound to the ViewController:
         //  * Experimenting
