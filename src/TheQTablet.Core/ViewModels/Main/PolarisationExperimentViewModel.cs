@@ -22,7 +22,7 @@ namespace TheQTablet.Core.ViewModels.Main
         private int _atmosphericPolarisation_deg = 0;
         private int _rotationStep_deg = 5;
 
-        private bool _initited = false;
+        private bool _inited = false;
         private bool _experimenting = false;
 
         // MVVM Commands
@@ -69,7 +69,7 @@ namespace TheQTablet.Core.ViewModels.Main
             _log.Trace("PolarisationExperimentViewModel:PolarisationExperimentViewModel()");
             _frequencyOfExperiment = 1;
 
-            _initited = false;
+            _inited = false;
             _experimenting = false;
 
             _polarisationSimulatorService = polarisationSimulatorService;
@@ -91,6 +91,10 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private async Task RunOnePolarisationSimulation()
         {
+            if (!_inited)
+            {
+                Init2(5, 0, 0);
+            }
             _log.Trace("PolarisationExperimentViewModel:RunOnePolarisationSimulation()");
             bool result = await _polarisationSimulatorService.Run();
             _resultAccumulatorService.AddExperimentResult(_accumulators[_currentTelescopePolarisation_deg], result);
@@ -107,7 +111,7 @@ namespace TheQTablet.Core.ViewModels.Main
             // Can only be called ONCE
 
             _log.Trace("PolarisationExperimentViewModel:Init() RotationStep_deg:"+ RotationStep_deg + " AtmosphericPolarisation_deg:"+ AtmosphericPolarisation_deg + " InitialTelescopePolarisation_deg:" + InitialTelescopePolarisation_deg);
-            if (_initited)
+            if (_inited)
             {
                 throw new Exception("Init() failed because the object has already been inited");
             }
@@ -131,12 +135,12 @@ namespace TheQTablet.Core.ViewModels.Main
                 _accumulators[i] = new PolarisationDataAccumulatedResult();
             }
 
-            _initited = true;
+            _inited = true;
         }
 
         public void StartExperimenting()
         {
-            if (!_initited)
+            if (!_inited)
             {
                 throw new Exception("StartExperimenting() failed because the object has not be inited");
             }
@@ -161,7 +165,7 @@ namespace TheQTablet.Core.ViewModels.Main
 
         public void StopExperienting()
         {
-            if (!_initited)
+            if (!_inited)
             {
                 throw new Exception("StopExperienting() failed because the object has not be inited");
             }
