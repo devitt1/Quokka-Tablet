@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using MvvmCross.Binding.BindingContext;
 using Cirrious.FluentLayouts.Touch;
 using Foundation;
 using MvvmCross.Platforms.Ios.Presenters.Attributes;
@@ -69,8 +69,11 @@ namespace TheQTablet.iOS.Views.Main
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            var set = this.CreateBindingSet();
+
+            var set = this.CreateBindingSet<RootViewController, PolarisationExperimentViewModel>();
+            //set.Bind(_btnRunSimulation).For("TouchUpInside").To(vm => vm.StartOnePolarisationSimulationCommand);
             set.Bind(_btnRunSimulation).To(vm => vm.StartOnePolarisationSimulationCommand);
+            set.Apply();
 
         }
     }
