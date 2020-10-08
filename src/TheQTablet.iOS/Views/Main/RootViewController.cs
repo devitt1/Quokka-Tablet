@@ -17,6 +17,7 @@ namespace TheQTablet.iOS.Views.Main
     {
         private UILabel _labelWelcome, _labelMessage;
         private UIButton _btnRunSimulation;
+        public UIButton StartSimulationButton;
 
         protected override void CreateView()
         {
@@ -34,6 +35,13 @@ namespace TheQTablet.iOS.Views.Main
             };
             Add(_labelMessage);
 
+
+            StartSimulationButton = new UIButton(UIButtonType.RoundedRect);
+            StartSimulationButton.SetTitle("Start", UIControlState.Normal);
+            StartSimulationButton.SetTitle("Start", UIControlState.Highlighted);
+            StartSimulationButton.SetTitle("Start", UIControlState.Selected);
+            Add(StartSimulationButton);
+
             // Initialise the ViewModel
             //((PolarisationExperimentViewModel)BindingContext).Init2(5, 0, 0);
 
@@ -47,9 +55,8 @@ namespace TheQTablet.iOS.Views.Main
             _btnRunSimulation.SetTitleColor(UIColor.LightGray, UIControlState.Selected);
             Add(_btnRunSimulation);
 
-
-
         }
+
         protected override void LayoutView()
         {
             View.AddConstraints(new FluentLayout[]
@@ -61,9 +68,13 @@ namespace TheQTablet.iOS.Views.Main
                 _labelMessage.WithSameWidth(View),
 
                 _btnRunSimulation.Below(_labelMessage, 10f),
-                _btnRunSimulation.WithSameWidth(View)
+                _btnRunSimulation.WithSameWidth(View),
 
+                StartSimulationButton.WithSameCenterX(View),
+                StartSimulationButton.Below(_btnRunSimulation,10f),
+                StartSimulationButton.WithSameWidth(_labelMessage)
            });
+
         }
 
         public override void ViewDidLoad()
@@ -73,6 +84,16 @@ namespace TheQTablet.iOS.Views.Main
             var set = this.CreateBindingSet<RootViewController, PolarisationExperimentViewModel>();
             //set.Bind(_btnRunSimulation).For("TouchUpInside").To(vm => vm.StartOnePolarisationSimulationCommand);
             set.Bind(_btnRunSimulation).To(vm => vm.StartOnePolarisationSimulationCommand);
+            set.Apply();
+
+        }
+
+        protected override void BindView()
+        {
+            base.BindView();
+
+            var set = this.CreateBindingSet<RootViewController, PolarisationExperimentViewModel>();
+            set.Bind(StartSimulationButton).For("TouchUpInside").To(vm => vm.StartSimulationCommand);
             set.Apply();
 
         }

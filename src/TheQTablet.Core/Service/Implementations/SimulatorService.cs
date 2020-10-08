@@ -18,13 +18,9 @@ namespace TheQTablet.Core.Service.Implementations
         private readonly IRestClient _restClient;
         private readonly IMvxLog _log;
 
-        public float Alpha { set; get; }
-        public float Theta { set; get; }
+        private const string PERFORM_OPERATION_URL = "perform_operation";
 
         public SimulatorService(IRestClient restClient, IMvxLog log)
-        //public SimulatorService()
-        // Add a ConnectionStatus callback/delegate/event??
-        // Add REST base URL?
         {
             _restClient = restClient;
             _log = log;
@@ -32,113 +28,214 @@ namespace TheQTablet.Core.Service.Implementations
 
         public async Task RunManySim()
         {
-            for (int i =0; i<10; ++i)
-            {
-                bool res = await this.Run();
-                _log.Trace("SimulatorService:RunManySim()[" + i + "]:" + res);
-            }
+            await Run();
         }
 
-        //public async Task<PolarisationResult> Run()
+        /// <summary>
+        /// Start a new Circuit
+        /// </summary>
+        /// <param name="param"></param>
+        /// <param name="qbits"></param>
+        /// <returns></returns>
+        public async Task<QbitsOperationResult> StartOperationAsync(QSimBasicParams param, int qbits)
+        {
+            object data = new
+            {
+                operation = param.Operation.ToString().ToLower(),
+
+                num_qubits = qbits
+            };
+
+            QbitsOperationResult result = await _restClient.MakeApiCallAsync<QbitsOperationResult>(PERFORM_OPERATION_URL, HttpMethod.Post, data);
+            _log.Trace("SimulatorService:Run(): Create Gate = " + result.Result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Set initial state
+        /// </summary>
+        /// <param name="qSimStateParam"></param>
+        /// <returns></returns>
+        public async Task<BoolOperationResult> SetStateOperationAsync(QSimStateParam qSimStateParam)
+        {
+
+            object data = new
+            {
+                operation = qSimStateParam.Operation.ToString().ToLower(),
+                register = qSimStateParam.RegisterId,
+                n = qSimStateParam.N,
+                x = qSimStateParam.X,
+                y = qSimStateParam.Y,
+            };
+
+            BoolOperationResult res = await _restClient.MakeApiCallAsync<BoolOperationResult>(PERFORM_OPERATION_URL, HttpMethod.Post, data);
+            _log.Trace("SimulatorService:Run(): Set State Operation = " + res.Result);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Perform Gate Operations
+        /// </summary>
+        /// <param name="qsimGateOperation"></param>
+        /// <returns></returns>
+        public async Task<BoolOperationResult> GateOperationAsync(QsimGateOperation qsimGateOperation)
+        {
+            object data = new
+            {
+                register = qsimGateOperation.RegisterId,
+                operation = qsimGateOperation.Operation.ToString().ToLower(),
+                gate = qsimGateOperation.Gate.ToString().ToLower(),
+                q = qsimGateOperation.Q,
+                theta = qsimGateOperation.Theta,
+            };
+
+            BoolOperationResult res = await _restClient.MakeApiCallAsync<BoolOperationResult>(PERFORM_OPERATION_URL, HttpMethod.Post, data);
+            _log.Trace("SimulatorService:Run(): Gate Operation = " + res.Result);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Measure values after gate operations
+        /// </summary>
+        /// <param name="qSimMeasureParam"></param>
+        /// <returns></returns>
+        public async Task<QbitsOperationResult> MesureOperationAsync(QSimMeasureParam qSimMeasureParam)
+        {
+            object data = new
+            {
+                operation = qSimMeasureParam.Operation.ToString().ToLower(),
+                register = qSimMeasureParam.RegisterId,
+                lq2m = qSimMeasureParam.Lq2m,
+            };
+
+            QbitsOperationResult res = await _restClient.MakeApiCallAsync<QbitsOperationResult>(PERFORM_OPERATION_URL, HttpMethod.Post, data);
+            _log.Trace("SimulatorService:Run(): Measure = " + res.Result);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Read the state 
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns>VectorOperationResult</returns>
+        public async Task<VectorOperationResult> StateVectorOperationAsync(QSimBasicParams param)
+        {
+            object data = new
+            {
+                operation = param.Operation.ToString().ToLower(),
+                register = param.RegisterId,
+            };
+
+            VectorOperationResult res = await _restClient.MakeApiCallAsync<VectorOperationResult>(PERFORM_OPERATION_URL, HttpMethod.Post, data);
+            _log.Trace("SimulatorService:Run(): Vector State = " + res.Result);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Destroy Cirtuit
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public async Task<BoolOperationResult> DestroyCircuitAsync(QSimBasicParams param)
+        {
+            object data = new
+            {
+                register = param.RegisterId,
+                operation = param.Operation.ToString().ToLower()
+
+            };
+
+            BoolOperationResult res = await _restClient.MakeApiCallAsync<BoolOperationResult>(PERFORM_OPERATION_URL, HttpMethod.Post, data);
+            _log.Trace("SimulatorService:Run(): Destroy Circuit = " + res.Result);
+
+            return res;
+        }
+
+        //Run basic Simulation
         public async Task<bool> Run()
         {
 
             _log.Trace("SimulatorService:Run()");
 
-
-            // Create Register API call
-            
-            var json_request_body = new System.Collections.Generic.Dictionary<string, int>();
-            json_request_body["num_qubits"] = 1;
-            
-            QsimApiResult_CreateRegister cr_res = await _restClient.MakeApiCallAsync<QsimApiResult_CreateRegister>("http://127.0.0.1:5002/qsim/create_register", HttpMethod.Post, json_request_body);
-            //_log.Trace("SimulatorService:Run(): QsimApiResult_CreateRegister=" + cr_res.result);
-
-            // Set State API call
-            json_request_body = new System.Collections.Generic.Dictionary<string, int>();
-            json_request_body["register"] = cr_res.result;
-            json_request_body["n"] = 1;
-            json_request_body["x"] = 1;
-            json_request_body["y"] = 0;
-            /*
-            object object_request_body = new
+            try
             {
-                register = cr_res.result,
-                n = 1,
-                x = 1,
-                y = 0
-            };
-            */
+                // Create Register API call
 
-            QsimApiResult_SetState ss_res = await _restClient.MakeApiCallAsync<QsimApiResult_SetState>("http://127.0.0.1:5002/qsim/set_state", HttpMethod.Post, json_request_body);
-            //_log.Trace("SimulatorService:Run(): QsimApiResult_SetState=" + ss_res.result);
-            
-            // Gate Operation API call
-            var gateOperationAPIParamJson = new QsimApiParam_GateOperation();
-            /*
-            object data = new
+                var createParams = new QSimBasicParams()
+                {
+                    Operation = OperationType.CREATE_CIRCUIT
+                };
+
+                QbitsOperationResult createCircuitResult = await StartOperationAsync(createParams, 1);
+                var registerId = createCircuitResult.Result;
+
+
+                //Set State
+                var setStateParams = new QSimStateParam()
+                {
+                    Operation = OperationType.SET_STATE,
+                    RegisterId = registerId,
+                    N = 0,
+                    X = 1,
+                    Y = 0
+                };
+
+                BasicOperationResult stateResult = await SetStateOperationAsync(setStateParams);
+
+                //Perform XRot Operation
+                var gateOperationParam = new QsimGateOperation()
+                {
+                    RegisterId = registerId,
+                    Operation = OperationType.GATE,
+                    Gate = GateType.XROT,
+                    Q = 0,
+                    Theta = 0.35f
+                };
+                BoolOperationResult gateOperation1 = await GateOperationAsync(gateOperationParam);
+
+                //Measure the result
+                var mesureParams = new QSimMeasureParam()
+                {
+                    RegisterId = registerId,
+                    Operation = OperationType.MEASURE
+
+                };
+                mesureParams.Lq2m.Add(0);
+
+                QbitsOperationResult measureOperation = await MesureOperationAsync(mesureParams);
+
+                var stateVectorParam = new QSimBasicParams()
+                {
+                    RegisterId = registerId,
+                    Operation = OperationType.STATE_VECTOR
+                };
+
+                // Read current state
+                VectorOperationResult stateVectorOperation = await StateVectorOperationAsync(stateVectorParam);
+
+                var destroyCircuitParam = new QSimBasicParams()
+                {
+                    RegisterId = registerId,
+                    Operation = OperationType.DESTROY_CIRCUIT
+                };
+
+                // Destroy Cirtuit
+                BoolOperationResult destroyRegistare = await DestroyCircuitAsync(destroyCircuitParam);
+
+                _log.Trace("SimulatorService: End");
+
+                return destroyRegistare.Result;
+            }
+            catch (Exception ex)
             {
-                email = "soething",
-                password = "password"
-            };
-            */
-
-            /*
-             *
-              [JsonProperty(PropertyName = "quiz")]
-        private Quiz userQuiz;
-        public Quiz UserQuiz { get => userQuiz; set => userQuiz = value; }
-             */
-            gateOperationAPIParamJson.register = cr_res.result;
-            gateOperationAPIParamJson.gate = "xrot";
-            gateOperationAPIParamJson.q = 0;
-            gateOperationAPIParamJson.theta = (float)0;
-            QsimApiResult_GateOperation go_res1 = await _restClient.MakeApiCallAsync<QsimApiResult_GateOperation>("http://127.0.0.1:5002/qsim/gate", HttpMethod.Post, gateOperationAPIParamJson);
-            //_log.Trace("SimulatorService:Run(): QsimApiResult_Gate=" + go_res1.result);
-            gateOperationAPIParamJson.q = 0;
-            //gateOperationAPIParamJson.theta = (float)0.7857;
-            gateOperationAPIParamJson.theta = (float)1.571;
-            //gateOperationAPIParamJson.theta = (float)3.1;
-            QsimApiResult_GateOperation go_res2 = await _restClient.MakeApiCallAsync<QsimApiResult_GateOperation>("http://127.0.0.1:5002/qsim/gate", HttpMethod.Post, gateOperationAPIParamJson);
-            //_log.Trace("SimulatorService:Run(): QsimApiResult_Gate=" + go_res2.result);
-
-
-            // Measure API call
-            var measureAPIParamJson = new QsimApiParam_Measure();
-            measureAPIParamJson.register = cr_res.result;
-            measureAPIParamJson.lq2m = new List<int>();
-            measureAPIParamJson.lq2m.Add(0);
-            //_log.Trace("SimulatorService:Run(): Measure. Parameters:" + measureAPIParamJson);
-            QsimApiResult_Measure me_res = await _restClient.MakeApiCallAsync<QsimApiResult_Measure>("http://127.0.0.1:5002/qsim/measure", HttpMethod.Post, measureAPIParamJson);
-            //_log.Trace("SimulatorService:Run(): QsimApiResult_Measure=" + me_res.result);
-            
-            // Print API call
-            json_request_body = new System.Collections.Generic.Dictionary<string, int>();
-            json_request_body["register"] = cr_res.result;
-            QsimApiResult_Print pr_res = await _restClient.MakeApiCallAsync<QsimApiResult_Print>("http://127.0.0.1:5002/qsim/print", HttpMethod.Post, json_request_body);
-            //string test = pr_res.result[0][0].ToString();
-            //_log.Trace("SimulatorService:Run(): QsimApiResult_Print=" + test);
-
-
-            // Destroy register API call
-            QsimApiResult_DestroyRegister dr_res = await _restClient.MakeApiCallAsync<QsimApiResult_DestroyRegister>("http://127.0.0.1:5002/qsim/destroy_register", HttpMethod.Post, json_request_body);
-            //_log.Trace("SimulatorService:Run(): QsimApiResult_DestroyRegister=" + dr_res.result);
-            
-            if (pr_res.result[0][1].ToString() == "0")
-            {
-                _log.Trace("SimulatorService:Run(): returning false");
+                _log.Trace("Error: {0}",ex);
                 return false;
             }
-            else if (pr_res.result[0][1].ToString() == "1")
-            {
-                _log.Trace("SimulatorService:Run(): returning true");
-                return true;
-            }
-
-            string exception_message = "SimulatorService:Run(): QsimApiResult_Print neither 1 or 0: " + pr_res.result[0][1];
-            _log.Trace(exception_message);
-            _log.ErrorException(exception_message, new Exception(exception_message));
-            return false;
 
         }
     }

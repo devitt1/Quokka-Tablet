@@ -8,43 +8,39 @@ using MvvmCross;
 using MvvmCross.Base;
 
 using TheQTablet.Core.Service.Interfaces;
+using MvvmCross.Commands;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
     public class RootViewModel : BaseViewModel
     {
         private readonly IMvxLog _log;
-        private readonly ISimulatorService PolarisationSimulatorService;
+        private readonly ISimulatorService _simulationService;
 
-        public RootViewModel(IMvxLog log, ISimulatorService polarisationSimulatorService)
+        public RootViewModel(IMvxLog log, ISimulatorService simulationService)
         {
             _log = log;
-            PolarisationSimulatorService = polarisationSimulatorService;
+
+            _simulationService = simulationService;
+
             _log.Trace("RootViewModel:RootViewModel()");
 
+            StartSimulationCommand = new MvxAsyncCommand(StartSimulationAsync);
         }
+
+        private async Task StartSimulationAsync()
+        {
+            await _simulationService.Run();
+            _log.Trace(" PolarisationSimulatorService: awaited");
+        }
+
+        public MvxAsyncCommand StartSimulationCommand { get; private set; }
 
         public override void ViewAppeared()
         {
             base.ViewAppeared();
 
-            /*
-             * Attempt running the task using the dispatcher
-             * to avoid the "iOS only allows the code to run every 10s issue
-             * NOT WORKING YET
-             * 
-            var dispatcher = Mvx.IoCProvider.Resolve<IMvxMainThreadAsyncDispatcher>();
-            dispatcher.ExecuteOnMainThreadAsync(
-                async () =>
-                {
-                    await PolarisationSimulatorService.RunManySim();
-                });
-            */
-
-            Task.Run(async () => {
-               await PolarisationSimulatorService.RunManySim();
-            });
-
         }
+    
     }
 }
