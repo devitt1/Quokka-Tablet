@@ -1,0 +1,56 @@
+﻿<Properties StartupConfiguration="{4F1B173A-8F13-410B-82BD-6589F0FE9464}|Default">
+  <MonoDevelop.Ide.Workbench>
+    <Files>
+      <File FileName="src/TheQTablet.Core/ViewModels/Main/PolarisationExperimentViewModel.cs" Line="31" Column="1" />
+      <File FileName="src/TheQTablet.Core/DataModel/QsimAPIResults.cs" Line="30" Column="6" />
+      <File FileName="src/TheQTablet.Core/Service/Interfaces/ISimulatorService.cs" Line="3" Column="33" />
+      <File FileName="src/TheQTablet.iOS/Views/Main/RootViewController.cs" Line="95" Column="100" />
+      <File FileName="src/TheQTablet.iOS/AppDelegate.cs" Line="1" Column="1" />
+      <File FileName="src/TheQTablet.Core/ViewModels/Main/RootViewModel.cs" Line="28" Column="80" />
+      <File FileName="src/TheQTablet.Core/Service/Implementations/SimulatorService.cs" Line="1" Column="1" />
+      <File FileName="src/TheQTablet.Core/DataModel/QSimAPIParam.cs" Line="31" Column="49" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="TheQTablet" expanded="True">
+            <Node name="TheQTablet.Core" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="DataModel" expanded="True">
+                <Node name="QsimApiResults.cs" selected="True" />
+              </Node>
+              <Node name="Rest" expanded="True">
+                <Node name="Implementations" expanded="True" />
+                <Node name="Interfaces" expanded="True" />
+              </Node>
+              <Node name="Service" expanded="True">
+                <Node name="Implementations" expanded="True" />
+                <Node name="Interfaces" expanded="True" />
+              </Node>
+              <Node name="ViewModels" expanded="True">
+                <Node name="Main" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="TheQTablet.iOS" expanded="True">
+              <Node name="Views" expanded="True">
+                <Node name="Main" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.TheQTablet.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.F4866C94-30A0-412D-8332-17234B29B528" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

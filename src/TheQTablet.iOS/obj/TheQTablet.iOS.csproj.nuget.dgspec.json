@@ -1,0 +1,128 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.iOS/TheQTablet.iOS.csproj": {}
+  },
+  "projects": {
+    "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/TheQTablet.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/TheQTablet.Core.csproj",
+        "projectName": "TheQTablet.Core",
+        "projectPath": "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/TheQTablet.Core.csproj",
+        "packagesPath": "/Users/Jeremy/.nuget/packages/",
+        "outputPath": "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/Jeremy/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "dependencies": {
+            "MvvmCross": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.402/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.iOS/TheQTablet.iOS.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.iOS/TheQTablet.iOS.csproj",
+        "projectName": "TheQTablet.iOS",
+        "projectPath": "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.iOS/TheQTablet.iOS.csproj",
+        "packagesPath": "/Users/Jeremy/.nuget/packages/",
+        "outputPath": "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.iOS/obj/",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "configFilePaths": [
+          "/Users/Jeremy/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "xamarinios10"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "xamarinios10": {
+            "projectReferences": {
+              "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/TheQTablet.Core.csproj": {
+                "projectPath": "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/TheQTablet.Core.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "xamarinios10": {
+          "dependencies": {
+            "Cirrious.FluentLayout": {
+              "target": "Package",
+              "version": "[2.9.0, )"
+            },
+            "MvvmCross": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "MvvmCross.Plugin.Json": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

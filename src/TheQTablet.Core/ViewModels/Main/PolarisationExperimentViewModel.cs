@@ -27,6 +27,8 @@ namespace TheQTablet.Core.ViewModels.Main
 
         // MVVM Commands
         public MvxAsyncCommand StartOnePolarisationSimulationCommand { get; private set; }
+        public MvxAsyncCommand StartSimulationCommand { get; private set; }
+
 
         // To be bound to the ViewController:
         //  * Experimenting
@@ -78,8 +80,16 @@ namespace TheQTablet.Core.ViewModels.Main
             _resultAccumulatorService = resultAccumulatorService;
 
             StartOnePolarisationSimulationCommand = new MvxAsyncCommand(RunOnePolarisationSimulation);
+            StartSimulationCommand = new MvxAsyncCommand(StartSimulationAsync);
 
         }
+
+        private async Task StartSimulationAsync()
+        {
+            await _polarisationSimulatorService.Run();
+            _log.Trace(" PolarisationSimulatorService: awaited");
+        }
+
 
         /*
         public override async Task Initialize()

@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "3Ej7z5vqqidnqsnyQCSydNT3BWdgjsNa7juLNMrtECFPaKLh3Goltqs71blOFI7jJjM6sWvaVnQfwScmSk2ZQA==",
+  "success": true,
+  "projectFilePath": "/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/TheQTablet.Core.csproj",
+  "expectedPackageFiles": [
+    "/Users/Jeremy/.nuget/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "/Users/Jeremy/.nuget/packages/mvvmcross/7.0.1/mvvmcross.7.0.1.nupkg.sha512",
+    "/Users/Jeremy/.nuget/packages/netstandard.library/2.0.3/netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

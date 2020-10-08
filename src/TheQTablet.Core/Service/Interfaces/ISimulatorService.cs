@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using TheQTablet.Core.DataModel;
 
 namespace TheQTablet.Core.Service.Interfaces
 {

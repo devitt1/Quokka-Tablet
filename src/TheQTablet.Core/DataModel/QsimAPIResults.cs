@@ -19,9 +19,22 @@ namespace TheQTablet.Core.DataModel
         public int Result { get; set; } = 0;
     }
 
+    public class ComplexValue
+    {
+        public float im { get; set; } = 0.0f;
+        public float re { get; set; } = 0.0f;
+    }
+
+    public class VectorResult
+    {
+        public string binary_pattern { get; set; } = "";
+        public ComplexValue complex_value { get; set; } = new ComplexValue();
+        public int state { get; set; } = 0;
+    }
+
     public class VectorOperationResult : BasicOperationResult
     {
-        public List<List<object>> Result { get; set; } = new List<List<object>>();
+        public List<VectorResult> Result { get; set; } = new List<VectorResult>();
     }
 
     public class ErrorAPIResult
@@ -29,16 +42,4 @@ namespace TheQTablet.Core.DataModel
         public string Status { get; set; } = "";
     }
 
-    public enum OperationType
-    {
-        CREATE_CIRCUIT,
-        GATE,
-        SET_STATE,
-        DESTROY_CIRCUIT,
-        MEASURE,
-        MEASURE_QUBITS,
-        STATE_VECTOR,
-        QSAM
-    }
-    
 }
