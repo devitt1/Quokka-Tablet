@@ -187,16 +187,28 @@ namespace TheQTablet.Core.Service.Implementations
 
                 BasicOperationResult stateResult = await SetStateOperationAsync(setStateParams);
 
-                //Perform XRot Operation
-                var gateOperationParam = new QsimGateOperation()
+                //Perform Atmospheric XRot Operation
+                var atmosphereGateOperationParam = new QsimGateOperation()
                 {
                     RegisterId = registerId,
                     Operation = OperationType.GATE,
                     Gate = GateType.XROT,
                     Q = 0,
-                    Theta = 0.35f
+                    Theta = 0.0f
                 };
-                BoolOperationResult gateOperation1 = await GateOperationAsync(gateOperationParam);
+                BoolOperationResult gateOperation1 = await GateOperationAsync(atmosphereGateOperationParam);
+
+                //Perform Telescope XRot Operation
+                var telescopeGateOperationParam = new QsimGateOperation()
+                {
+                    RegisterId = registerId,
+                    Operation = OperationType.GATE,
+                    Gate = GateType.XROT,
+                    Q = 0,
+                    Theta = (float) (90 * (2 * Math.PI) / 360)
+                };
+                BoolOperationResult gateOperation2 = await GateOperationAsync(telescopeGateOperationParam);
+
 
                 //Measure the result
                 var mesureParams = new QSimMeasureParam()
@@ -217,6 +229,11 @@ namespace TheQTablet.Core.Service.Implementations
 
                 // Read current state
                 VectorOperationResult stateVectorOperation = await StateVectorOperationAsync(stateVectorParam);
+                if (stateVectorOperation.Result.Count != 1)
+                {
+                    throw new Exception("StateVectorOperationAsync returned an array of size != 1.");
+                }
+                bool result = (stateVectorOperation.Result[0].state == 1);
 
                 var destroyCircuitParam = new QSimBasicParams()
                 {
@@ -227,9 +244,9 @@ namespace TheQTablet.Core.Service.Implementations
                 // Destroy Cirtuit
                 BoolOperationResult destroyRegistare = await DestroyCircuitAsync(destroyCircuitParam);
 
-                _log.Trace("SimulatorService: End");
+                _log.Trace("SimulatorService: End, result is {0}", result);
 
-                return destroyRegistare.Result;
+                return result;
             }
             catch (Exception ex)
             {
