@@ -17,7 +17,7 @@ namespace TheQTablet.iOS.Views.Main
     {
         private UILabel _labelWelcome, _labelMessage;
         private UIButton _btnRunSimulation;
-        public  UIButton StartSimulationButton;
+        public UIButton StartSimulationButton;
 
         protected override void CreateView()
         {

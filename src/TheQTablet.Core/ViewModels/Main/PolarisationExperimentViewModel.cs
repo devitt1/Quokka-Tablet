@@ -35,7 +35,8 @@ namespace TheQTablet.Core.ViewModels.Main
         //  * ExperimentAccumulators
         //  * TelescopePolarisation
         //  * StartOnePolarisationSimulationCommand
-        public bool Experimenting {
+        public bool Experimenting
+        {
             get => _experimenting;
             set
             {
@@ -50,14 +51,15 @@ namespace TheQTablet.Core.ViewModels.Main
             }
         }
         public Dictionary<int, PolarisationDataAccumulatedResult> ExperimentAccumulators { get => _accumulators; }
-        public int TelescopePolarisation {
+        public int TelescopePolarisation
+        {
             get => _currentTelescopePolarisation_deg;
             set
             {
                 // enforcing rotation step constraint
                 if ((value % _rotationStep_deg) != 0)
                 {
-                    throw new Exception("TelescopePolarisation SET failed because value "+value+" is not divisible by provided RotationStep_deg " + _rotationStep_deg);
+                    throw new Exception("TelescopePolarisation SET failed because value " + value + " is not divisible by provided RotationStep_deg " + _rotationStep_deg);
                 }
                 _currentTelescopePolarisation_deg = value;
                 RaisePropertyChanged(() => TelescopePolarisation);
@@ -120,7 +122,7 @@ namespace TheQTablet.Core.ViewModels.Main
             // The aim of this function is to set everything up ready to call StartExperimenting()
             // Can only be called ONCE
 
-            _log.Trace("PolarisationExperimentViewModel:Init() RotationStep_deg:"+ RotationStep_deg + " AtmosphericPolarisation_deg:"+ AtmosphericPolarisation_deg + " InitialTelescopePolarisation_deg:" + InitialTelescopePolarisation_deg);
+            _log.Trace("PolarisationExperimentViewModel:Init() RotationStep_deg:" + RotationStep_deg + " AtmosphericPolarisation_deg:" + AtmosphericPolarisation_deg + " InitialTelescopePolarisation_deg:" + InitialTelescopePolarisation_deg);
             if (_inited)
             {
                 throw new Exception("Init() failed because the object has already been inited");
@@ -131,7 +133,7 @@ namespace TheQTablet.Core.ViewModels.Main
             }
             if ((360 % RotationStep_deg) != 0)
             {
-                throw new Exception("Init() failed because 360 is not divisible by provided RotationStep_deg "+ RotationStep_deg);
+                throw new Exception("Init() failed because 360 is not divisible by provided RotationStep_deg " + RotationStep_deg);
             }
 
             _atmosphericPolarisation_deg = AtmosphericPolarisation_deg;
@@ -140,7 +142,7 @@ namespace TheQTablet.Core.ViewModels.Main
 
             // Initialise the dictionary of PolarisationAccumulator
             _accumulators = new Dictionary<int, PolarisationDataAccumulatedResult>();
-            for (int i=0; i<360; i+= RotationStep_deg)
+            for (int i = 0; i < 360; i += RotationStep_deg)
             {
                 _accumulators[i] = new PolarisationDataAccumulatedResult();
             }
@@ -200,7 +202,7 @@ namespace TheQTablet.Core.ViewModels.Main
         // send the event here about variable change state.
         }
         */
-             
-    
+
+
     }
 }
