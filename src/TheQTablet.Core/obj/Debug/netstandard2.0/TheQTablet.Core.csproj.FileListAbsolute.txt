@@ -1,8 +1,0 @@
-/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/obj/Debug/netstandard2.0/TheQTablet.Core.AssemblyInfoInputs.cache
-/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/obj/Debug/netstandard2.0/TheQTablet.Core.AssemblyInfo.cs
-/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/obj/Debug/netstandard2.0/TheQTablet.Core.csproj.CoreCompileInputs.cache
-/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/bin/Debug/netstandard2.0/TheQTablet.Core.deps.json
-/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/bin/Debug/netstandard2.0/TheQTablet.Core.dll
-/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/bin/Debug/netstandard2.0/TheQTablet.Core.pdb
-/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/obj/Debug/netstandard2.0/TheQTablet.Core.dll
-/Users/Jeremy/Projects/repo/theq-tablet/src/TheQTablet.Core/obj/Debug/netstandard2.0/TheQTablet.Core.pdb
