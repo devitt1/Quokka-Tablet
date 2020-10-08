@@ -1,0 +1,8 @@
+# Don't track content of these folders
+.vs
+./src/TheQTablet.Core/bin
+./src/TheQTablet.Core/obj
+./src/TheQTablet.iOS/bin
+./src/TheQTablet.iOS/obj
+
+
