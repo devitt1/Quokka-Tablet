@@ -64,9 +64,12 @@ namespace TheQTablet.Core.Service.Implementations
             {
                 operation = qSimStateParam.Operation.ToString().ToLower(),
                 register = qSimStateParam.RegisterId,
-                n = qSimStateParam.N,
-                x = qSimStateParam.X,
-                y = qSimStateParam.Y,
+                state = qSimStateParam.State,
+                complex_value = new
+                {
+                    im = qSimStateParam.ComplexValue.Im,
+                    re = qSimStateParam.ComplexValue.Re
+                }
             };
 
             BoolOperationResult res = await _restClient.MakeApiCallAsync<BoolOperationResult>(PERFORM_OPERATION_URL, HttpMethod.Post, data);
@@ -180,9 +183,12 @@ namespace TheQTablet.Core.Service.Implementations
                 {
                     Operation = OperationType.SET_STATE,
                     RegisterId = registerId,
-                    N = 0,
-                    X = 1,
-                    Y = 0
+                    State = 0,
+                    ComplexValue = new ComplexValue()
+                    {
+                        Re = 1,
+                        Im = 0
+                    }
                 };
 
                 BasicOperationResult stateResult = await SetStateOperationAsync(setStateParams);
@@ -233,7 +239,7 @@ namespace TheQTablet.Core.Service.Implementations
                 {
                     throw new Exception("StateVectorOperationAsync returned an array of size != 1.");
                 }
-                bool result = (stateVectorOperation.Result[0].state == 1);
+                bool result = (stateVectorOperation.Result[0].State == 1);
 
                 var destroyCircuitParam = new QSimBasicParams()
                 {

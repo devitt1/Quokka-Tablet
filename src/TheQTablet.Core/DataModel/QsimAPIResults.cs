@@ -21,15 +21,15 @@ namespace TheQTablet.Core.DataModel
 
     public class ComplexValue
     {
-        public float im { get; set; } = 0.0f;
-        public float re { get; set; } = 0.0f;
+        public float Im { get; set; } = 0.0f;
+        public float Re { get; set; } = 0.0f;
     }
 
     public class VectorResult
     {
-        public string binary_pattern { get; set; } = "";
-        public ComplexValue complex_value { get; set; } = new ComplexValue();
-        public int state { get; set; } = 0;
+        public string BinaryPattern { get; set; } = "";
+        public ComplexValue ComplexValue { get; set; } = new ComplexValue();
+        public int State { get; set; } = 0;
     }
 
     public class VectorOperationResult : BasicOperationResult
