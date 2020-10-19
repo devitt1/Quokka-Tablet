@@ -9,19 +9,24 @@ using MvvmCross.Base;
 
 using TheQTablet.Core.Service.Interfaces;
 using MvvmCross.Commands;
+using MvvmCross.Navigation;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
     public class RootViewModel : BaseViewModel
     {
+        private readonly IMvxNavigationService _navigationService;
         private readonly IMvxLog _log;
         private readonly ISimulatorService _simulationService;
 
-        public RootViewModel(IMvxLog log, ISimulatorService simulationService)
+        public RootViewModel(
+            IMvxLog log,
+            ISimulatorService simulationService,
+            IMvxNavigationService navigationService)
         {
             _log = log;
-
             _simulationService = simulationService;
+            _navigationService = navigationService;
 
             _log.Trace("RootViewModel:RootViewModel()");
 
@@ -30,8 +35,9 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private async Task StartSimulationAsync()
         {
-            await _simulationService.Run();
-            _log.Trace(" PolarisationSimulatorService: awaited");
+            _log.Trace(" Navigation to PolarisationSimulatorService: awaiting");
+            var result = await _navigationService.Navigate<PolarisationExperimentViewModel>();
+            _log.Trace(" Navigation to PolarisationSimulatorService: awaited");
         }
 
         public MvxAsyncCommand StartSimulationCommand { get; private set; }
