@@ -12,12 +12,12 @@ using UIKit;
 namespace TheQTablet.iOS.Views.Main
 {
     [MvxRootPresentation(WrapInNavigationController = true)]
-    //    public partial class RootViewController : BaseViewController<RootViewModel>
-    public partial class RootViewController : BaseViewController<PolarisationExperimentViewModel>
+    public partial class RootViewController : BaseViewController<RootViewModel>
+    //public partial class RootViewController : BaseViewController<PolarisationExperimentViewModel>
     {
         private UILabel _labelWelcome, _labelMessage;
         private UIButton _btnRunSimulation;
-        public UIButton StartSimulationButton;
+        private UIButton StartSimulationButton;
 
         protected override void CreateView()
         {
@@ -81,9 +81,8 @@ namespace TheQTablet.iOS.Views.Main
         {
             base.ViewDidLoad();
 
-            var set = this.CreateBindingSet<RootViewController, PolarisationExperimentViewModel>();
-            //set.Bind(_btnRunSimulation).For("TouchUpInside").To(vm => vm.StartOnePolarisationSimulationCommand);
-            set.Bind(_btnRunSimulation).To(vm => vm.StartOnePolarisationSimulationCommand);
+            var set = this.CreateBindingSet<RootViewController, RootViewModel>();
+            set.Bind(_btnRunSimulation).To(vm => vm.StartSimulationCommand);
             set.Apply();
 
         }
@@ -92,7 +91,7 @@ namespace TheQTablet.iOS.Views.Main
         {
             base.BindView();
 
-            var set = this.CreateBindingSet<RootViewController, PolarisationExperimentViewModel>();
+            var set = this.CreateBindingSet<RootViewController, RootViewModel>();
             set.Bind(StartSimulationButton).For("TouchUpInside").To(vm => vm.StartSimulationCommand);
             set.Apply();
 
