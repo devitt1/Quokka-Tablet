@@ -16,6 +16,14 @@ namespace TheQTablet.Core.Service.Interfaces
         Task<bool> Run();
 
         /// <summary>
+        /// Run basic simulation 
+        /// </summary>
+        /// <param name="atmospheric_rot"></param>
+        /// <param name="telescope_rot"></param>
+        /// <returns></returns>
+        Task<bool> Run(float atmospheric_rot, float telescope_rot);
+
+        /// <summary>
         /// Start a new Circuit
         /// </summary>
         /// <param name="param"></param>
