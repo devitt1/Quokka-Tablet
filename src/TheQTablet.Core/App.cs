@@ -28,8 +28,7 @@ namespace TheQTablet.Core
             Mvx.IoCProvider.RegisterType<IResultAccumulatorService, ResultAccumulatorService>();
             Mvx.IoCProvider.RegisterType<IRestClient, RestClient>();
 
-            //RegisterAppStart<RootViewModel>();
-            RegisterAppStart<PolarisationExperimentViewModel>();
+            RegisterAppStart<RootViewModel>();
         }
     }
 }
