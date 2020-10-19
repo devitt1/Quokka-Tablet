@@ -30,17 +30,17 @@ namespace TheQTablet.Core.ViewModels.Main
 
             _log.Trace("RootViewModel:RootViewModel()");
 
-            StartSimulationCommand = new MvxAsyncCommand(StartSimulationAsync);
+            NavigateToPolarisationExperimentCommand = new MvxAsyncCommand(NavigateToPolarisationExperimentAsync);
         }
 
-        private async Task StartSimulationAsync()
+        private async Task NavigateToPolarisationExperimentAsync()
         {
             _log.Trace(" Navigation to PolarisationSimulatorService: awaiting");
             var result = await _navigationService.Navigate<PolarisationExperimentViewModel>();
             _log.Trace(" Navigation to PolarisationSimulatorService: awaited");
         }
 
-        public MvxAsyncCommand StartSimulationCommand { get; private set; }
+        public MvxAsyncCommand NavigateToPolarisationExperimentCommand { get; private set; }
 
         public override void ViewAppeared()
         {
