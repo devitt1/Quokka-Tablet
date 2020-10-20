@@ -13,10 +13,8 @@ namespace TheQTablet.iOS.Views.Main
 {
     [MvxRootPresentation(WrapInNavigationController = true)]
     public partial class RootViewController : BaseViewController<RootViewModel>
-    //public partial class RootViewController : BaseViewController<PolarisationExperimentViewModel>
     {
         private UILabel _labelWelcome, _labelMessage;
-        private UIButton _btnRunSimulation;
         private UIButton StartSimulationButton;
 
         protected override void CreateView()
@@ -37,23 +35,10 @@ namespace TheQTablet.iOS.Views.Main
 
 
             StartSimulationButton = new UIButton(UIButtonType.RoundedRect);
-            StartSimulationButton.SetTitle("Start", UIControlState.Normal);
-            StartSimulationButton.SetTitle("Start", UIControlState.Highlighted);
-            StartSimulationButton.SetTitle("Start", UIControlState.Selected);
+            StartSimulationButton.SetTitle("Light Polarisation Experiment Page", UIControlState.Normal);
+            StartSimulationButton.SetTitle("Light Polarisation Experiment Page", UIControlState.Highlighted);
+            StartSimulationButton.SetTitle("Light Polarisation Experiment Page", UIControlState.Selected);
             Add(StartSimulationButton);
-
-            // Initialise the ViewModel
-            //((PolarisationExperimentViewModel)BindingContext).Init2(5, 0, 0);
-
-            _btnRunSimulation = new UIButton
-            {
-                BackgroundColor = UIColor.Red
-            };
-            _btnRunSimulation.Layer.CornerRadius = 8f;
-            _btnRunSimulation.SetTitle("Do One Single Simulation", UIControlState.Normal);
-            _btnRunSimulation.SetTitleColor(UIColor.White, UIControlState.Normal);
-            _btnRunSimulation.SetTitleColor(UIColor.LightGray, UIControlState.Selected);
-            Add(_btnRunSimulation);
 
         }
 
@@ -67,11 +52,8 @@ namespace TheQTablet.iOS.Views.Main
                 _labelMessage.Below(_labelWelcome, 10f),
                 _labelMessage.WithSameWidth(View),
 
-                _btnRunSimulation.Below(_labelMessage, 10f),
-                _btnRunSimulation.WithSameWidth(View),
-
                 StartSimulationButton.WithSameCenterX(View),
-                StartSimulationButton.Below(_btnRunSimulation,10f),
+                StartSimulationButton.Below(_labelMessage,10f),
                 StartSimulationButton.WithSameWidth(_labelMessage)
            });
 
@@ -80,11 +62,6 @@ namespace TheQTablet.iOS.Views.Main
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-
-            var set = this.CreateBindingSet<RootViewController, RootViewModel>();
-            set.Bind(_btnRunSimulation).To(vm => vm.StartSimulationCommand);
-            set.Apply();
-
         }
 
         protected override void BindView()
@@ -92,7 +69,7 @@ namespace TheQTablet.iOS.Views.Main
             base.BindView();
 
             var set = this.CreateBindingSet<RootViewController, RootViewModel>();
-            set.Bind(StartSimulationButton).For("TouchUpInside").To(vm => vm.StartSimulationCommand);
+            set.Bind(StartSimulationButton).For("TouchUpInside").To(vm => vm.NavigateToPolarisationExperimentCommand);
             set.Apply();
 
         }

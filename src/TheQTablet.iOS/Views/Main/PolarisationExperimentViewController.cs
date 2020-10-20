@@ -48,7 +48,7 @@ namespace TheQTablet.iOS.Views.Main
 
             _initialLabel = new UILabel
             {
-                Text = "This is PolarisationExperimentViewController!!",
+                Text = "This is the Polarisation Experiment Page",
                 TextAlignment = UITextAlignment.Center
             };
             Add(_initialLabel);
@@ -132,18 +132,22 @@ namespace TheQTablet.iOS.Views.Main
                 _currentTelescopeFilterRotationSlider.AtLeftOf(View, 0.0f),
                 _currentTelescopeFilterRotationSlider.WithSameWidth(View),
                 _telescopeRotationStaticLabel.Below(_currentTelescopeFilterRotationSlider),
+                _telescopeRotationStaticLabel.AtLeftOf(View, 10.0f),
                 _telescopeRotationLabel.WithSameTop(_telescopeRotationStaticLabel),
                 _telescopeRotationLabel.ToRightOf(_telescopeRotationStaticLabel, 30.0f),
 
                 _experimentalResultMeanStaticLabel.Below(_telescopeRotationStaticLabel),
+                _experimentalResultMeanStaticLabel.WithSameLeft(_telescopeRotationStaticLabel),
                 _averageNumberOfPhotonCapturedLabel.WithSameTop(_experimentalResultMeanStaticLabel),
                 _averageNumberOfPhotonCapturedLabel.WithSameLeft(_telescopeRotationLabel),
 
                 _numberOfExperimentsStaticLabel.Below(_experimentalResultMeanStaticLabel),
+                _numberOfExperimentsStaticLabel.WithSameLeft(_experimentalResultMeanStaticLabel),
                 _numberOfExperimentsLabel.WithSameTop(_numberOfExperimentsStaticLabel),
                 _numberOfExperimentsLabel.WithSameLeft(_telescopeRotationLabel),
 
                 _numberOfCapturedPhotonsStaticLabel.Below(_numberOfExperimentsStaticLabel),
+                _numberOfCapturedPhotonsStaticLabel.WithSameLeft(_numberOfExperimentsStaticLabel),
                 _numberOfCapturedPhotonsLabel.WithSameTop(_numberOfCapturedPhotonsStaticLabel),
                 _numberOfCapturedPhotonsLabel.WithSameLeft(_telescopeRotationLabel),
 
