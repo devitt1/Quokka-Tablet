@@ -15,8 +15,8 @@ namespace TheQTablet.Core.DataModel
             get
             {
                 if (NumberOfExperiments > 0)
-                    return AccumulatedPhotons / NumberOfExperiments;
-                return (float)0;
+                    return (float)AccumulatedPhotons / NumberOfExperiments;
+                return 0.0f;
             }
         }
 

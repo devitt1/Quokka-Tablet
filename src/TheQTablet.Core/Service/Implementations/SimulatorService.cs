@@ -162,8 +162,14 @@ namespace TheQTablet.Core.Service.Implementations
         //Run basic Simulation
         public async Task<bool> Run()
         {
+            return await Run(0, 90);
+        }
 
-            _log.Trace("SimulatorService:Run()");
+        //Run basic Simulation
+        public async Task<bool> Run(float atmospheric_rot, float telescope_rot)
+        {
+
+             _log.Trace("SimulatorService:Run()");
 
             try
             {
@@ -200,7 +206,7 @@ namespace TheQTablet.Core.Service.Implementations
                     Operation = OperationType.GATE,
                     Gate = GateType.XROT,
                     Q = 0,
-                    Theta = 0.0f
+                    Theta = (float) (atmospheric_rot * 2 * Math.PI / 360)
                 };
                 BoolOperationResult gateOperation1 = await GateOperationAsync(atmosphereGateOperationParam);
 
@@ -211,7 +217,7 @@ namespace TheQTablet.Core.Service.Implementations
                     Operation = OperationType.GATE,
                     Gate = GateType.XROT,
                     Q = 0,
-                    Theta = (float) (90 * (2 * Math.PI) / 360)
+                    Theta = (float) (telescope_rot * (2 * Math.PI) / 360)
                 };
                 BoolOperationResult gateOperation2 = await GateOperationAsync(telescopeGateOperationParam);
 
