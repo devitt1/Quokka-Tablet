@@ -35,6 +35,7 @@ namespace TheQTablet.Core.ViewModels.Main
         // MVVM Commands
         public MvxAsyncCommand StartOnePolarisationSimulationCommand { get; private set; }
         public MvxAsyncCommand StartSimulationCommand { get; private set; }
+        public MvxAsyncCommand StartMultipleSimulationsCommand { get; private set; }
 
         // MVVM Properties
         public PlotModel PlotModel => GeneratePlotModel();
@@ -189,20 +190,41 @@ namespace TheQTablet.Core.ViewModels.Main
 
             StartOnePolarisationSimulationCommand = new MvxAsyncCommand(StartSimulationAsync);
             StartSimulationCommand = new MvxAsyncCommand(StartSimulationAsync);
+            StartMultipleSimulationsCommand = new MvxAsyncCommand(StartMultipleSimulationsAsync);
 
         }
 
+        
         private async Task StartSimulationAsync()
         {
             Debug.Assert(_inited, "StartSimulationAsync cannot be called before the InitInternal was called");
 
             _log.Trace("PolarisationExperimentViewModel:StartSimulationAsync()");
-            bool result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg);
+            bool result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API);
             _resultAccumulatorService.AddExperimentResult(_accumulators[_currentTelescopePolarisation_deg], result);
 
             // Raising the property change event for the accumulators
             RaisePropertyChangedForExperiment();
         }
+        
+
+
+        private async Task StartMultipleSimulationsAsync()
+        {
+            Debug.Assert(_inited, "StartMultipleSimulationsAsync cannot be called before the InitInternal was called");
+
+            _log.Trace("StartMultipleSimulationsAsync:StartSimulationAsync()");
+            PolarisationResultList result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API, 100);
+
+            foreach(bool element in result.Results)
+            {
+                _resultAccumulatorService.AddExperimentResult(_accumulators[_currentTelescopePolarisation_deg], element);
+            }
+
+            // Raising the property change event for the accumulators
+            RaisePropertyChangedForExperiment();
+        }
+
 
 
         /*

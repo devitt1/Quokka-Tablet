@@ -33,7 +33,7 @@ namespace TheQTablet.iOS.Views.Main
             _numberOfCapturedPhotonsLabel;
         public UISlider _currentTelescopeFilterRotationSlider;
         //private UIStepper _telescopeRotationStepper;
-        public UIButton StartSimulationButton;
+        public UIButton RunOneExperiment, RunMultipleExperiments;
 
         private PlotView _plotView;
 
@@ -114,11 +114,18 @@ namespace TheQTablet.iOS.Views.Main
             };
             Add(_numberOfCapturedPhotonsLabel);
 
-            StartSimulationButton = new UIButton(UIButtonType.RoundedRect);
-            StartSimulationButton.SetTitle("Do One Simulation", UIControlState.Normal);
-            StartSimulationButton.SetTitle("Do One Simulation", UIControlState.Highlighted);
-            StartSimulationButton.SetTitle("Do One Simulation", UIControlState.Selected);
-            Add(StartSimulationButton);
+            RunOneExperiment = new UIButton(UIButtonType.RoundedRect);
+            RunOneExperiment.SetTitle("OneSimulation", UIControlState.Normal);
+            RunOneExperiment.SetTitle("OneSimulation", UIControlState.Highlighted);
+            RunOneExperiment.SetTitle("OneSimulation", UIControlState.Selected);
+            Add(RunOneExperiment);
+
+
+            RunMultipleExperiments = new UIButton(UIButtonType.RoundedRect);
+            RunMultipleExperiments.SetTitle("MultipleSimulations", UIControlState.Normal);
+            RunMultipleExperiments.SetTitle("MultipleSimulations", UIControlState.Highlighted);
+            RunMultipleExperiments.SetTitle("MultipleSimulations", UIControlState.Selected);
+            Add(RunMultipleExperiments);
 
         }
         protected override void LayoutView()
@@ -151,11 +158,15 @@ namespace TheQTablet.iOS.Views.Main
                 _numberOfCapturedPhotonsLabel.WithSameTop(_numberOfCapturedPhotonsStaticLabel),
                 _numberOfCapturedPhotonsLabel.WithSameLeft(_telescopeRotationLabel),
 
-                StartSimulationButton.WithSameCenterX(View),
-                StartSimulationButton.Below(_numberOfExperimentsLabel, 20f),
-                StartSimulationButton.WithSameWidth(View),
+                RunOneExperiment.WithSameCenterX(View),
+                RunOneExperiment.Below(_numberOfExperimentsLabel, 20f),
+                //RunOneExperiment.WithSameWidth(View),
+                //RunMultipleExperiments.WithSameCenterX(View),
+                RunMultipleExperiments.WithSameTop(RunOneExperiment),
 
-                _plotView.Below(StartSimulationButton),
+                RunMultipleExperiments.ToRightOf(RunOneExperiment, 20.0f),
+
+                _plotView.Below(RunMultipleExperiments),
                 _plotView.WithSameWidth(View),
                 _plotView.AtLeftOf(View),
                 _plotView.AtRightOf(View),
@@ -170,7 +181,8 @@ namespace TheQTablet.iOS.Views.Main
             base.BindView();
 
             var set = this.CreateBindingSet<PolarisationExperimentViewController, PolarisationExperimentViewModel>();
-            set.Bind(StartSimulationButton).For("TouchUpInside").To(vm => vm.StartSimulationCommand);
+            set.Bind(RunOneExperiment).For("TouchUpInside").To(vm => vm.StartSimulationCommand);
+            set.Bind(RunMultipleExperiments).For("TouchUpInside").To(vm => vm.StartMultipleSimulationsCommand);
             set.Bind(_telescopeRotationLabel).To(vm => vm.TelescopePolarisation);
             set.Apply();
             set = this.CreateBindingSet<PolarisationExperimentViewController, PolarisationExperimentViewModel>();

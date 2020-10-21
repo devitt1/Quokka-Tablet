@@ -24,6 +24,26 @@ namespace TheQTablet.Core.Service.Interfaces
         Task<bool> Run(float atmospheric_rot, float telescope_rot);
 
         /// <summary>
+        /// Run basic simulation 
+        /// </summary>
+        /// <param name="atmospheric_rot"></param>
+        /// <param name="telescope_rot"></param>
+        /// <param name="api_type"></param>
+        /// <returns></returns>
+        Task<bool> Run(float atmospheric_rot, float telescope_rot, ApiType api_type);
+
+        /// <summary>
+        /// Run basic simulation 
+        /// </summary>
+        /// <param name="atmospheric_rot"></param>
+        /// <param name="telescope_rot"></param>
+        /// <param name="api_type"></param>
+        /// <param name="number_of_experiments"></param>
+        /// <returns></returns>
+        Task<PolarisationResultList> Run(float atmospheric_rot, float telescope_rot, ApiType api_type, int number_of_experiments);
+
+
+        /// <summary>
         /// Start a new Circuit
         /// </summary>
         /// <param name="param"></param>

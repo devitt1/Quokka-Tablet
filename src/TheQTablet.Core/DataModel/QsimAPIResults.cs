@@ -42,4 +42,16 @@ namespace TheQTablet.Core.DataModel
         public string Status { get; set; } = "";
     }
 
+
+    public class ClassicalRegistersList
+    {
+        public List<List<int>> c;
+    }
+    public class QsamOperationResult
+    {
+        public int error_code;
+        public string error;
+        public ClassicalRegistersList result;
+    }
+
 }
