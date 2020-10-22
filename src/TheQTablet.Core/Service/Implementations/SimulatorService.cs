@@ -153,7 +153,7 @@ namespace TheQTablet.Core.Service.Implementations
 
             };
 
-            BoolOperationResult res = await _restClient.MakeApiCallAsync<BoolOperationResult>(PERFORM_OPERATION_URL, HttpMethod.Post, data);
+            BoolOperationResult res = await _restClient.MakeApiCallAsync<BoolOperationResult>("qasm", HttpMethod.Post, data);
             _log.Trace("SimulatorService:Run(): Destroy Circuit = " + res.Result);
 
             return res;
@@ -164,9 +164,83 @@ namespace TheQTablet.Core.Service.Implementations
         {
             return await Run(0, 90);
         }
+        public async Task<bool> Run(float atmospheric_rot, float telescope_rot)
+        {
+            return await Run(0, 90, ApiType.CLASSIC_API);
+        }
+
+        public async Task<bool> Run(float atmospheric_rot, float telescope_rot, ApiType api_type)
+        {
+            switch (api_type)
+            {
+                case ApiType.CLASSIC_API:
+                    return await RunClassic(atmospheric_rot, telescope_rot);
+                case ApiType.QASM_API:
+                    return await RunQASM(atmospheric_rot, telescope_rot);
+
+                default:
+                    return await RunClassic(atmospheric_rot, telescope_rot);
+            }
+
+        }
+
+        public async Task<PolarisationResultList> Run(float atmospheric_rot, float telescope_rot, ApiType api_type, int number_of_simulations)
+        {
+            switch (api_type)
+            {
+                case ApiType.QASM_API:
+                    return await RunQASM(atmospheric_rot, telescope_rot, number_of_simulations);
+
+                default:
+                    return await RunQASM(atmospheric_rot, telescope_rot, number_of_simulations);
+            }
+
+        }
+
+        public async Task<bool> RunQASM(float atmospheric_rot, float telescope_rot)
+        {
+            PolarisationResultList results = await RunQASM(atmospheric_rot, telescope_rot, 1);
+            return results.Results[0];
+        }
+
+        public async Task<PolarisationResultList> RunQASM(float atmospheric_rot, float telescope_rot, int number_of_simulations)
+        {
+            _log.Trace("SimulatorService:RunQASM()");
+
+            float atm_rot_rad = (float)(atmospheric_rot * (2 * Math.PI) / 360);
+            float tel_rot_rad = (float)(telescope_rot * (2 * Math.PI) / 360);
+            String QasmScript = String.Format("OPENQASM 2.0;\nqreg q[1];\ncreg c[1];\nrx({0}) q[0];\nrx({1}) q[0];\nmeasure q[0] -> c[0];", atm_rot_rad, tel_rot_rad);
+
+            try
+            {
+                object data = new
+                {
+                    script = QasmScript,
+                    count = number_of_simulations,
+                    state_vector = false
+                };
+
+                QsamOperationResult res = await _restClient.MakeApiCallAsync<QsamOperationResult>("qasm", HttpMethod.Post, data);
+                _log.Trace("SimulatorService:RunQASM(): result = " + res.result.ToString());
+
+                PolarisationResultList ret = new PolarisationResultList("no error");
+                foreach (List<int> element in res.result.c)
+                {
+                    ret.Results.Add(element[0]==1);
+                }
+                return ret;
+
+            }
+            catch (Exception ex)
+            {
+                _log.Trace("Error: {0}", ex);
+                return new PolarisationResultList("API call failed");
+            }
+        }
+
 
         //Run basic Simulation
-        public async Task<bool> Run(float atmospheric_rot, float telescope_rot)
+        public async Task<bool> RunClassic(float atmospheric_rot, float telescope_rot)
         {
 
              _log.Trace("SimulatorService:Run()");
@@ -267,5 +341,7 @@ namespace TheQTablet.Core.Service.Implementations
             }
 
         }
+
+
     }
 }
