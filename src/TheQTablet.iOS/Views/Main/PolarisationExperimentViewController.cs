@@ -217,7 +217,10 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(RunMultipleExperiments).For("TouchUpInside").To(vm => vm.StartMultipleSimulationsCommand);
             set.Bind(OverlayCos2).For("TouchUpInside").To(vm => vm.ToggleOverlayCosSquare);
             set.Bind(StartContinuousExperimenting).For("TouchUpInside").To(vm => vm.ToggleContinuousSimulation);
+            set.Bind(StartSweepExperimenting).For("TouchUpInside").To(vm => vm.ToggleAutoSweepSimulation);
             
+
+
 
 
             set.Bind(_telescopeRotationLabel).To(vm => vm.TelescopePolarisation);

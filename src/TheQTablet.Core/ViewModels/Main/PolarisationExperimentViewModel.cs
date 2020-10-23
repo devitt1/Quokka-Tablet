@@ -30,8 +30,9 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private int _currentTelescopeSliderPosition = 0;
 
-        private bool _inited = false;
-        private bool _experimenting = false; // TODO: NOT USED YET
+        private bool _inited = false;   // prevents simulation to be run before internalInit() has been called
+        private bool _continuousExperimentRunning = false;
+        private bool _autoSweepRunning = false; // prevent the UI slider to change the current filter angle during Sweep or Fix process
 
         private bool _overlayCosSquare = false;
         public bool OverlayCosSquare
@@ -53,6 +54,8 @@ namespace TheQTablet.Core.ViewModels.Main
         public MvxAsyncCommand ToggleContinuousSimulation { get; private set; }
         public MvxAsyncCommand ToggleSweepSimulation { get; private set; }
         public MvxAsyncCommand CurrentTelescopeFilterRotationSliderTouchCancel { get; private set; }
+        public MvxAsyncCommand ToggleAutoSweepSimulation { get; private set; }
+        public MvxAsyncCommand ToggleAutoFixSimulation { get; private set; }
 
         // MVVM Properties
         public PlotModel PlotModel => GeneratePlotModel();
@@ -137,9 +140,13 @@ namespace TheQTablet.Core.ViewModels.Main
             get => _currentTelescopeSliderPosition;
             set
             {
-                _currentTelescopeSliderPosition = value;
-                RaisePropertyChanged(() => CurrentTelescopeFilterRotationSlider);
-                RecalculateTelescopePolarisation();
+                if (!_autoSweepRunning)
+                {
+                    // Rotation Slider only change the angle if not currently in an Auto Sweep to Fix
+                    _currentTelescopeSliderPosition = value;
+                    RaisePropertyChanged(() => CurrentTelescopeFilterRotationSlider);
+                    RecalculateTelescopePolarisation();
+                }
             }
         }
         
@@ -154,7 +161,7 @@ namespace TheQTablet.Core.ViewModels.Main
         // TODO: NOT USED YET
         public bool Experimenting
         {
-            get => _experimenting;
+            get => _continuousExperimentRunning;
             set
             {
                 if (value)
@@ -188,7 +195,10 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private async Task CurrentTelescopeFilterRotationSliderTouchCancelAsync()
         {
-            _storedResults.Clear();
+            if (!_autoSweepRunning)
+            {
+                _storedResults.Clear();
+            }
         }
 
         private void RaisePropertyChangedForExperiment()
@@ -201,7 +211,16 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private async Task gatherExperimentResults(int number = 100)
         {
-            if (_fetchingForStoredResults)
+            await gatherExperimentResults(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, number, false);
+        }
+        private async Task gatherExperimentResults(int telescopePolarisaton, int number, bool stackable= false)
+        {
+            await gatherExperimentResults(_atmosphericPolarisation_deg, telescopePolarisaton, number, stackable);
+        }
+
+        private async Task gatherExperimentResults(int atmPolarisation, int telescopePolarisaton, int number, bool stackable)
+        {
+            if (_fetchingForStoredResults && !stackable)
             {
                 _log.Trace("gatherExperimentResults() skipping call QASM as _fetchingForStoredResultsis true");
                 return;
@@ -209,12 +228,12 @@ namespace TheQTablet.Core.ViewModels.Main
 
             _log.Trace("gatherExperimentResults() about to call QASM");
             _fetchingForStoredResults = true;
-            PolarisationResultList result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API, number);
+            PolarisationResultList result = await _polarisationSimulatorService.Run(atmPolarisation, telescopePolarisaton, ApiType.QASM_API, number);
             _log.Trace("gatherExperimentResults() got result from QASM, enqueing...");
 
             foreach (bool element in result.Results)
             {
-                _storedResults.Enqueue(new KeyValuePair<int, bool>(_currentTelescopePolarisation_deg, element));
+                _storedResults.Enqueue(new KeyValuePair<int, bool>(telescopePolarisaton, element));
             }
             _fetchingForStoredResults = false;
             _log.Trace("gatherExperimentResults() result queued done!");
@@ -247,7 +266,7 @@ namespace TheQTablet.Core.ViewModels.Main
             _log.Trace("PolarisationExperimentViewModel:PolarisationExperimentViewModel()");
 
             _inited = false;
-            _experimenting = false;
+            _continuousExperimentRunning = false;
 
             _polarisationSimulatorService = polarisationSimulatorService;
             _accumulators = new Dictionary<int, PolarisationDataAccumulatedResult>();
@@ -265,7 +284,116 @@ namespace TheQTablet.Core.ViewModels.Main
             ToggleOverlayCosSquare = new MvxAsyncCommand(ToggleOverlayCosSquareAsync);
             ToggleContinuousSimulation = new MvxAsyncCommand(StartContinuousSimulationAsync);
             CurrentTelescopeFilterRotationSliderTouchCancel = new MvxAsyncCommand(CurrentTelescopeFilterRotationSliderTouchCancelAsync);
+            ToggleAutoSweepSimulation = new MvxAsyncCommand(ToggleAutoSweepSimulationAsync);
+            ToggleAutoFixSimulation = new MvxAsyncCommand(ToggleAutoFixSimulationAsync);
             //StopExperimenting = new MvxAsyncCommand(StartContinuousSimulationAsync);
+
+        }
+
+        private async Task ToggleAutoSweepSimulationAsync()
+        {
+            if (!_inited)
+            {
+                throw new Exception("ToggleAutoSweepSimulationAsync() failed because the object has not be inited");
+            }
+
+            if (_autoSweepRunning)
+            {
+                _log.Trace("ToggleAutoSweepSimulationAsync(): Stop experimenting");
+                _autoSweepRunning = false;
+                return;
+            }
+
+
+            // To be pushed to the Tick function later
+
+            _log.Trace("ToggleAutoSweepSimulationAsync() about to call QASM");
+            await gatherExperimentResults(0,200,true);
+
+            /*
+            PolarisationResultList result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API, 100);
+            _log.Trace("StartContinuousSimulationAsync() got result from QASM");
+
+            foreach (bool element in result.Results)
+            {
+                _storedResults.Enqueue(new KeyValuePair<int, bool>(_currentTelescopePolarisation_deg, element));
+            }
+            */
+
+            int timerDelay = (int)(1000 / _frequencyOfExperiment);
+            _log.Trace("StartExperimenting() Setting up Timer @ " + timerDelay + "ms");
+
+            object state = new
+            {
+                releasePerTick= 20
+            };
+            _autoSweepRunning = true;
+            _timerState = new timerState(10);
+            this.experimentTimer = new System.Threading.Timer(timerSweepExperimentTick, null, 0, timerDelay);
+            _log.Trace("StartExperimenting() Timer setup");
+        }
+
+        private class timerState
+        {
+            public int ReleasePerTick;
+            public int CurrentFilterAngle;
+            public Dictionary<int, int> ReleaseData;
+
+            public timerState(int _ReleasePerTick)
+            {
+                ReleasePerTick = _ReleasePerTick;
+                CurrentFilterAngle = 0;
+                ReleaseData = new Dictionary<int, int>();
+            }
+        }
+        private timerState _timerState;
+
+        private void timerSweepExperimentTick(Object state)
+        {
+            //_log.Trace("timerContinuousExperimentTick() called");
+            if (!_autoSweepRunning || _storedResults == null)
+            {
+                // End of experiment, destroy timer & clean data
+                _log.Trace("timerSweepExperimentTick() stopping internal timer & destroy unused experimental data");
+                _storedResults.Clear();
+                experimentTimer.Dispose();
+                _autoSweepRunning = false;
+                return;
+            }
+            if (_storedResults.Count < 3*_timerState.ReleasePerTick)
+            {
+                if (_timerState.CurrentFilterAngle < (360- _rotationStep_deg))
+                {
+                    // If the number of stored data is low, launch an async task to get more data
+                    _timerState.CurrentFilterAngle = _timerState.CurrentFilterAngle + _rotationStep_deg;
+                    _log.Trace("timerSweepExperimentTick(): getting more data for angle " + _timerState.CurrentFilterAngle);
+                    var task = Task.Run(async () => await gatherExperimentResults(_timerState.CurrentFilterAngle, 200, true));
+                }
+                else
+                {
+                    _autoSweepRunning = false;
+                }
+
+            }
+            if (_storedResults.Count > 0)
+            {
+                // Only push data to the accumulator if there is some
+                //_log.Trace("timerContinuousExperimentTick(): AddExperimentResult");
+                int tmp_last_angle = 0;
+                for (int i=0; (i< _timerState.ReleasePerTick && _storedResults.Count > 0);++i)
+                {
+                    KeyValuePair<int, bool> result = _storedResults.Dequeue();
+                    _resultAccumulatorService.AddExperimentResult(_accumulators[result.Key], result.Value);
+                    tmp_last_angle = result.Key;
+                }
+                _currentTelescopePolarisation_deg = tmp_last_angle;
+                RaisePropertyChangedForExperiment();
+            }
+
+        }
+
+        private async Task ToggleAutoFixSimulationAsync()
+        {
 
         }
 
@@ -362,10 +490,10 @@ public override async Task Initialize()
             {
                 throw new Exception("StartContinuousSimulationAsync() failed because the object has not be inited");
             }
-            if (_experimenting)
+            if (_continuousExperimentRunning)
             {
                 _log.Trace("StartContinuousSimulationAsync(): Stop experimenting");
-                _experimenting = false;
+                _continuousExperimentRunning = false;
                 return;
             }
 
@@ -388,24 +516,24 @@ public override async Task Initialize()
             int timerDelay = (int)(1000 / _frequencyOfExperiment);
             _log.Trace("StartExperimenting() Setting up Timer @ "+ timerDelay + "ms");
             this.experimentTimer = new System.Threading.Timer(timerContinuousExperimentTick, null, 0, timerDelay);
-            _experimenting = true;
+            _continuousExperimentRunning = true;
             _log.Trace("StartExperimenting() Timer setup");
 
         }
 
         private void timerContinuousExperimentTick(Object state)
         {
-            _log.Trace("timerContinuousExperimentTick() called");
-            if (!_experimenting || _storedResults == null)
+            //_log.Trace("timerContinuousExperimentTick() called");
+            if (!_continuousExperimentRunning || _storedResults == null)
             {
                 // End of experiment, destroy timer & clean data
                 _log.Trace("timerTick() stoping internal timer & destroy unused experimental data");
                 _storedResults.Clear();
                 experimentTimer.Dispose();
-                _experimenting = false;
+                _continuousExperimentRunning = false;
                 return;
             }
-            if (_storedResults.Count <= 2)
+            if (_storedResults.Count < 3)
             {
                 // If the number of stored data is low, launch an async task to get more data
                 _log.Trace("timerContinuousExperimentTick(): getting more data");
@@ -422,11 +550,11 @@ public override async Task Initialize()
                 });
                 */
             }
-            if (_storedResults.Count > 1)
+            if (_storedResults.Count > 0)
             {
                 // Only push data to the accumulator if there is some
                 KeyValuePair<int, bool> result = _storedResults.Dequeue();
-                _log.Trace("timerContinuousExperimentTick(): AddExperimentResult");
+                //_log.Trace("timerContinuousExperimentTick(): AddExperimentResult");
                 _resultAccumulatorService.AddExperimentResult(_accumulators[result.Key], result.Value);
                 RaisePropertyChangedForExperiment();
             }
@@ -445,7 +573,7 @@ public override async Task Initialize()
             {
                 throw new Exception("StartMultipleSimulationsAsync() failed because the object has not be inited");
             }
-            if (_experimenting)
+            if (_continuousExperimentRunning)
             {
                 _log.Trace("StartMultipleSimulationsAsync() failed because the object is already experimenting");
                 return;
@@ -471,7 +599,7 @@ public override async Task Initialize()
 
             _log.Trace("StartMultipleSimulationsAsync() Setting up Timer");
             this.experimentTimer = new System.Threading.Timer(timerTick, null, 0, 100);
-            _experimenting = true;
+            _continuousExperimentRunning = true;
             _log.Trace("StartMultipleSimulationsAsync() Timer setup");
 
 
@@ -493,12 +621,12 @@ public override async Task Initialize()
             {
                 throw new Exception("StopExperienting() failed because the object has not be inited");
             }
-            if (!_experimenting)
+            if (!_continuousExperimentRunning)
             {
                 _log.Trace("StopExperienting() failed because the object is not experimenting");
                 return;
             }
-            _experimenting = false;
+            _continuousExperimentRunning = false;
         }
 
         //private Queue<AngleResult> storedResults;
@@ -510,12 +638,12 @@ public override async Task Initialize()
         {
 
             _log.Trace("timerTick() called");
-            if (!_experimenting || _storedResults == null || _storedResults.Count < 1)
+            if (!_continuousExperimentRunning || _storedResults == null || _storedResults.Count < 1)
             {
                 _log.Trace("timerTick() stoping internal timer & destroy unused experimental data");
                 _storedResults.Clear();
                 experimentTimer.Dispose();
-                _experimenting = false;
+                _continuousExperimentRunning = false;
                 return;
             }
 
