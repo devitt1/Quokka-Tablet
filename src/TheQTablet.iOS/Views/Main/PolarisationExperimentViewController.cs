@@ -33,7 +33,7 @@ namespace TheQTablet.iOS.Views.Main
             _numberOfCapturedPhotonsLabel;
         public UISlider _currentTelescopeFilterRotationSlider;
         //private UIStepper _telescopeRotationStepper;
-        public UIButton RunOneExperiment, RunMultipleExperiments;
+        public UIButton RunOneExperiment, RunMultipleExperiments, StartContinuousExperimenting, StartSweepExperimenting, StopExperimenting, OverlayCos2;
 
         private PlotView _plotView;
 
@@ -81,7 +81,7 @@ namespace TheQTablet.iOS.Views.Main
 
             _currentTelescopeFilterRotationSlider = new UISlider
             {
-                MaxValue = 100,
+                MaxValue = 99,
                 MinValue = 0,
                 Value = 0
             };
@@ -127,6 +127,28 @@ namespace TheQTablet.iOS.Views.Main
             RunMultipleExperiments.SetTitle("MultipleSimulations", UIControlState.Selected);
             Add(RunMultipleExperiments);
 
+            StartContinuousExperimenting = new UIButton(UIButtonType.RoundedRect);
+            StartContinuousExperimenting.SetTitle("ContinousExperiment", UIControlState.Normal);
+            StartContinuousExperimenting.SetTitle("ContinousExperiment", UIControlState.Highlighted);
+            StartContinuousExperimenting.SetTitle("ContinousExperiment", UIControlState.Selected);
+            Add(StartContinuousExperimenting);
+            StartSweepExperimenting = new UIButton(UIButtonType.RoundedRect);
+            StartSweepExperimenting.SetTitle("SweepExperiment", UIControlState.Normal);
+            StartSweepExperimenting.SetTitle("SweepExperiment", UIControlState.Highlighted);
+            StartSweepExperimenting.SetTitle("SweepExperiment", UIControlState.Selected);
+            Add(StartSweepExperimenting);
+            StopExperimenting = new UIButton(UIButtonType.RoundedRect);
+            StopExperimenting.SetTitle("StopExperimenting", UIControlState.Normal);
+            StopExperimenting.SetTitle("StopExperimenting", UIControlState.Highlighted);
+            StopExperimenting.SetTitle("StopExperimenting", UIControlState.Selected);
+            Add(StopExperimenting);
+            OverlayCos2 = new UIButton(UIButtonType.RoundedRect);
+            OverlayCos2.SetTitle("OverlayCosSqure", UIControlState.Normal);
+            OverlayCos2.SetTitle("OverlayCosSqure", UIControlState.Highlighted);
+            OverlayCos2.SetTitle("OverlayCosSqure", UIControlState.Selected);
+            Add(OverlayCos2);
+
+
         }
         protected override void LayoutView()
         {
@@ -158,13 +180,23 @@ namespace TheQTablet.iOS.Views.Main
                 _numberOfCapturedPhotonsLabel.WithSameTop(_numberOfCapturedPhotonsStaticLabel),
                 _numberOfCapturedPhotonsLabel.WithSameLeft(_telescopeRotationLabel),
 
-                RunOneExperiment.WithSameCenterX(View),
+                RunOneExperiment.AtLeftOf(View, 10.0f),
                 RunOneExperiment.Below(_numberOfExperimentsLabel, 20f),
                 //RunOneExperiment.WithSameWidth(View),
                 //RunMultipleExperiments.WithSameCenterX(View),
                 RunMultipleExperiments.WithSameTop(RunOneExperiment),
-
                 RunMultipleExperiments.ToRightOf(RunOneExperiment, 20.0f),
+
+                StartContinuousExperimenting.WithSameTop(RunOneExperiment),
+                StartContinuousExperimenting.ToRightOf(RunMultipleExperiments, 20.0f),
+                StartSweepExperimenting.WithSameTop(RunOneExperiment),
+                StartSweepExperimenting.ToRightOf(StartContinuousExperimenting, 20.0f),
+                
+                StopExperimenting.WithSameTop(RunOneExperiment),
+                StopExperimenting.ToRightOf(StartSweepExperimenting, 20.0f),
+                OverlayCos2.WithSameTop(RunOneExperiment),
+                OverlayCos2.ToRightOf(StopExperimenting, 20.0f),
+                
 
                 _plotView.Below(RunMultipleExperiments),
                 _plotView.WithSameWidth(View),
@@ -183,10 +215,17 @@ namespace TheQTablet.iOS.Views.Main
             var set = this.CreateBindingSet<PolarisationExperimentViewController, PolarisationExperimentViewModel>();
             set.Bind(RunOneExperiment).For("TouchUpInside").To(vm => vm.StartSimulationCommand);
             set.Bind(RunMultipleExperiments).For("TouchUpInside").To(vm => vm.StartMultipleSimulationsCommand);
+            set.Bind(OverlayCos2).For("TouchUpInside").To(vm => vm.ToggleOverlayCosSquare);
+            set.Bind(StartContinuousExperimenting).For("TouchUpInside").To(vm => vm.ToggleContinuousSimulation);
+            
+
+
             set.Bind(_telescopeRotationLabel).To(vm => vm.TelescopePolarisation);
             set.Apply();
             set = this.CreateBindingSet<PolarisationExperimentViewController, PolarisationExperimentViewModel>();
-            set.Bind(_currentTelescopeFilterRotationSlider).To(vm => vm.CurrentTelescopeFilterRotationSlider);            
+            set.Bind(_currentTelescopeFilterRotationSlider).To(vm => vm.CurrentTelescopeFilterRotationSlider);
+            set.Bind(_currentTelescopeFilterRotationSlider).For("TouchUpInside").To(vm => vm.CurrentTelescopeFilterRotationSliderTouchCancel);
+            set.Bind(_currentTelescopeFilterRotationSlider).For("TouchUpOutside").To(vm => vm.CurrentTelescopeFilterRotationSliderTouchCancel);
             set.Bind(_averageNumberOfPhotonCapturedLabel).To(vm => vm.AverageNumberOfPhotonCaptured);
             set.Bind(_numberOfExperimentsLabel).To(vm => vm.NumberOfExperiments);
             set.Bind(_numberOfCapturedPhotonsLabel).To(vm => vm.NumberOfCapturedPhotons);

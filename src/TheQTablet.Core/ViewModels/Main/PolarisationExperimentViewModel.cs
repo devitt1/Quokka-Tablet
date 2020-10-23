@@ -12,6 +12,7 @@ using OxyPlot.Series;
 
 using TheQTablet.Core.Service.Interfaces;
 using TheQTablet.Core.DataModel;
+using System.Collections.ObjectModel;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
@@ -22,7 +23,7 @@ namespace TheQTablet.Core.ViewModels.Main
         private readonly IResultAccumulatorService _resultAccumulatorService;
 
         private Dictionary<int, PolarisationDataAccumulatedResult> _accumulators;
-        private float _frequencyOfExperiment = 1; // in Hz
+        private float _frequencyOfExperiment = 10; // in Hz
         private int _currentTelescopePolarisation_deg = 0;
         private int _atmosphericPolarisation_deg = 0;
         private int _rotationStep_deg = 5;
@@ -32,10 +33,26 @@ namespace TheQTablet.Core.ViewModels.Main
         private bool _inited = false;
         private bool _experimenting = false; // TODO: NOT USED YET
 
+        private bool _overlayCosSquare = false;
+        public bool OverlayCosSquare
+        {
+            get => _overlayCosSquare;
+            set
+            {
+                _overlayCosSquare = value;
+                GeneratePlotModel();
+                RaisePropertyChanged(() => PlotModel);
+            }
+        }
+
         // MVVM Commands
         public MvxAsyncCommand StartOnePolarisationSimulationCommand { get; private set; }
         public MvxAsyncCommand StartSimulationCommand { get; private set; }
         public MvxAsyncCommand StartMultipleSimulationsCommand { get; private set; }
+        public MvxAsyncCommand ToggleOverlayCosSquare { get; private set; }
+        public MvxAsyncCommand ToggleContinuousSimulation { get; private set; }
+        public MvxAsyncCommand ToggleSweepSimulation { get; private set; }
+        public MvxAsyncCommand CurrentTelescopeFilterRotationSliderTouchCancel { get; private set; }
 
         // MVVM Properties
         public PlotModel PlotModel => GeneratePlotModel();
@@ -53,6 +70,8 @@ namespace TheQTablet.Core.ViewModels.Main
             model.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Bottom,
+                Maximum = 360,
+                Minimum = -5,
                 Title = "TIME TITLE",
                 TitleColor = OxyColors.White,
                 AxislineColor = OxyColors.LightGray,
@@ -61,13 +80,26 @@ namespace TheQTablet.Core.ViewModels.Main
             model.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
-                Maximum = 1,
-                Minimum = 0,
+                Maximum = 1.02,
+                Minimum = -0.02,
                 Title = "TARGETS TITLE",
                 TitleColor = OxyColors.White,
                 AxislineColor = OxyColors.LightGray,
                 TicklineColor = OxyColors.LightGray
             });
+
+
+            var currentRotationSerie = new RectangleBarSeries
+            {
+                StrokeThickness = 0,
+                FillColor = OxyColors.WhiteSmoke
+            };
+            var currenTotationItem = new RectangleBarItem(_currentTelescopePolarisation_deg - (float)_rotationStep_deg/2, 0, _currentTelescopePolarisation_deg + (float)_rotationStep_deg / 2, 1);
+            currentRotationSerie.Items.Add(currenTotationItem);
+
+
+
+            model.Series.Add(currentRotationSerie);
 
             var series1 = new LineSeries
             {
@@ -80,14 +112,25 @@ namespace TheQTablet.Core.ViewModels.Main
             // Plotting the data from the PolarisationDataAccumulatedResult
             foreach (KeyValuePair<int, PolarisationDataAccumulatedResult> entry in ExperimentAccumulators)
             {
-                series1.Points.Add(new DataPoint(entry.Key, entry.Value.Value));
+                if ( !float.IsNaN(entry.Value.Value) )
+                {
+                    series1.Points.Add(new DataPoint(entry.Key, entry.Value.Value));
+                }
             }
-
             model.Series.Add(series1);
+
+            if (_overlayCosSquare)
+            {
+                model.Series.Add(new FunctionSeries(cosSquareDegree, 0, 359, 0.1));
+            }
 
             return model;
         }
 
+        private double cosSquareDegree(double x)
+        {
+            return Math.Cos(2 * Math.PI * x / 360)* Math.Cos(2 * Math.PI * x / 360);
+        }
 
         public int CurrentTelescopeFilterRotationSlider
         {
@@ -99,6 +142,7 @@ namespace TheQTablet.Core.ViewModels.Main
                 RecalculateTelescopePolarisation();
             }
         }
+        
 
 
         // To be bound to the ViewController:
@@ -136,9 +180,15 @@ namespace TheQTablet.Core.ViewModels.Main
                     throw new Exception("TelescopePolarisation SET failed because value " + value + " is not divisible by provided RotationStep_deg " + _rotationStep_deg);
                 }
                 _currentTelescopePolarisation_deg = value;
+                //_storedResults.Clear();
                 RaisePropertyChanged(() => TelescopePolarisation);
                 RaisePropertyChangedForExperiment();
             }
+        }
+
+        private async Task CurrentTelescopeFilterRotationSliderTouchCancelAsync()
+        {
+            _storedResults.Clear();
         }
 
         private void RaisePropertyChangedForExperiment()
@@ -147,7 +197,27 @@ namespace TheQTablet.Core.ViewModels.Main
             RaisePropertyChanged(() => NumberOfCapturedPhotons);
             RaisePropertyChanged(() => AverageNumberOfPhotonCaptured);
             RaisePropertyChanged(() => PlotModel);
-            
+        }
+
+        private async Task gatherExperimentResults(int number = 100)
+        {
+            if (_fetchingForStoredResults)
+            {
+                _log.Trace("gatherExperimentResults() skipping call QASM as _fetchingForStoredResultsis true");
+                return;
+            }
+
+            _log.Trace("gatherExperimentResults() about to call QASM");
+            _fetchingForStoredResults = true;
+            PolarisationResultList result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API, number);
+            _log.Trace("gatherExperimentResults() got result from QASM, enqueing...");
+
+            foreach (bool element in result.Results)
+            {
+                _storedResults.Enqueue(new KeyValuePair<int, bool>(_currentTelescopePolarisation_deg, element));
+            }
+            _fetchingForStoredResults = false;
+            _log.Trace("gatherExperimentResults() result queued done!");
         }
 
         public int NumberOfExperiments
@@ -175,7 +245,6 @@ namespace TheQTablet.Core.ViewModels.Main
         {
             _log = log;
             _log.Trace("PolarisationExperimentViewModel:PolarisationExperimentViewModel()");
-            _frequencyOfExperiment = 1;
 
             _inited = false;
             _experimenting = false;
@@ -185,55 +254,28 @@ namespace TheQTablet.Core.ViewModels.Main
 
             _resultAccumulatorService = resultAccumulatorService;
 
+            _storedResults = new Queue<KeyValuePair<int, bool>>();
+
             // Hardcoded 5deg step, atmopheric rotation of 90deg, initial telescopefilter 0deg
-            InternalInit(5, 90, 0);
+            InternalInit(10, 0, 0);
 
             StartOnePolarisationSimulationCommand = new MvxAsyncCommand(StartSimulationAsync);
             StartSimulationCommand = new MvxAsyncCommand(StartSimulationAsync);
             StartMultipleSimulationsCommand = new MvxAsyncCommand(StartMultipleSimulationsAsync);
+            ToggleOverlayCosSquare = new MvxAsyncCommand(ToggleOverlayCosSquareAsync);
+            ToggleContinuousSimulation = new MvxAsyncCommand(StartContinuousSimulationAsync);
+            CurrentTelescopeFilterRotationSliderTouchCancel = new MvxAsyncCommand(CurrentTelescopeFilterRotationSliderTouchCancelAsync);
+            //StopExperimenting = new MvxAsyncCommand(StartContinuousSimulationAsync);
 
         }
-
-        
-        private async Task StartSimulationAsync()
-        {
-            Debug.Assert(_inited, "StartSimulationAsync cannot be called before the InitInternal was called");
-
-            _log.Trace("PolarisationExperimentViewModel:StartSimulationAsync()");
-            bool result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API);
-            _resultAccumulatorService.AddExperimentResult(_accumulators[_currentTelescopePolarisation_deg], result);
-
-            // Raising the property change event for the accumulators
-            RaisePropertyChangedForExperiment();
-        }
-        
-
-
-        private async Task StartMultipleSimulationsAsync()
-        {
-            Debug.Assert(_inited, "StartMultipleSimulationsAsync cannot be called before the InitInternal was called");
-
-            _log.Trace("StartMultipleSimulationsAsync:StartSimulationAsync()");
-            PolarisationResultList result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API, 100);
-
-            foreach(bool element in result.Results)
-            {
-                _resultAccumulatorService.AddExperimentResult(_accumulators[_currentTelescopePolarisation_deg], element);
-            }
-
-            // Raising the property change event for the accumulators
-            RaisePropertyChangedForExperiment();
-        }
-
-
 
         /*
-        public override async Task Initialize()
-        {
-            await base.Initialize();
+public override async Task Initialize()
+{
+    await base.Initialize();
 
-        }
-        */
+}
+*/
 
 
         // Internal Init function
@@ -274,33 +316,175 @@ namespace TheQTablet.Core.ViewModels.Main
             _inited = true;
         }
 
-        // TODO: NOT USED YET
-        public void StartExperimenting()
+
+
+
+        private async Task StartSimulationAsync()
+        {
+            Debug.Assert(_inited, "StartSimulationAsync cannot be called before the InitInternal was called");
+
+            _log.Trace("PolarisationExperimentViewModel:StartSimulationAsync()");
+            bool result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API);
+            _log.Trace("PolarisationExperimentViewModel: Got results from QASM()");
+            _resultAccumulatorService.AddExperimentResult(_accumulators[_currentTelescopePolarisation_deg], result);
+
+            // Raising the property change event for the accumulators
+            RaisePropertyChangedForExperiment();
+        }
+
+        private async Task ToggleOverlayCosSquareAsync()
+        {
+            OverlayCosSquare = !OverlayCosSquare;
+        }
+
+
+        /*
+        private async Task StartMultipleSimulationsAsync()
+        {
+            Debug.Assert(_inited, "StartMultipleSimulationsAsync cannot be called before the InitInternal was called");
+
+            _log.Trace("StartMultipleSimulationsAsync:StartSimulationAsync()");
+            PolarisationResultList result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API, 100);
+
+            foreach(bool element in result.Results)
+            {
+                _resultAccumulatorService.AddExperimentResult(_accumulators[_currentTelescopePolarisation_deg], element);
+            }
+
+            // Raising the property change event for the accumulators
+            RaisePropertyChangedForExperiment();
+        }
+        */
+
+        public async Task StartContinuousSimulationAsync()
         {
             if (!_inited)
             {
-                throw new Exception("StartExperimenting() failed because the object has not be inited");
+                throw new Exception("StartContinuousSimulationAsync() failed because the object has not be inited");
             }
             if (_experimenting)
             {
-                _log.Trace("StartExperimenting() failed because the object is already experimenting");
+                _log.Trace("StartContinuousSimulationAsync(): Stop experimenting");
+                _experimenting = false;
                 return;
             }
 
+
+            // To be pushed to the Tick function later
+
+            _log.Trace("StartContinuousSimulationAsync() about to call QASM");
+            await gatherExperimentResults();
+
             /*
-             * TODO: Do the Experimenting thing, how to set a timer calling the Tick function
-             * 
-             * */
+            PolarisationResultList result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API, 100);
+            _log.Trace("StartContinuousSimulationAsync() got result from QASM");
+
+            foreach (bool element in result.Results)
+            {
+                _storedResults.Enqueue(new KeyValuePair<int, bool>(_currentTelescopePolarisation_deg, element));
+            }
+            */
+
+            int timerDelay = (int)(1000 / _frequencyOfExperiment);
+            _log.Trace("StartExperimenting() Setting up Timer @ "+ timerDelay + "ms");
+            this.experimentTimer = new System.Threading.Timer(timerContinuousExperimentTick, null, 0, timerDelay);
+            _experimenting = true;
+            _log.Trace("StartExperimenting() Timer setup");
+
+        }
+
+        private void timerContinuousExperimentTick(Object state)
+        {
+            _log.Trace("timerContinuousExperimentTick() called");
+            if (!_experimenting || _storedResults == null)
+            {
+                // End of experiment, destroy timer & clean data
+                _log.Trace("timerTick() stoping internal timer & destroy unused experimental data");
+                _storedResults.Clear();
+                experimentTimer.Dispose();
+                _experimenting = false;
+                return;
+            }
+            if (_storedResults.Count <= 2)
+            {
+                // If the number of stored data is low, launch an async task to get more data
+                _log.Trace("timerContinuousExperimentTick(): getting more data");
+                var task = Task.Run(async () => await gatherExperimentResults());
+                /*
+                var task = Task.Run(async () => {
+                    _log.Trace("Anomymous function from timerContinuousExperimentTick(): getting more data");
+                    PolarisationResultList result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API, 100);
+                    _log.Trace("Anomymous function from timerContinuousExperimentTick(): got result from QASM");
+                    foreach (bool element in result.Results)
+                    {
+                        _storedResults.Enqueue(new KeyValuePair<int, bool>(_currentTelescopePolarisation_deg, element));
+                    }
+                });
+                */
+            }
+            if (_storedResults.Count > 1)
+            {
+                // Only push data to the accumulator if there is some
+                KeyValuePair<int, bool> result = _storedResults.Dequeue();
+                _log.Trace("timerContinuousExperimentTick(): AddExperimentResult");
+                _resultAccumulatorService.AddExperimentResult(_accumulators[result.Key], result.Value);
+                RaisePropertyChangedForExperiment();
+            }
+        }
+
+
+
+
+        // TODO: NOT USED YET
+        public void StartExperimenting()
+        { }
+
+        private async Task StartMultipleSimulationsAsync()
+        {
+            if (!_inited)
+            {
+                throw new Exception("StartMultipleSimulationsAsync() failed because the object has not be inited");
+            }
+            if (_experimenting)
+            {
+                _log.Trace("StartMultipleSimulationsAsync() failed because the object is already experimenting");
+                return;
+            }
+
+
+            // To be pushed to the Tick function later
+
+            _log.Trace("StartMultipleSimulationsAsync() about to call QASM");
+            PolarisationResultList result = await _polarisationSimulatorService.Run(_atmosphericPolarisation_deg, _currentTelescopePolarisation_deg, ApiType.QASM_API, 100);
+            _log.Trace("StartMultipleSimulationsAsync() got result from QASM");
+
+            foreach (bool element in result.Results)
+            {
+                _log.Trace("StartMultipleSimulationsAsync() creating var for enqueing");
+                var test = new KeyValuePair<int, bool>(_currentTelescopePolarisation_deg, element);
+                _log.Trace("StartMultipleSimulationsAsync() enqueing var");
+                _storedResults.Enqueue(new KeyValuePair<int, bool>(_currentTelescopePolarisation_deg, element));
+                //_resultAccumulatorService.AddExperimentResult(_accumulators[test.Key], test.Value);
+                //await Task.Delay(100);
+                _log.Trace("StartMultipleSimulationsAsync() var enqued");
+            }
+
+            _log.Trace("StartMultipleSimulationsAsync() Setting up Timer");
+            this.experimentTimer = new System.Threading.Timer(timerTick, null, 0, 100);
+            _experimenting = true;
+            _log.Trace("StartMultipleSimulationsAsync() Timer setup");
 
 
         }
 
         // TODO: NOT USED YET
+        /*
         public void StartExperimenting(float Frequency)
         {
             _frequencyOfExperiment = Frequency;
             StartExperimenting();
         }
+        */
 
         // TODO: NOT USED YET
         public void StopExperienting()
@@ -314,22 +498,31 @@ namespace TheQTablet.Core.ViewModels.Main
                 _log.Trace("StopExperienting() failed because the object is not experimenting");
                 return;
             }
-
-            /*
-            * TODO: Stop the Experimenting thing
-            * */
+            _experimenting = false;
         }
 
-        // TODO: NOT USED YET
-        /*
-        private async Task Tick()
+        //private Queue<AngleResult> storedResults;
+        private System.Threading.Timer experimentTimer;
+        private Queue<KeyValuePair<int, bool>> _storedResults;
+        private bool _fetchingForStoredResults = false;
+
+        private void timerTick(Object state)
         {
-            // This is the function to execute ONE (1) experiment
-            // 
-            //
-            _polarisationSimulatorService.Run();
-        }
-        */
 
+            _log.Trace("timerTick() called");
+            if (!_experimenting || _storedResults == null || _storedResults.Count < 1)
+            {
+                _log.Trace("timerTick() stoping internal timer & destroy unused experimental data");
+                _storedResults.Clear();
+                experimentTimer.Dispose();
+                _experimenting = false;
+                return;
+            }
+
+            KeyValuePair<int, bool> result = _storedResults.Dequeue();
+            _log.Trace("timerTick() AddExperimentResult ");
+            _resultAccumulatorService.AddExperimentResult(_accumulators[result.Key], result.Value);
+            RaisePropertyChangedForExperiment();
+        }
     }
 }

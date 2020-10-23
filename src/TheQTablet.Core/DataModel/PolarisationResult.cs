@@ -33,4 +33,10 @@ namespace TheQTablet.Core.DataModel
         BATCH_API,
         QASM_API
     }
+
+    public class AngleResult
+    {
+        public int Angle { set; get; }
+        public bool Value { set; get; }
+    }
 }
