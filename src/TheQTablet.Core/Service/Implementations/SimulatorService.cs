@@ -226,7 +226,7 @@ namespace TheQTablet.Core.Service.Implementations
                 PolarisationResultList ret = new PolarisationResultList("no error");
                 foreach (List<int> element in res.result.c)
                 {
-                    ret.Results.Add(element[0]==1);
+                    ret.Results.Add(element[0]==0);
                 }
                 return ret;
 
