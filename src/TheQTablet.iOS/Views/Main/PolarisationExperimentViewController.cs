@@ -33,7 +33,7 @@ namespace TheQTablet.iOS.Views.Main
             _numberOfCapturedPhotonsLabel;
         public UISlider _currentTelescopeFilterRotationSlider;
         //private UIStepper _telescopeRotationStepper;
-        public UIButton RunOneExperiment, RunMultipleExperiments, StartContinuousExperimenting, StartSweepExperimenting, StopExperimenting, OverlayCos2;
+        public UIButton RunOneExperiment, RunMultipleExperiments, StartContinuousExperimenting, StartSweepExperimenting, StartAutoFixExperimenting, OverlayCos2;
 
         private PlotView _plotView;
 
@@ -137,11 +137,11 @@ namespace TheQTablet.iOS.Views.Main
             StartSweepExperimenting.SetTitle("SweepExperiment", UIControlState.Highlighted);
             StartSweepExperimenting.SetTitle("SweepExperiment", UIControlState.Selected);
             Add(StartSweepExperimenting);
-            StopExperimenting = new UIButton(UIButtonType.RoundedRect);
-            StopExperimenting.SetTitle("StopExperimenting", UIControlState.Normal);
-            StopExperimenting.SetTitle("StopExperimenting", UIControlState.Highlighted);
-            StopExperimenting.SetTitle("StopExperimenting", UIControlState.Selected);
-            Add(StopExperimenting);
+            StartAutoFixExperimenting = new UIButton(UIButtonType.RoundedRect);
+            StartAutoFixExperimenting.SetTitle("AutoFix", UIControlState.Normal);
+            StartAutoFixExperimenting.SetTitle("AutoFix", UIControlState.Highlighted);
+            StartAutoFixExperimenting.SetTitle("AutoFix", UIControlState.Selected);
+            Add(StartAutoFixExperimenting);
             OverlayCos2 = new UIButton(UIButtonType.RoundedRect);
             OverlayCos2.SetTitle("OverlayCosSqure", UIControlState.Normal);
             OverlayCos2.SetTitle("OverlayCosSqure", UIControlState.Highlighted);
@@ -192,10 +192,10 @@ namespace TheQTablet.iOS.Views.Main
                 StartSweepExperimenting.WithSameTop(RunOneExperiment),
                 StartSweepExperimenting.ToRightOf(StartContinuousExperimenting, 20.0f),
                 
-                StopExperimenting.WithSameTop(RunOneExperiment),
-                StopExperimenting.ToRightOf(StartSweepExperimenting, 20.0f),
+                StartAutoFixExperimenting.WithSameTop(RunOneExperiment),
+                StartAutoFixExperimenting.ToRightOf(StartSweepExperimenting, 20.0f),
                 OverlayCos2.WithSameTop(RunOneExperiment),
-                OverlayCos2.ToRightOf(StopExperimenting, 20.0f),
+                OverlayCos2.ToRightOf(StartAutoFixExperimenting, 20.0f),
                 
 
                 _plotView.Below(RunMultipleExperiments),
@@ -218,10 +218,7 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(OverlayCos2).For("TouchUpInside").To(vm => vm.ToggleOverlayCosSquare);
             set.Bind(StartContinuousExperimenting).For("TouchUpInside").To(vm => vm.ToggleContinuousSimulation);
             set.Bind(StartSweepExperimenting).For("TouchUpInside").To(vm => vm.ToggleAutoSweepSimulation);
-            
-
-
-
+            set.Bind(StartAutoFixExperimenting).For("TouchUpInside").To(vm => vm.ToggleAutoFixSimulation);
 
             set.Bind(_telescopeRotationLabel).To(vm => vm.TelescopePolarisation);
             set.Apply();
