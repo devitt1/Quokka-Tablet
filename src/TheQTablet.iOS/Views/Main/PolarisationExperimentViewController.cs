@@ -33,7 +33,7 @@ namespace TheQTablet.iOS.Views.Main
             _numberOfCapturedPhotonsLabel;
         public UISlider _currentTelescopeFilterRotationSlider;
         //private UIStepper _telescopeRotationStepper;
-        public UIButton RunOneExperiment, RunMultipleExperiments, StartContinuousExperimenting, StartSweepExperimenting, StartAutoFixExperimenting, OverlayCos2;
+        public UIButton RunOneExperiment, RunMultipleExperiments, StartContinuousExperimenting, StartSweepExperimenting, StartAutoFixExperimenting, OverlayCos2, ExperimentSwitcher;
 
         private PlotView _plotView;
 
@@ -148,6 +148,12 @@ namespace TheQTablet.iOS.Views.Main
             OverlayCos2.SetTitle("OverlayCosSqure", UIControlState.Selected);
             Add(OverlayCos2);
 
+            ExperimentSwitcher = new UIButton(UIButtonType.RoundedRect);
+            ExperimentSwitcher.SetTitle("SwitchExperiment", UIControlState.Normal);
+            ExperimentSwitcher.SetTitle("SwitchExperiment", UIControlState.Highlighted);
+            ExperimentSwitcher.SetTitle("SwitchExperiment", UIControlState.Selected);
+            Add(ExperimentSwitcher);
+
 
         }
         protected override void LayoutView()
@@ -179,6 +185,9 @@ namespace TheQTablet.iOS.Views.Main
                 _numberOfCapturedPhotonsStaticLabel.WithSameLeft(_numberOfExperimentsStaticLabel),
                 _numberOfCapturedPhotonsLabel.WithSameTop(_numberOfCapturedPhotonsStaticLabel),
                 _numberOfCapturedPhotonsLabel.WithSameLeft(_telescopeRotationLabel),
+
+                ExperimentSwitcher.WithSameTop(_telescopeRotationStaticLabel),
+                ExperimentSwitcher.ToRightOf(_telescopeRotationLabel, 30.0f),
 
                 RunOneExperiment.AtLeftOf(View, 10.0f),
                 RunOneExperiment.Below(_numberOfExperimentsLabel, 20f),
@@ -219,6 +228,8 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(StartContinuousExperimenting).For("TouchUpInside").To(vm => vm.ToggleContinuousSimulation);
             set.Bind(StartSweepExperimenting).For("TouchUpInside").To(vm => vm.ToggleAutoSweepSimulation);
             set.Bind(StartAutoFixExperimenting).For("TouchUpInside").To(vm => vm.ToggleAutoFixSimulation);
+            set.Bind(ExperimentSwitcher).For("TouchUpInside").To(vm => vm.ToggleExperiment);
+            
 
             set.Bind(_telescopeRotationLabel).To(vm => vm.TelescopePolarisation);
             set.Apply();
