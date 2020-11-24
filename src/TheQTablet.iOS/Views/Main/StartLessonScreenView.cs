@@ -26,15 +26,15 @@ namespace TheQTablet.iOS
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            scene = SCNScene.FromFile("Art.scnassets/environement01.scn");
+            //scene = SCNScene.FromFile("Art.scnassets/environement01.scn");
 
-            sceneView = new SCNView(View.Frame);
-            sceneView.BackgroundColor = UIColor.Clear;
-            sceneView.AutoresizingMask = UIViewAutoresizing.All;
-            sceneView.Scene = scene;
-            sceneView.AllowsCameraControl = true;
+            //sceneView = new SCNView(View.Frame);
+            //sceneView.BackgroundColor = UIColor.Clear;
+            //sceneView.AutoresizingMask = UIViewAutoresizing.All;
+            //sceneView.Scene = scene;
+            //sceneView.AllowsCameraControl = true;
 
-            this.View.InsertSubview(sceneView,0);
+            //this.View.InsertSubview(sceneView,0);
 
             startButton.BackgroundColor = ColorPalette.Accent;
             startButton.Font = FontGenerator.GenerateFont(17, UIFontWeight.Bold);
