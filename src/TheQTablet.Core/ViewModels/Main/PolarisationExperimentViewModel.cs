@@ -175,22 +175,24 @@ namespace TheQTablet.Core.ViewModels.Main
             model.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Bottom,
-                Maximum = 360,
-                Minimum = -5,
-                Title = "TIME TITLE",
-                TitleColor = OxyColors.White,
-                AxislineColor = OxyColors.LightGray,
-                TicklineColor = OxyColors.LightGray
+                Maximum = 365,
+                Minimum = 0,
+                Title = "DEGREE",
+                TitleColor = OxyColors.Black,
+                AxislineColor = OxyColors.Black,
+                TicklineColor = OxyColors.Black,
+
             });
             model.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
-                Maximum = 1.02,
-                Minimum = -0.02,
-                Title = "TARGETS TITLE",
-                TitleColor = OxyColors.White,
-                AxislineColor = OxyColors.LightGray,
-                TicklineColor = OxyColors.LightGray
+                //Maximum = 1,
+                //Minimum = -0.02,
+                //Title = "PHOTONS COLLECTED",
+                TitleColor = OxyColors.Black,
+                AxislineColor = OxyColors.Black,
+                TicklineColor = OxyColors.Black,
+                
             });
 
             // The gray rectangle showing current selection
@@ -806,7 +808,7 @@ namespace TheQTablet.Core.ViewModels.Main
             }
 
             // Number of experiment is hardcoded here at the moment
-            int _numberOfExperiments = 100;
+            int _numberOfExperiments = 10;
 
             Dictionary<int, PolarisationDataAccumulatedResult> _accumulator;
 

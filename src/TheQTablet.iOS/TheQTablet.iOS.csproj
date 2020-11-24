@@ -135,6 +135,60 @@
         <DependentUpon>RootViewController.cs</DependentUpon>
       </Compile>
     <Compile Include="Views\Main\PolarisationExperimentViewController.cs" />
+    <Compile Include="Views\Main\DetailSimulationView.cs" />
+    <Compile Include="Views\Main\DetailSimulationView.designer.cs">
+      <DependentUpon>DetailSimulationView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\LightPolaritationStoryView.cs" />
+    <Compile Include="Views\Main\LightPolaritationStoryView.designer.cs">
+      <DependentUpon>LightPolaritationStoryView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\StartLessonScreenView.cs" />
+    <Compile Include="Views\Main\StartLessonScreenView.designer.cs">
+      <DependentUpon>StartLessonScreenView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\StoryContainerView.cs" />
+    <Compile Include="Views\Main\StoryContainerView.designer.cs">
+      <DependentUpon>StoryContainerView.cs</DependentUpon>
+    </Compile>
+    <ImageAsset Include="Resources\Media.xcassets\story_background.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\story_background.imageset\story_background.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\logo.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\logo.imageset\logo.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\light_graph.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\light_graph.imageset\Group 1308.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_background.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_background.imageset\Group 1225.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_top.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_top.imageset\Group 1220.pdf" />
+    <Compile Include="Views\Main\LessonInfoView.cs" />
+    <Compile Include="Views\Main\LessonInfoView.designer.cs">
+      <DependentUpon>LessonInfoView.cs</DependentUpon>
+    </Compile>
+    <BundleResource Include="Resources\Fonts\Roboto-BlackItalic.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-Black.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-BoldItalic.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-Bold.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-MediumItalic.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-Medium.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-Italic.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-Regular.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-LightItalic.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-Light.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-ThinItalic.ttf" />
+    <BundleResource Include="Resources\Fonts\Roboto-Thin.ttf" />
+    <Compile Include="Styles\FontGenerator.cs" />
+    <Compile Include="Styles\ButtonGenerator.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\circuit.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\circuit.imageset\Group 1298.pdf" />
+    <Compile Include="Views\Main\QuantumComputingInfoView.cs" />
+    <Compile Include="Views\Main\QuantumComputingInfoView.designer.cs">
+      <DependentUpon>QuantumComputingInfoView.cs</DependentUpon>
+    </Compile>
+    <ImageAsset Include="Resources\Media.xcassets\emma.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\emma.imageset\Group 1322.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\text_background.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\text_background.imageset\Rectangle 181.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -153,13 +207,13 @@
       <Version>2.9.0</Version>
     </PackageReference>
     <PackageReference Include="MvvmCross">
-      <Version>7.0.1</Version>
+      <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="MvvmCross.Plugin.Json">
-      <Version>7.0.1</Version>
+      <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="OxyPlot.Xamarin.iOS">
       <Version>1.1.0-unstable0011</Version>
@@ -217,6 +271,25 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Main\" />
+    <Folder Include="Resources\Media.xcassets\story_background.imageset\" />
+    <Folder Include="Resources\Media.xcassets\logo.imageset\" />
+    <Folder Include="Resources\Media.xcassets\light_graph.imageset\" />
+    <Folder Include="Resources\Media.xcassets\dial_background.imageset\" />
+    <Folder Include="Resources\Media.xcassets\dial_top.imageset\" />
+    <Folder Include="Resources\Fonts\" />
+    <Folder Include="Resources\Media.xcassets\circuit.imageset\" />
+    <Folder Include="Resources\Media.xcassets\emma.imageset\" />
+    <Folder Include="Resources\Media.xcassets\text_background.imageset\" />
+    <Folder Include="Art.scnassets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />
+    <SceneKitAsset Include="Art.scnassets\happyIdleProf.scn" />
+    <SceneKitAsset Include="Art.scnassets\environement01.scn" />
+    <SceneKitAsset Include="Art.scnassets\happyIdleProf2.scn" />
+    <SceneKitAsset Include="Art.scnassets\environement.dae" />
+    <SceneKitAsset Include="Art.scnassets\gradquoka.png" />
+    <SceneKitAsset Include="Art.scnassets\happyIdleProf.dae" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -36,7 +36,7 @@ namespace TheQTablet.Core.ViewModels.Main
         private async Task NavigateToPolarisationExperimentAsync()
         {
             _log.Trace(" Navigation to PolarisationSimulatorService: awaiting");
-            var result = await _navigationService.Navigate<PolarisationExperimentViewModel>();
+            var result = await _navigationService.Navigate<StartLessonViewModel>();
             _log.Trace(" Navigation to PolarisationSimulatorService: awaited");
         }
 

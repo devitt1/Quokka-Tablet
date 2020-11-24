@@ -37,5 +37,18 @@
 	<string>Resources/Media.xcassets/LaunchImages.launchimage</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Fonts/Roboto-Black.ttf</string>
+		<string>Fonts/Roboto-BlackItalic.ttf</string>
+		<string>Fonts/Roboto-Bold.ttf</string>
+		<string>Fonts/Roboto-BoldItalic.ttf</string>
+		<string>Fonts/Roboto-Italic.ttf</string>
+		<string>Fonts/Roboto-Medium.ttf</string>
+		<string>Fonts/Roboto-MediumItalic.ttf</string>
+		<string>Fonts/Roboto-Regular.ttf</string>
+		<string>Fonts/Roboto-Thin.ttf</string>
+		<string>Fonts/Roboto-ThinItalic.ttf</string>
+	</array>
 </dict>
 </plist>

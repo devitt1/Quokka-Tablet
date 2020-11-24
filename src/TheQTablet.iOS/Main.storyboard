@@ -1,29 +1,439 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="NbK-23-BZu">
-    <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="NbK-23-BZu">
+    <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Root View Controller-->
         <scene sceneID="f2j-nP-jP6">
             <objects>
-                <viewController storyboardIdentifier="RootViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="NbK-23-BZu" sceneMemberID="viewController" customClass="RootViewController">
+                <viewController storyboardIdentifier="RootViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="NbK-23-BZu" customClass="RootViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9qq-Kc-7db"/>
                         <viewControllerLayoutGuide type="bottom" id="DWV-3Z-z8Z"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="w1w-IF-lwv">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mqm-qM-296" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-673" y="-238"/>
+            <point key="canvasLocation" x="-939" y="-238"/>
+        </scene>
+        <!--Start Lesson Screen View-->
+        <scene sceneID="Ejd-hn-HoK">
+            <objects>
+                <viewController storyboardIdentifier="StartLessonScreenView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="sDn-Cj-1by" customClass="StartLessonScreenView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Xi2-9k-qeA"/>
+                        <viewControllerLayoutGuide type="bottom" id="3eH-BB-yQq"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="edw-8y-U1A">
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="253" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="Gcl-yJ-mHH">
+                                <rect key="frame" x="477" y="90" width="240" height="286"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="BPW-6U-hYf"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Lesson 1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8fI-Ib-xFI">
+                                <rect key="frame" x="32" y="387" width="1130" height="42"/>
+                                <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="36"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Polarisation of Light " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rpn-9l-HFq">
+                                <rect key="frame" x="32" y="444" width="1130" height="67"/>
+                                <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="36"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fiO-Hp-MRC">
+                                <rect key="frame" x="32" y="577" width="1130" height="205"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_background" translatesAutoresizingMaskIntoConstraints="NO" id="gNN-HR-Rgn">
+                                        <rect key="frame" x="0.0" y="0.0" width="1130" height="205"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZGh-pi-dRI">
+                                        <rect key="frame" x="32" y="32" width="1066" height="47"/>
+                                        <string key="text">In this module we will learn about polarisation of photons as they pass through a lens.
+Using the Q we can investigate how photons change through a polarised lens.</string>
+                                        <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uCH-Fo-Qmw">
+                                        <rect key="frame" x="32" y="115" width="157" height="58"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="157" id="pC2-vB-CVU"/>
+                                            <constraint firstAttribute="height" constant="58" id="q1w-sm-ylb"/>
+                                        </constraints>
+                                        <state key="normal" title="BACK"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ch5-wN-V0o">
+                                        <rect key="frame" x="941" y="115" width="157" height="58"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="157" id="be2-Ce-6Sg"/>
+                                            <constraint firstAttribute="height" constant="58" id="doy-h6-3nr"/>
+                                        </constraints>
+                                        <state key="normal" title="LETS BEGIN"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="uCH-Fo-Qmw" secondAttribute="bottom" constant="32" id="4ao-Em-icR"/>
+                                    <constraint firstAttribute="bottom" secondItem="gNN-HR-Rgn" secondAttribute="bottom" id="C1S-d6-0Rr"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ch5-wN-V0o" secondAttribute="trailing" constant="32" id="ReH-Lw-iST"/>
+                                    <constraint firstItem="ZGh-pi-dRI" firstAttribute="top" secondItem="fiO-Hp-MRC" secondAttribute="top" constant="32" id="Tyh-cI-vZn"/>
+                                    <constraint firstAttribute="bottom" secondItem="Ch5-wN-V0o" secondAttribute="bottom" constant="32" id="ZwZ-AE-zSN"/>
+                                    <constraint firstItem="gNN-HR-Rgn" firstAttribute="top" secondItem="fiO-Hp-MRC" secondAttribute="top" id="anm-0y-bMP"/>
+                                    <constraint firstAttribute="trailing" secondItem="ZGh-pi-dRI" secondAttribute="trailing" constant="32" id="b0v-Wb-zgf"/>
+                                    <constraint firstAttribute="trailing" secondItem="gNN-HR-Rgn" secondAttribute="trailing" id="ieG-zM-VwV"/>
+                                    <constraint firstItem="uCH-Fo-Qmw" firstAttribute="leading" secondItem="fiO-Hp-MRC" secondAttribute="leading" constant="32" id="tpS-xZ-V1p"/>
+                                    <constraint firstAttribute="height" constant="205" id="yIj-8e-4uz"/>
+                                    <constraint firstItem="ZGh-pi-dRI" firstAttribute="leading" secondItem="fiO-Hp-MRC" secondAttribute="leading" constant="32" id="zcx-Nk-lWf"/>
+                                    <constraint firstItem="gNN-HR-Rgn" firstAttribute="leading" secondItem="fiO-Hp-MRC" secondAttribute="leading" id="zv3-Vc-pAI"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="fiO-Hp-MRC" firstAttribute="leading" secondItem="edw-8y-U1A" secondAttribute="leading" constant="32" id="3SY-o6-jCq"/>
+                            <constraint firstItem="fiO-Hp-MRC" firstAttribute="top" relation="lessThanOrEqual" secondItem="Rpn-9l-HFq" secondAttribute="bottom" constant="66" id="671-hk-9dy"/>
+                            <constraint firstItem="Gcl-yJ-mHH" firstAttribute="centerX" secondItem="edw-8y-U1A" secondAttribute="centerX" id="6cJ-hY-kKa"/>
+                            <constraint firstItem="Rpn-9l-HFq" firstAttribute="leading" secondItem="edw-8y-U1A" secondAttribute="leading" constant="32" id="M0v-fw-Bwf"/>
+                            <constraint firstItem="8fI-Ib-xFI" firstAttribute="top" secondItem="Gcl-yJ-mHH" secondAttribute="bottom" constant="11" id="PAh-fb-KoL"/>
+                            <constraint firstItem="Gcl-yJ-mHH" firstAttribute="top" secondItem="Xi2-9k-qeA" secondAttribute="bottom" constant="90" id="Q4u-4I-qif"/>
+                            <constraint firstAttribute="trailing" secondItem="8fI-Ib-xFI" secondAttribute="trailing" constant="32" id="iOa-XS-V9r"/>
+                            <constraint firstItem="Rpn-9l-HFq" firstAttribute="top" secondItem="8fI-Ib-xFI" secondAttribute="bottom" constant="15" id="isM-fV-De0"/>
+                            <constraint firstItem="3eH-BB-yQq" firstAttribute="top" secondItem="fiO-Hp-MRC" secondAttribute="bottom" constant="32" id="ljq-1U-bVZ"/>
+                            <constraint firstAttribute="trailing" secondItem="Rpn-9l-HFq" secondAttribute="trailing" constant="32" id="oIH-xM-pe2"/>
+                            <constraint firstAttribute="trailing" secondItem="fiO-Hp-MRC" secondAttribute="trailing" constant="32" id="ppw-OZ-lqb"/>
+                            <constraint firstItem="8fI-Ib-xFI" firstAttribute="leading" secondItem="edw-8y-U1A" secondAttribute="leading" constant="32" id="wMo-Ue-BqO"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="backButton" destination="uCH-Fo-Qmw" id="bK6-M9-M3a"/>
+                        <outlet property="startButton" destination="Ch5-wN-V0o" id="67q-ZS-tOe"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EfF-PQ-0HK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="740.7035175879397" y="-270.50359712230215"/>
+        </scene>
+        <!--Detail Simulation View-->
+        <scene sceneID="JJs-Ja-rVP">
+            <objects>
+                <viewController storyboardIdentifier="DetailSimulationView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="e9P-jl-BlW" customClass="DetailSimulationView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="rtx-Ee-tJd"/>
+                        <viewControllerLayoutGuide type="bottom" id="EG6-55-k3a"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="zZL-0S-2h7">
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Efo-Sl-p6t" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1702" y="540"/>
+        </scene>
+        <!--Story Container View-->
+        <scene sceneID="NnX-HF-N65">
+            <objects>
+                <viewController storyboardIdentifier="StoryContainerView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4JV-0j-5TL" customClass="StoryContainerView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kXW-Zh-NkB"/>
+                        <viewControllerLayoutGuide type="bottom" id="Df2-8Y-Rqa"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4Jq-sa-hOC">
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="story_background" translatesAutoresizingMaskIntoConstraints="NO" id="9hO-fc-lBM">
+                                <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emma" translatesAutoresizingMaskIntoConstraints="NO" id="etx-c9-5JH">
+                                <rect key="frame" x="283" y="464" width="221" height="233"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="233" id="Q34-L1-1uf"/>
+                                    <constraint firstAttribute="width" constant="221" id="mo9-ia-sa6"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cS6-lh-Lny">
+                                <rect key="frame" x="32" y="40" width="1130" height="76"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_background" translatesAutoresizingMaskIntoConstraints="NO" id="03h-Ny-Ua4">
+                                        <rect key="frame" x="0.0" y="0.0" width="1130" height="76"/>
+                                    </imageView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="7Hp-qG-NyU">
+                                        <rect key="frame" x="50" y="10" width="1060" height="56"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmf-Tx-aAp">
+                                                <rect key="frame" x="0.0" y="0.0" width="1014" height="56"/>
+                                                <attributedString key="attributedText">
+                                                    <fragment>
+                                                        <string key="content">The telescope has a polarisation filter and quantum circuit built in, it can record the photons that 
+hit the lens</string>
+                                                        <attributes>
+                                                            <color key="NSColor" red="0.97647058819999999" green="0.98431372549999996" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <font key="NSFont" size="18" name="Roboto-Medium"/>
+                                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eu6-Ve-01B">
+                                                <rect key="frame" x="1014" y="0.0" width="46" height="56"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="46" id="O3x-RO-EDY"/>
+                                                </constraints>
+                                                <state key="normal">
+                                                    <attributedString key="attributedTitle">
+                                                        <fragment content="NEXT">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.90196078431372551" green="0.68627450980392157" blue="0.1803921568627451" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="18" name="Roboto-Medium"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                </state>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="7Hp-qG-NyU" secondAttribute="bottom" constant="10" id="2zC-Ve-Gxi"/>
+                                    <constraint firstItem="7Hp-qG-NyU" firstAttribute="top" secondItem="cS6-lh-Lny" secondAttribute="top" constant="10" id="Bdj-ZM-NcO"/>
+                                    <constraint firstAttribute="height" constant="76" id="Ctx-NT-cnW"/>
+                                    <constraint firstItem="03h-Ny-Ua4" firstAttribute="leading" secondItem="cS6-lh-Lny" secondAttribute="leading" id="KXT-n8-vqK"/>
+                                    <constraint firstAttribute="trailing" secondItem="03h-Ny-Ua4" secondAttribute="trailing" id="RXn-af-heN"/>
+                                    <constraint firstItem="7Hp-qG-NyU" firstAttribute="leading" secondItem="cS6-lh-Lny" secondAttribute="leading" constant="50" id="SYJ-tQ-BNJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="03h-Ny-Ua4" secondAttribute="bottom" id="fXv-2q-gZH"/>
+                                    <constraint firstAttribute="trailing" secondItem="7Hp-qG-NyU" secondAttribute="trailing" constant="20" id="iDn-Ye-Syp"/>
+                                    <constraint firstItem="03h-Ny-Ua4" firstAttribute="top" secondItem="cS6-lh-Lny" secondAttribute="top" id="srV-2n-A88"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="etx-c9-5JH" firstAttribute="bottom" secondItem="9hO-fc-lBM" secondAttribute="bottom" constant="-137" id="LpG-Fh-9c5"/>
+                            <constraint firstItem="9hO-fc-lBM" firstAttribute="leading" secondItem="etx-c9-5JH" secondAttribute="trailing" constant="-504" id="Pb8-8x-a2Y"/>
+                            <constraint firstAttribute="trailing" secondItem="cS6-lh-Lny" secondAttribute="trailing" constant="32" id="XLF-3c-MQb"/>
+                            <constraint firstItem="cS6-lh-Lny" firstAttribute="top" secondItem="kXW-Zh-NkB" secondAttribute="bottom" constant="40" id="bQa-4A-rd6"/>
+                            <constraint firstItem="9hO-fc-lBM" firstAttribute="top" secondItem="kXW-Zh-NkB" secondAttribute="bottom" id="fPq-OU-FCd"/>
+                            <constraint firstItem="9hO-fc-lBM" firstAttribute="leading" secondItem="4Jq-sa-hOC" secondAttribute="leading" id="fcB-gr-uB8"/>
+                            <constraint firstAttribute="trailing" secondItem="9hO-fc-lBM" secondAttribute="trailing" id="hvT-my-lYN"/>
+                            <constraint firstAttribute="bottom" secondItem="9hO-fc-lBM" secondAttribute="bottom" id="uZB-jO-H38"/>
+                            <constraint firstItem="cS6-lh-Lny" firstAttribute="leading" secondItem="4Jq-sa-hOC" secondAttribute="leading" constant="32" id="wdt-Xc-d90"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="nextButton" destination="Eu6-Ve-01B" id="qWj-OV-bFW"/>
+                        <outlet property="storyLabel" destination="cmf-Tx-aAp" id="WJ1-2S-hHZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lbu-pj-fxK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="741" y="540"/>
+        </scene>
+        <!--Light Polaritation Story View-->
+        <scene sceneID="D7Z-7u-mhy">
+            <objects>
+                <viewController storyboardIdentifier="LightPolaritationStoryView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nmr-wO-Dcb" customClass="LightPolaritationStoryView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="TRi-gq-wJ6"/>
+                        <viewControllerLayoutGuide type="bottom" id="qIf-N8-0yx"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="w8g-BE-dev">
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y6C-zX-Nk0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="741" y="1496"/>
+        </scene>
+        <!--Lesson Info View-->
+        <scene sceneID="aG2-QV-gVl">
+            <objects>
+                <viewController storyboardIdentifier="LessonInfoView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="L9Z-Cz-mwM" customClass="LessonInfoView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jjg-4e-cpU"/>
+                        <viewControllerLayoutGuide type="bottom" id="Yla-JS-Lv8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="AhQ-Uh-p8z">
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="kmi-6g-yey">
+                                <rect key="frame" x="50" y="50" width="1094" height="714"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What is Polarisation" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DyD-0S-fzs">
+                                        <rect key="frame" x="0.0" y="0.0" width="1094" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Gek-xp-oyW"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="24"/>
+                                        <color key="textColor" red="0.062745098039215685" green="0.11764705882352941" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rxl-Oy-sEc">
+                                        <rect key="frame" x="0.0" y="35" width="1094" height="170.5"/>
+                                        <string key="text">A light wave is an electromagnetic wave that consists of vibrating electric and magnetic fields.  A single particle of light - called a photon - is a very small pulse of vibrating electric and magnetic fields that travel at the speed of light (299 792 kilometers per second).
+
+The electric and magnetic fields that make up a photon of light vibrate at 90 degrees to each other.  The wavelength of the light - its colour - is determined by the distance between two peaks in the electric field and the polarisation of light is determined by where the electric field points. 
+
+Play with the dial and see how you can rotate the polarisation of this light wave by changing where the electric field points in space.</string>
+                                        <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="17"/>
+                                        <color key="textColor" red="0.25098039215686274" green="0.31372549019607843" blue="0.41960784313725491" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="top" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="aKC-38-abQ">
+                                        <rect key="frame" x="0.0" y="210.5" width="1094" height="503.5"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="Bxa-wg-DDs">
+                                                <rect key="frame" x="0.0" y="0.0" width="854" height="405"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Light wave" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8W5-FY-y5v">
+                                                        <rect key="frame" x="0.0" y="0.0" width="854" height="25"/>
+                                                        <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="24"/>
+                                                        <color key="textColor" red="0.062745098039215685" green="0.11764705882352941" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="light_graph" translatesAutoresizingMaskIntoConstraints="NO" id="FWT-h4-Egi">
+                                                        <rect key="frame" x="0.0" y="55" width="854" height="350"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="350" id="vbx-u8-KLh"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="vSz-xh-Z0X">
+                                                <rect key="frame" x="874" y="0.0" width="220" height="315"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Theta Angle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lu9-dI-ECm">
+                                                        <rect key="frame" x="0.0" y="0.0" width="220" height="28"/>
+                                                        <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="24"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dial_background" translatesAutoresizingMaskIntoConstraints="NO" id="Yyw-fj-uSe">
+                                                        <rect key="frame" x="0.0" y="58" width="220" height="257"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="220" id="Cxa-6w-Cib"/>
+                                                        </constraints>
+                                                    </imageView>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dial_top" translatesAutoresizingMaskIntoConstraints="NO" id="c1e-mx-0Cf">
+                                <rect key="frame" x="944" y="354" width="180" height="180"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="180" id="BRF-AI-wVP"/>
+                                    <constraint firstAttribute="width" constant="180" id="rVa-S2-wLs"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="c1e-mx-0Cf" firstAttribute="centerY" secondItem="Yyw-fj-uSe" secondAttribute="centerY" constant="-3" id="2ZQ-Da-SFf"/>
+                            <constraint firstItem="Yla-JS-Lv8" firstAttribute="top" secondItem="kmi-6g-yey" secondAttribute="bottom" constant="50" id="B6h-8m-vaz"/>
+                            <constraint firstItem="kmi-6g-yey" firstAttribute="leading" secondItem="AhQ-Uh-p8z" secondAttribute="leading" constant="50" id="K3r-ad-gWG"/>
+                            <constraint firstItem="kmi-6g-yey" firstAttribute="top" secondItem="jjg-4e-cpU" secondAttribute="bottom" constant="50" id="PLN-DV-nzX"/>
+                            <constraint firstAttribute="trailing" secondItem="kmi-6g-yey" secondAttribute="trailing" constant="50" id="rKu-j0-MKQ"/>
+                            <constraint firstItem="c1e-mx-0Cf" firstAttribute="centerX" secondItem="Yyw-fj-uSe" secondAttribute="centerX" id="tJn-S7-MFy"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="80Y-2g-7wP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1727" y="-271"/>
+        </scene>
+        <!--Quantum Computing Info View-->
+        <scene sceneID="ydZ-p9-Z4O">
+            <objects>
+                <viewController storyboardIdentifier="QuantumComputingInfoView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="OCA-ly-hJl" customClass="QuantumComputingInfoView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bsJ-Dk-IMC"/>
+                        <viewControllerLayoutGuide type="bottom" id="xOD-Cc-wrv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="47M-L7-xxj">
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="U96-Tw-z4U">
+                                <rect key="frame" x="70" y="50" width="1054" height="614"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Introduction to Quantum Computing" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PxH-s1-FCw">
+                                        <rect key="frame" x="0.0" y="0.0" width="389" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="oH0-hI-b3o"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="24"/>
+                                        <color key="textColor" red="0.062745098040000002" green="0.1176470588" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UMW-m5-d3c">
+                                        <rect key="frame" x="0.0" y="62" width="1054" height="409"/>
+                                        <string key="text">(Emma) has just gotten her new telescope and the stars are very bright tonight, giving her an excellent opportunity to test it out.  
+
+The telescope contains a polarisation filter which is attached to the front lens of her telescope and a quantum sensor at the base of her telescope that will click everytime it gets hit by a single photon of light.  
+
+The polarisation filter will allow some of the photons to pass through and block others, depending on how the lens is orientated relative to the photons coming from the sky. 
+
+We can model this by a simple quantum program.  We can think of a quantum bit - a qubit - which has two states, a horizontal state and a vertical state (corresponding to two orthogonal orientations of a photons polarisation).  The lens acts to rotate polarisation which rotates my qubit between the |V&gt; and the |H&gt; states and my quantum sensor only has the ability to “click” if it gets hit with a Horizontal photon.
+</string>
+                                        <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="18"/>
+                                        <color key="textColor" red="0.25098039215686274" green="0.31372549019607843" blue="0.41960784313725491" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="circuit" translatesAutoresizingMaskIntoConstraints="NO" id="VLh-A7-woF">
+                                        <rect key="frame" x="0.0" y="503" width="386" height="111"/>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="U96-Tw-z4U" secondAttribute="trailing" constant="50" id="FpQ-xj-pn0"/>
+                            <constraint firstItem="U96-Tw-z4U" firstAttribute="leading" secondItem="47M-L7-xxj" secondAttribute="leadingMargin" constant="50" id="Sid-5j-dFA"/>
+                            <constraint firstItem="U96-Tw-z4U" firstAttribute="top" secondItem="bsJ-Dk-IMC" secondAttribute="bottom" constant="50" id="TqN-Iq-A4B"/>
+                            <constraint firstItem="xOD-Cc-wrv" firstAttribute="top" secondItem="U96-Tw-z4U" secondAttribute="bottom" constant="150" id="Uwf-HP-hsT"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kXf-nh-N17" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3194" y="-284"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="circuit" width="386" height="45"/>
+        <image name="dial_background" width="257" height="257"/>
+        <image name="dial_top" width="195" height="209"/>
+        <image name="emma" width="222" height="233"/>
+        <image name="light_graph" width="602" height="399"/>
+        <image name="logo" width="286" height="286"/>
+        <image name="story_background" width="1112" height="834"/>
+        <image name="text_background" width="1057" height="213"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

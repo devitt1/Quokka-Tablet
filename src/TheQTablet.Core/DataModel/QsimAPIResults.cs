@@ -47,11 +47,19 @@ namespace TheQTablet.Core.DataModel
     {
         public List<List<int>> c;
     }
+
+    public class QASMResult
+    {
+
+        public Dictionary<string, List<int>> C;
+    }
+
     public class QsamOperationResult
     {
-        public int error_code;
-        public string error;
-        public ClassicalRegistersList result;
+        public int ErrorCode;
+        public string Error;
+        public QASMResult Result;
     }
+
 
 }

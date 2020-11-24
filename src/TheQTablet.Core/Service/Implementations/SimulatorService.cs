@@ -26,11 +26,6 @@ namespace TheQTablet.Core.Service.Implementations
             _log = log;
         }
 
-        public async Task RunManySim()
-        {
-            await Run();
-        }
-
         /// <summary>
         /// Start a new Circuit
         /// </summary>
@@ -159,11 +154,6 @@ namespace TheQTablet.Core.Service.Implementations
             return res;
         }
 
-        //Run basic Simulation
-        public async Task<bool> Run()
-        {
-            return await Run(0, 90);
-        }
         public async Task<bool> Run(float atmospheric_rot, float telescope_rot)
         {
             return await Run(0, 90, ApiType.CLASSIC_API);
@@ -221,13 +211,13 @@ namespace TheQTablet.Core.Service.Implementations
                 };
 
                 QsamOperationResult res = await _restClient.MakeApiCallAsync<QsamOperationResult>("qasm", HttpMethod.Post, data);
-                _log.Trace("SimulatorService:RunQASM(): result = " + res.result.ToString());
+                _log.Trace("SimulatorService:RunQASM(): result = " + res.Result.ToString());
 
                 PolarisationResultList ret = new PolarisationResultList("no error");
-                foreach (List<int> element in res.result.c)
-                {
-                    ret.Results.Add(element[0]==0);
-                }
+                //foreach (List<int> element in res.Result.C)
+                //{
+                //    ret.Results.Add(element[0]==0);
+                //}
                 return ret;
 
             }
@@ -341,7 +331,6 @@ namespace TheQTablet.Core.Service.Implementations
             }
 
         }
-
 
     }
 }

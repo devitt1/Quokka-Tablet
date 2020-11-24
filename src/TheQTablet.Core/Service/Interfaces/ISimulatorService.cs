@@ -7,14 +7,7 @@ namespace TheQTablet.Core.Service.Interfaces
 {
     public interface ISimulatorService
     {
-        Task RunManySim();
-
-        /// <summary>
-        /// Run basic simulation 
-        /// </summary>
-        /// <returns></returns>
-        Task<bool> Run();
-
+      
         /// <summary>
         /// Run basic simulation 
         /// </summary>

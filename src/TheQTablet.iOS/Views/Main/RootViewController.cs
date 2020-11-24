@@ -9,7 +9,7 @@ using MvvmCross.Platforms.Ios.Presenters.Attributes;
 using TheQTablet.Core.ViewModels.Main;
 using UIKit;
 
-namespace TheQTablet.iOS.Views.Main
+namespace TheQTablet.iOS
 {
     [MvxRootPresentation(WrapInNavigationController = true)]
     public partial class RootViewController : BaseViewController<RootViewModel>
@@ -28,16 +28,16 @@ namespace TheQTablet.iOS.Views.Main
 
             _labelMessage = new UILabel
             {
-                Text = "App scaffolded with MvxScaffolding",
+                Text = "The Q Simulator",
                 TextAlignment = UITextAlignment.Center
             };
             Add(_labelMessage);
 
 
             StartSimulationButton = new UIButton(UIButtonType.RoundedRect);
-            StartSimulationButton.SetTitle("Light Polarisation Experiment Page", UIControlState.Normal);
-            StartSimulationButton.SetTitle("Light Polarisation Experiment Page", UIControlState.Highlighted);
-            StartSimulationButton.SetTitle("Light Polarisation Experiment Page", UIControlState.Selected);
+            StartSimulationButton.SetTitle("Light Polarisation Lesson", UIControlState.Normal);
+            StartSimulationButton.SetTitle("Light Polarisation Lesson", UIControlState.Highlighted);
+            StartSimulationButton.SetTitle("Light Polarisation Lesson", UIControlState.Selected);
             Add(StartSimulationButton);
 
         }

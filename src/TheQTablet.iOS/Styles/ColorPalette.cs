@@ -1,20 +1,20 @@
 ﻿using System;
 using UIKit;
 
-namespace TheQTablet.iOS.Styles
+namespace TheQTablet.iOS
 {
     public static class ColorPalette
     {
-        public static UIColor Primary => FromHexString("#24b780");
+        public static UIColor Primary => FromHexString("#1C3351");
         public static UIColor PrimaryDark => FromHexString("#008653");
         public static UIColor PrimaryLight => FromHexString("#64eab0");
 
-        public static UIColor Accent => FromHexString("#4c555a");
-        public static UIColor AccentDark => FromHexString("#242c31");
-        public static UIColor AccentLight => FromHexString("#788187");
+        public static UIColor Accent => FromHexString("#E6AF2E");
+        public static UIColor AccentDark => FromHexString("#1C3351");
+        public static UIColor AccentLight => FromHexString("#FFFFFF");
 
-        public static UIColor PrimaryText => FromHexString("#000000");
-        public static UIColor SecondaryText => FromHexString("#ffffff");
+        public static UIColor PrimaryText => FromHexString("#101E57");
+        public static UIColor SecondaryText => FromHexString("#40506B");
 
         private static UIColor FromHexString(string hexValue)
         {
