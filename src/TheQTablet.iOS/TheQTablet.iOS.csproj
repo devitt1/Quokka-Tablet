@@ -189,6 +189,12 @@
     <ImageAsset Include="Resources\Media.xcassets\emma.imageset\Group 1322.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\text_background.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\text_background.imageset\Rectangle 181.pdf" />
+    <Compile Include="Views\Main\PlotViewController.cs" />
+    <Compile Include="Views\Custom\KnobView.cs" />
+    <BundleResource Include="Resources\dial.png" />
+    <BundleResource Include="Resources\dialcopy.png" />
+    <BundleResource Include="Resources\pointer.png" />
+    <BundleResource Include="Resources\circuit.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -281,6 +287,7 @@
     <Folder Include="Resources\Media.xcassets\emma.imageset\" />
     <Folder Include="Resources\Media.xcassets\text_background.imageset\" />
     <Folder Include="Art.scnassets\" />
+    <Folder Include="Views\Custom\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />

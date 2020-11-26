@@ -16,6 +16,14 @@ namespace TheQTablet.iOS
         public static UIColor PrimaryText => FromHexString("#101E57");
         public static UIColor SecondaryText => FromHexString("#40506B");
 
+        public static UIColor BackgroundLight => FromHexString("#F9FBFF");
+        public static UIColor BackgroundDark => FromHexString("#C5D5E2");
+
+        public static UIColor PlotBackgroundLight => FromHexString("#EDF2F5");
+        public static UIColor PlotBackgroundDark => FromHexString("#D0DAE1");
+
+        public static UIColor AngleText => FromHexString("#4B88D5");
+
         private static UIColor FromHexString(string hexValue)
         {
             var colorString = hexValue.Replace("#", "");
