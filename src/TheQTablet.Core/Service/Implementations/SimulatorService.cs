@@ -214,10 +214,10 @@ namespace TheQTablet.Core.Service.Implementations
                 _log.Trace("SimulatorService:RunQASM(): result = " + res.Result.ToString());
 
                 PolarisationResultList ret = new PolarisationResultList("no error");
-                //foreach (List<int> element in res.Result.C)
-                //{
-                //    ret.Results.Add(element[0]==0);
-                //}
+                foreach (List<int> element in res.Result.C)
+                {
+                    ret.Results.Add(element[0] == 0);
+                }
                 return ret;
 
             }

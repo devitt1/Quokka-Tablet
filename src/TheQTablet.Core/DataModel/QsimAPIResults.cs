@@ -51,7 +51,7 @@ namespace TheQTablet.Core.DataModel
     public class QASMResult
     {
 
-        public Dictionary<string, List<int>> C;
+        public List<List<int>> C;
     }
 
     public class QsamOperationResult
