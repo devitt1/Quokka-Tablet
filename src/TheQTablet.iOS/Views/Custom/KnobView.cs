@@ -24,13 +24,14 @@ namespace TheQTablet.iOS.Views.Custom
             {
                 _angle = AsAngle(value);
                 _innerCircle.Transform = CGAffineTransform.MakeRotation((float) ToRad(SmoothAngle));
-                _innerCircle.Layer.ShadowOffset = AngleCorrectedOffset(SmoothAngle, new CGSize(0, 4));
+                _innerCircle.Layer.ShadowOffset = AngleCorrectedOffset(SmoothAngle, _shadowOffset);
                 _angleLabel.Text = AngleText(SteppedAngle);
                 SteppedAngleChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
         public int Step;
+        private CGSize _shadowOffset;
 
         public event EventHandler SteppedAngleChanged;
         public event EventHandler TouchUp;
@@ -38,6 +39,7 @@ namespace TheQTablet.iOS.Views.Custom
         public KnobView()
         {
             Step = 5;
+            _shadowOffset = new CGSize(0, 4);
 
             _outerRing = new UIImageView
             {
@@ -54,6 +56,7 @@ namespace TheQTablet.iOS.Views.Custom
             _innerCircle.Layer.ShadowOpacity = 0.5f;
             _innerCircle.Layer.ShadowRadius = 7;
             _innerCircle.Layer.ShadowColor = UIColor.Black.CGColor;
+            _innerCircle.Layer.ShadowOffset = _shadowOffset;
             AddSubview(_innerCircle);
 
             _angleLabel = new UILabel

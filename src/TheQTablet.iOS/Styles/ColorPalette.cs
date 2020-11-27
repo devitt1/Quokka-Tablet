@@ -23,6 +23,7 @@ namespace TheQTablet.iOS
         public static UIColor PlotBackgroundDark => FromHexString("#D0DAE1");
 
         public static UIColor AngleText => FromHexString("#4B88D5");
+        public static UIColor PlotBlue => FromHexString("#5B9CEF");
 
         private static UIColor FromHexString(string hexValue)
         {

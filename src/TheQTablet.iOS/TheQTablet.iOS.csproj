@@ -196,6 +196,7 @@
     <BundleResource Include="Resources\circuit.png" />
     <BundleResource Include="Resources\cross.png" />
     <Compile Include="Views\Custom\ToggleButton.cs" />
+    <Compile Include="Views\Custom\KnobContainerView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

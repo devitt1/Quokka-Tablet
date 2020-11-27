@@ -33,15 +33,12 @@ namespace TheQTablet.iOS.Views.Main
         private UILabel _functionButtonsTitle;
         private ToggleButton _cosOverlayButton;
 
-        private UIStackView _knobContainer;
-        private UILabel _knobHeader;
-        private KnobView _knobControl;
+        private KnobContainerView _telescopeAngleKnob;
 
         private UIView _sceneView;
 
         private CAGradientLayer _viewGradient;
         private CAGradientLayer _plotGradient;
-        private CAGradientLayer _knobContainerGradient;
 
         public PlotViewController()
         {
@@ -186,51 +183,12 @@ namespace TheQTablet.iOS.Views.Main
             };
             _functionButtonsStack.AddArrangedSubview(_cosOverlayButton);
 
-            _knobContainer = new UIStackView()
+            _telescopeAngleKnob = new KnobContainerView()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Axis = UILayoutConstraintAxis.Vertical,
-                Alignment = UIStackViewAlignment.Center,
-                Distribution = UIStackViewDistribution.FillProportionally,
-                LayoutMarginsRelativeArrangement = true,
-                LayoutMargins = new UIEdgeInsets
-                {
-                    Top = 20,
-                    Bottom = 4,
-                    Left = 4,
-                    Right = 4,
-                },
-                Spacing = 20,
-            };
-            _knobContainer.Layer.ShadowColor = UIColor.Black.CGColor;
-            _knobContainer.Layer.ShadowOpacity = 0.25f;
-            _knobContainer.Layer.ShadowOffset = new CGSize(5, 0);
-            _knobContainer.Layer.ShadowRadius = 0;
-            View.AddSubview(_knobContainer);
 
-            _knobContainerGradient = new CAGradientLayer();
-            _knobContainerGradient.Colors = new CGColor[] {
-                ColorPalette.PlotBackgroundLight.CGColor,
-                ColorPalette.PlotBackgroundDark.CGColor
             };
-            _knobContainer.Layer.AddSublayer(_knobContainerGradient);
-
-            _knobHeader = new UILabel
-            {
-                TranslatesAutoresizingMaskIntoConstraints = false,
-                Text = "θ TELESCOPE LENS",
-                Font = FontGenerator.GenerateFont(16, UIFontWeight.Bold),
-                TextColor = ColorPalette.SecondaryText,
-            };
-            _knobHeader.SetContentCompressionResistancePriority((float) UILayoutPriority.Required, UILayoutConstraintAxis.Vertical);
-            _knobContainer.AddArrangedSubview(_knobHeader);
-
-            _knobControl = new KnobView
-            {
-                TranslatesAutoresizingMaskIntoConstraints = false,
-                Step = 5,
-            };
-            _knobContainer.AddArrangedSubview(_knobControl);
+            View.AddSubview(_telescopeAngleKnob);
 
             _sceneView = new UIView()
             {
@@ -249,7 +207,7 @@ namespace TheQTablet.iOS.Views.Main
             _closeCross.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.03f).Active = true;
 
             _plotContainer.TopAnchor.ConstraintEqualTo(_heading.BottomAnchor, 22).Active = true;
-            _plotContainer.BottomAnchor.ConstraintEqualTo(_knobContainer.TopAnchor, -22).Active = true;
+            _plotContainer.BottomAnchor.ConstraintEqualTo(_sceneView.TopAnchor, -22).Active = true;
             _plotContainer.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 16).Active = true;
             _plotContainer.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
 
@@ -274,10 +232,10 @@ namespace TheQTablet.iOS.Views.Main
 
             _cosOverlayButton.WidthAnchor.ConstraintEqualTo(_functionButtonsStack.WidthAnchor, 0.75f).Active = true;
 
-            _knobContainer.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.22f).Active = true;
-            _knobContainer.TopAnchor.ConstraintEqualTo(_sceneView.TopAnchor).Active = true;
-            _knobContainer.BottomAnchor.ConstraintEqualTo(View.BottomAnchor).Active = true;
-            _knobContainer.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 16).Active = true;
+            _telescopeAngleKnob.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.22f).Active = true;
+            _telescopeAngleKnob.TopAnchor.ConstraintEqualTo(_sceneView.TopAnchor).Active = true;
+            _telescopeAngleKnob.BottomAnchor.ConstraintEqualTo(View.BottomAnchor).Active = true;
+            _telescopeAngleKnob.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 16).Active = true;
 
             _sceneView.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.33f).Active = true;
             _sceneView.HeightAnchor.ConstraintEqualTo(View.HeightAnchor, 0.25f).Active = true;
@@ -286,7 +244,7 @@ namespace TheQTablet.iOS.Views.Main
 
             var set = CreateBindingSet();
             set.Bind(_plotView).For(v => v.Model).To(vm => vm.PhotonPlotModel);
-            set.Bind(_knobControl).For(v => v.SteppedAngle).To(vm => vm.TelescopeAngle);
+            set.Bind(_telescopeAngleKnob.KnobControl).For(v => v.SteppedAngle).To(vm => vm.TelescopeAngle);
             set.Bind(_sceneView).For("Tap").To(vm => vm.CloseModalCommand);
             set.Bind(_closeCross).For("Tap").To(vm => vm.CloseModalCommand);
             set.Bind(_cosOverlayButton).For(v => v.Active).To(vm => vm.ShowCosOverlay);
@@ -300,7 +258,6 @@ namespace TheQTablet.iOS.Views.Main
             // Set gradient frame size after views have been laid out
             _viewGradient.Frame = View.Bounds;
             _plotGradient.Frame = _plotContainer.Bounds;
-            _knobContainerGradient.Frame = _knobContainer.Bounds;
         }
     }
 }
