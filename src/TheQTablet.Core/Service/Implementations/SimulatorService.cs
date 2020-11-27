@@ -197,8 +197,8 @@ namespace TheQTablet.Core.Service.Implementations
         {
             _log.Trace("SimulatorService:RunQASM()");
 
-            float atm_rot_rad = (float)(2*atmospheric_rot * (2 * Math.PI) / 360);
-            float tel_rot_rad = (float)(2*telescope_rot * (2 * Math.PI) / 360);
+            float atm_rot_rad = (float)(atmospheric_rot * (2 * Math.PI) / 360);
+            float tel_rot_rad = (float)(telescope_rot * (2 * Math.PI) / 360);
             String QasmScript = String.Format("OPENQASM 2.0;\nqreg q[1];\ncreg c[1];\nrx({0}) q[0];\nrx({1}) q[0];\nmeasure q[0] -> c[0];", atm_rot_rad, tel_rot_rad);
 
             try

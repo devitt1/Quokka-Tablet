@@ -13,31 +13,12 @@ using UIKit;
 
 namespace TheQTablet.iOS.Views.Main
 {
-    public class AngleDisplayConverter : MvxValueConverter<int, string>
-    {
-        protected override string Convert(int value, Type targetType, object parameter, CultureInfo cultureInfo)
-        {
-            return value + "°";
-        }
-    }
-
-    public class DegreesToRadiansConverter : MvxValueConverter<int, float>
-    {
-        protected override float Convert(int value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (float) (value * ((float)Math.PI / 180.0f));
-        }
-
-        protected override int ConvertBack(float value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (int) (value * (180.0f / (float)Math.PI));
-        }
-    }
-
-    [MvxChildPresentation]
+    [MvxModalPresentation(WrapInNavigationController = false)]
     public partial class PlotViewController : MvxViewController<PlotViewModel>
     {
         private UILabel _heading;
+        private UIImageView _closeCross;
+
         private UIView _plotContainer;
         private UIStackView _plotHeader;
         private UIStackView _plotHeaderCircuit;
@@ -46,10 +27,16 @@ namespace TheQTablet.iOS.Views.Main
         private UILabel _plotHeaderTitle;
         private UILabel _plotHeaderProgress;
         private PlotView _plotView;
+
+        private UIView _functionButtonsContainer;
+        private UIStackView _functionButtonsStack;
+        private UILabel _functionButtonsTitle;
+        private ToggleButton _cosOverlayButton;
+
         private UIStackView _knobContainer;
         private UILabel _knobHeader;
         private KnobView _knobControl;
-        //private UILabel _telescopeAngle;
+
         private UIView _sceneView;
 
         private CAGradientLayer _viewGradient;
@@ -82,6 +69,14 @@ namespace TheQTablet.iOS.Views.Main
                 TextColor = ColorPalette.SecondaryText,
             };
             View.AddSubview(_heading);
+
+            _closeCross = new UIImageView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Image = new UIImage("cross.png"),
+            };
+            _closeCross.Layer.AffineTransform = CGAffineTransform.MakeRotation((float) Math.PI / 2.0f);
+            View.AddSubview(_closeCross);
 
             _plotContainer = new UIView
             {
@@ -159,6 +154,38 @@ namespace TheQTablet.iOS.Views.Main
             };
             _plotContainer.AddSubview(_plotView);
 
+            _functionButtonsContainer = new UIView()
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+            };
+            _plotContainer.AddSubview(_functionButtonsContainer);
+
+            _functionButtonsStack = new UIStackView()
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Alignment = UIStackViewAlignment.Center,
+                Distribution = UIStackViewDistribution.EqualSpacing,
+                Axis = UILayoutConstraintAxis.Vertical,
+                Spacing = 20,
+            };
+            _functionButtonsContainer.AddSubview(_functionButtonsStack);
+
+            _functionButtonsTitle = new UILabel
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Text = "GRAPH UNDERLAY",
+                Font = FontGenerator.GenerateFont(16, UIFontWeight.Bold),
+                TextAlignment = UITextAlignment.Center,
+                TextColor = ColorPalette.SecondaryText,
+            };
+            _functionButtonsStack.AddArrangedSubview(_functionButtonsTitle);
+
+            _cosOverlayButton = new ToggleButton
+            {
+                Text = "Cos(x + 30°)",
+            };
+            _functionButtonsStack.AddArrangedSubview(_cosOverlayButton);
+
             _knobContainer = new UIStackView()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
@@ -201,16 +228,9 @@ namespace TheQTablet.iOS.Views.Main
             _knobControl = new KnobView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
+                Step = 5,
             };
             _knobContainer.AddArrangedSubview(_knobControl);
-
-            //_telescopeAngle = new UILabel
-            //{
-            //    TranslatesAutoresizingMaskIntoConstraints = false,
-            //    Font = FontGenerator.GenerateFont(20, UIFontWeight.Regular),
-            //    TextColor = ColorPalette.AngleText,
-            //};
-            //_knobControl.AddSubview(_telescopeAngle);
 
             _sceneView = new UIView()
             {
@@ -222,6 +242,11 @@ namespace TheQTablet.iOS.Views.Main
 
             _heading.CenterXAnchor.ConstraintEqualTo(View.CenterXAnchor).Active = true;
             _heading.TopAnchor.ConstraintEqualTo(View.TopAnchor, 22).Active = true;
+
+            _closeCross.CenterYAnchor.ConstraintEqualTo(_heading.CenterYAnchor).Active = true;
+            _closeCross.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
+            _closeCross.WidthAnchor.ConstraintEqualTo(_closeCross.HeightAnchor).Active = true;
+            _closeCross.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.03f).Active = true;
 
             _plotContainer.TopAnchor.ConstraintEqualTo(_heading.BottomAnchor, 22).Active = true;
             _plotContainer.BottomAnchor.ConstraintEqualTo(_knobContainer.TopAnchor, -22).Active = true;
@@ -236,15 +261,23 @@ namespace TheQTablet.iOS.Views.Main
             _plotView.TopAnchor.ConstraintEqualTo(_plotHeader.BottomAnchor).Active = true;
             _plotView.BottomAnchor.ConstraintEqualTo(_plotContainer.BottomAnchor).Active = true;
             _plotView.LeftAnchor.ConstraintEqualTo(_plotContainer.LeftAnchor).Active = true;
-            _plotView.RightAnchor.ConstraintEqualTo(_plotContainer.RightAnchor, -150).Active = true;
+            _plotView.RightAnchor.ConstraintEqualTo(_functionButtonsContainer.LeftAnchor).Active = true;
+
+            _functionButtonsContainer.WidthAnchor.ConstraintEqualTo(_plotContainer.WidthAnchor, 0.15f).Active = true;
+            _functionButtonsContainer.RightAnchor.ConstraintEqualTo(_plotContainer.RightAnchor).Active = true;
+            _functionButtonsContainer.TopAnchor.ConstraintEqualTo(_plotHeader.BottomAnchor).Active = true;
+            _functionButtonsContainer.BottomAnchor.ConstraintEqualTo(_plotView.BottomAnchor, -100).Active = true;
+
+            _functionButtonsStack.WidthAnchor.ConstraintEqualTo(_functionButtonsContainer.WidthAnchor).Active = true;
+            _functionButtonsStack.CenterYAnchor.ConstraintEqualTo(_functionButtonsContainer.CenterYAnchor).Active = true;
+            _functionButtonsStack.CenterXAnchor.ConstraintEqualTo(_functionButtonsContainer.CenterXAnchor).Active = true;
+
+            _cosOverlayButton.WidthAnchor.ConstraintEqualTo(_functionButtonsStack.WidthAnchor, 0.75f).Active = true;
 
             _knobContainer.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.22f).Active = true;
             _knobContainer.TopAnchor.ConstraintEqualTo(_sceneView.TopAnchor).Active = true;
             _knobContainer.BottomAnchor.ConstraintEqualTo(View.BottomAnchor).Active = true;
             _knobContainer.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 16).Active = true;
-
-            //_telescopeAngle.CenterXAnchor.ConstraintEqualTo(_knobControl.CenterXAnchor).Active = true;
-            //_telescopeAngle.CenterYAnchor.ConstraintEqualTo(_knobControl.CenterYAnchor).Active = true;
 
             _sceneView.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.33f).Active = true;
             _sceneView.HeightAnchor.ConstraintEqualTo(View.HeightAnchor, 0.25f).Active = true;
@@ -253,9 +286,10 @@ namespace TheQTablet.iOS.Views.Main
 
             var set = CreateBindingSet();
             set.Bind(_plotView).For(v => v.Model).To(vm => vm.PhotonPlotModel);
-            //set.Bind(_telescopeAngle).To(vm => vm.TelescopeAngle).WithConversion("AngleDisplay");
-            set.Bind(_knobControl).For(v => v.Angle).To(vm => vm.TelescopeAngle).WithConversion("DegreesToRadians");
-            //set.Bind(_knobControl).For("TouchUp").To(vm => vm.TriggerOneTimeRun);
+            set.Bind(_knobControl).For(v => v.SteppedAngle).To(vm => vm.TelescopeAngle);
+            set.Bind(_sceneView).For("Tap").To(vm => vm.CloseModalCommand);
+            set.Bind(_closeCross).For("Tap").To(vm => vm.CloseModalCommand);
+            set.Bind(_cosOverlayButton).For(v => v.Active).To(vm => vm.ShowCosOverlay);
             set.Apply();
         }
 

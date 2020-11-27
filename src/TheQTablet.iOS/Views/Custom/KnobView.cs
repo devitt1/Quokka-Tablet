@@ -12,36 +12,44 @@ namespace TheQTablet.iOS.Views.Custom
         private UILabel _angleLabel;
 
         private float _startAngle;
-        private float _angle;
-        public float Angle
+        private int _angle;
+        private int SmoothAngle
         {
             get => _angle;
+        }
+        public int SteppedAngle
+        {
+            get => AsAngle((int) Round(_angle, Step));
             set
             {
                 _angle = AsAngle(value);
-                _innerCircle.Transform = CGAffineTransform.MakeRotation(_angle);
-                _innerCircle.Layer.ShadowOffset = AngleCorrectedOffset(_angle, new CGSize(0, 2));
-                _angleLabel.Text = AngleText(_angle);
-                AngleChanged?.Invoke(this, EventArgs.Empty);
+                _innerCircle.Transform = CGAffineTransform.MakeRotation((float) ToRad(SmoothAngle));
+                _innerCircle.Layer.ShadowOffset = AngleCorrectedOffset(SmoothAngle, new CGSize(0, 4));
+                _angleLabel.Text = AngleText(SteppedAngle);
+                SteppedAngleChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        public event EventHandler AngleChanged;
+        public int Step;
+
+        public event EventHandler SteppedAngleChanged;
         public event EventHandler TouchUp;
 
         public KnobView()
         {
+            Step = 5;
+
             _outerRing = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Image = new UIImage("dial.png")
+                Image = new UIImage("dial.png"),
             };
             AddSubview(_outerRing);
 
             _innerCircle = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Image = new UIImage("pointer.png"),
+                Image = new UIImage("dial_pointer.png"),
             };
             _innerCircle.Layer.ShadowOpacity = 0.5f;
             _innerCircle.Layer.ShadowRadius = 7;
@@ -53,7 +61,7 @@ namespace TheQTablet.iOS.Views.Custom
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Font = FontGenerator.GenerateFont(20, UIFontWeight.Regular),
                 TextColor = ColorPalette.AngleText,
-                Text = AngleText(Angle),
+                Text = AngleText(SmoothAngle),
             };
             AddSubview(_angleLabel);
 
@@ -76,7 +84,7 @@ namespace TheQTablet.iOS.Views.Custom
             base.TouchesBegan(touches, evt);
 
             var touch = touches.AnyObject as UITouch;
-            _startAngle = Angle - GetTouchAngle(touch);
+            _startAngle = (float) ToRad(SmoothAngle) - GetTouchAngle(touch);
         }
 
         public override void TouchesMoved(NSSet touches, UIEvent evt)
@@ -85,12 +93,13 @@ namespace TheQTablet.iOS.Views.Custom
 
             var touch = touches.AnyObject as UITouch;
             var angle = GetTouchAngle(touch) + _startAngle;
-            Angle = (float)angle;
+            SteppedAngle = (int) ToDeg(angle);
         }
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
             base.TouchesEnded(touches, evt);
+            SteppedAngle = SteppedAngle;
             TouchUp?.Invoke(this, EventArgs.Empty);
         }
 
@@ -102,27 +111,43 @@ namespace TheQTablet.iOS.Views.Custom
             return (float)Math.Atan2((touchLocation.Y - centre.Y), (touchLocation.X - centre.X));
         }
 
-        private static float AsAngle(float value)
+        private static CGSize AngleCorrectedOffset(float angleDeg, CGSize offset)
         {
-            var remainder = value % ((float) Math.PI * 2.0f);
+            var angleRad = ToRad(angleDeg);
+            return new CGSize(
+                offset.Height * (float) Math.Sin(angleRad) + offset.Width * (float)Math.Cos(angleRad),
+                offset.Height * (float) Math.Cos(angleRad) + offset.Width * (float)Math.Sin(angleRad)
+            );
+        }
+
+        private string AngleText(int angle)
+        {
+            return angle + "°";
+        }
+
+        private static int AsAngle(int value)
+        {
+            var remainder = value % 360;
             if (remainder < 0)
             {
-                remainder += (float) Math.PI * 2.0f;
+                remainder += 360;
             }
             return remainder;
         }
 
-        private static CGSize AngleCorrectedOffset(float angle, CGSize offset)
+        private double Round(double number, double increment, double offset = 0)
         {
-            return new CGSize(
-                offset.Height * (float) Math.Sin(angle) + offset.Width * (float)Math.Cos(angle),
-                offset.Height * (float) Math.Cos(angle) + offset.Width * (float)Math.Sin(angle)
-            );
+            return Math.Round((number - offset) / increment) * increment + offset;
         }
 
-        private string AngleText(float angle)
+        private static double ToRad(double deg)
         {
-            return ((int) (angle * (180 / Math.PI))) + "°";
+            return deg * (Math.PI / 180.0);
+        }
+
+        private static double ToDeg(double deg)
+        {
+            return deg * (180.0 / Math.PI);
         }
     }
 }

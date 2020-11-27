@@ -24,7 +24,7 @@ namespace TheQTablet.Core.ViewModels.Main
             }
             else
             {
-                await NavigationService.Navigate<PolarisationExperimentViewModel>();
+                await NavigationService.Navigate<PlotViewModel>();
             }
         }
 

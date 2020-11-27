@@ -34,7 +34,8 @@ namespace TheQTablet.Core.ViewModels.Main
     {
         private ISimulatorService _simulatorService;
 
-        public MvxAsyncCommand TriggerOneTimeRun { get; private set; }
+        public MvxAsyncCommand TriggerOneTimeRunCommand { get; private set; }
+        public MvxCommand CloseModalCommand { get; private set; }
 
         public PlotViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService, ISimulatorService simulatorService) : base(logProvider, navigationService)
         {
@@ -47,12 +48,14 @@ namespace TheQTablet.Core.ViewModels.Main
             }
             _telescopeAngle = 0;
             _atmosphereAngle = 30;
+            _showCosOverlay = false;
 
             _runTimer = new Timer(1000);
             _runTimer.Elapsed += TimerCallback;
             _runTimer.AutoReset = true;
 
-            TriggerOneTimeRun = new MvxAsyncCommand(RunOneTime);
+            TriggerOneTimeRunCommand = new MvxAsyncCommand(RunOneTime);
+            CloseModalCommand = new MvxCommand(Close);
         }
 
         private PlotModel CreatePlotModel()
@@ -80,13 +83,12 @@ namespace TheQTablet.Core.ViewModels.Main
             };
             model.Axes.Add(xAxis);
 
-            var yPadding = 0.1;
             var yAxis = new LinearAxis()
             {
                 Position = AxisPosition.Left,
                 Title = "PHOTONS COLLECTED",
-                Minimum = -yPadding, // Padding to show 0 values
-                Maximum = 1 + yPadding,
+                Minimum = -5, // Padding to show 0 values
+                Maximum = 105,
                 //MajorStep = 25,
                 TickStyle = TickStyle.None,
                 AxisTickToLabelDistance = 22,
@@ -100,12 +102,21 @@ namespace TheQTablet.Core.ViewModels.Main
             };
             model.Axes.Add(yAxis);
 
+            if(_showCosOverlay)
+            {
+                model.Series.Add(new FunctionSeries(PlotCosFunction, 0, 359, 0.1, "Cos(x + 30°)")
+                {
+                    Color = OxyColor.Parse("#B6CFE9"),
+                    StrokeThickness = 3,
+                });
+            }
+
             var points = new Collection<ScatterPoint>();
             for(var i = 0; i < _results.Length; i++)
             {
                 if (_results[i].count > 0)
                 {
-                    points.Add(new ScatterPoint(i, _results[i].Averaged));
+                    points.Add(new ScatterPoint(i, _results[i].Averaged * 100));
                 }
             }
             var scatterSeries = new ScatterSeries()
@@ -114,6 +125,7 @@ namespace TheQTablet.Core.ViewModels.Main
                 MarkerType = MarkerType.Circle,
                 MarkerSize = 4,
                 MarkerFill = OxyColor.Parse("#5B9CEF"),
+                Title = "Photons"
             };
             model.Series.Add(scatterSeries);
 
@@ -140,6 +152,17 @@ namespace TheQTablet.Core.ViewModels.Main
             set
             {
                 SetProperty(ref _atmosphereAngle, AsAngle(value));
+            }
+        }
+
+        private bool _showCosOverlay;
+        public bool ShowCosOverlay
+        {
+            get => _showCosOverlay;
+            set
+            {
+                _showCosOverlay = value;
+                RaisePropertyChanged(() => PhotonPlotModel);
             }
         }
 
@@ -174,6 +197,11 @@ namespace TheQTablet.Core.ViewModels.Main
             await RunOneTime();
         }
 
+        private void Close()
+        {
+            NavigationService.Close(this);
+        }
+
         private static int AsAngle(int value)
         {
             var remainder = value % 360;
@@ -182,6 +210,17 @@ namespace TheQTablet.Core.ViewModels.Main
                 remainder += 360;
             }
             return remainder;
+        }
+
+        private static double ToRad(double deg)
+        {
+            return deg * (Math.PI / 180.0);
+        }
+
+        private double PlotCosFunction(double x)
+        {
+            var cos = Math.Cos(ToRad(x + AtmosphereAngle));
+            return (1 + cos) * 100 * 0.5;
         }
     }
 }

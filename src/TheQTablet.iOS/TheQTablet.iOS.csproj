@@ -192,9 +192,10 @@
     <Compile Include="Views\Main\PlotViewController.cs" />
     <Compile Include="Views\Custom\KnobView.cs" />
     <BundleResource Include="Resources\dial.png" />
-    <BundleResource Include="Resources\dialcopy.png" />
-    <BundleResource Include="Resources\pointer.png" />
+    <BundleResource Include="Resources\dial_pointer.png" />
     <BundleResource Include="Resources\circuit.png" />
+    <BundleResource Include="Resources\cross.png" />
+    <Compile Include="Views\Custom\ToggleButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
