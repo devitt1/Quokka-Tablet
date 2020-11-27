@@ -13,6 +13,14 @@ using UIKit;
 
 namespace TheQTablet.iOS.Views.Main
 {
+    public class ProgressLabelConverter : MvxValueConverter<float, string>
+    {
+        protected override string Convert(float value, Type targetType, object parameter, CultureInfo cultureInfo)
+        {
+            return "COLLECTION PROGRESS " + (value * 100).ToString("0.#") + "%";
+        }
+    }
+
     [MvxModalPresentation(WrapInNavigationController = false)]
     public partial class PlotViewController : MvxViewController<PlotViewModel>
     {
@@ -25,7 +33,9 @@ namespace TheQTablet.iOS.Views.Main
         private UILabel _plotHeaderCircuitTitle;
         private UIImageView _plotHeaderCircuitImage;
         private UILabel _plotHeaderTitle;
-        private UILabel _plotHeaderProgress;
+        private UIStackView _plotHeaderProgress;
+        private UILabel _plotHeaderProgressTitle;
+        private UIProgressView _plotHeaderProgressBar;
         private PlotView _plotView;
 
         private UIView _functionButtonsContainer;
@@ -51,10 +61,12 @@ namespace TheQTablet.iOS.Views.Main
 
             View.BackgroundColor = UIColor.White;
 
-            _viewGradient = new CAGradientLayer();
-            _viewGradient.Colors = new CGColor[] {
-                ColorPalette.BackgroundLight.CGColor,
-                ColorPalette.BackgroundDark.CGColor
+            _viewGradient = new CAGradientLayer
+            {
+                Colors = new CGColor[] {
+                    ColorPalette.BackgroundLight.CGColor,
+                    ColorPalette.BackgroundDark.CGColor
+                }
             };
             View.Layer.AddSublayer(_viewGradient);
 
@@ -81,10 +93,12 @@ namespace TheQTablet.iOS.Views.Main
             };
             View.AddSubview(_plotContainer);
 
-            _plotGradient = new CAGradientLayer();
-            _plotGradient.Colors = new CGColor[] {
-                ColorPalette.PlotBackgroundLight.CGColor,
-                ColorPalette.PlotBackgroundDark.CGColor
+            _plotGradient = new CAGradientLayer
+            {
+                Colors = new CGColor[] {
+                    ColorPalette.PlotBackgroundLight.CGColor,
+                    ColorPalette.PlotBackgroundDark.CGColor
+                }
             };
             _plotContainer.Layer.AddSublayer(_plotGradient);
 
@@ -134,15 +148,37 @@ namespace TheQTablet.iOS.Views.Main
             };
             _plotHeader.AddArrangedSubview(_plotHeaderTitle);
 
-            _plotHeaderProgress = new UILabel
+            _plotHeaderProgress = new UIStackView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Text = "COLLECTION PROGRESS: 0%",
+                Axis = UILayoutConstraintAxis.Horizontal,
+                Distribution = UIStackViewDistribution.Fill,
+                Alignment = UIStackViewAlignment.Center,
+                LayoutMarginsRelativeArrangement = true,
+                LayoutMargins = new UIEdgeInsets
+                {
+                    Right = 16,
+                },
+                Spacing = 20,
+            };
+            _plotHeader.AddArrangedSubview(_plotHeaderProgress);
+
+            _plotHeaderProgressTitle = new UILabel
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
                 Font = FontGenerator.GenerateFont(14, UIFontWeight.Bold),
                 TextAlignment = UITextAlignment.Center,
                 TextColor = ColorPalette.SecondaryText,
             };
-            _plotHeader.AddArrangedSubview(_plotHeaderProgress);
+            _plotHeaderProgress.AddArrangedSubview(_plotHeaderProgressTitle);
+
+            _plotHeaderProgressBar = new UIProgressView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                TrackTintColor = UIColor.White,
+            };
+            _plotHeaderProgressBar.Layer.CornerRadius = 10;
+            _plotHeaderProgress.AddArrangedSubview(_plotHeaderProgressBar);
 
             _plotView = new PlotView()
             {
@@ -186,7 +222,7 @@ namespace TheQTablet.iOS.Views.Main
             _telescopeAngleKnob = new KnobContainerView()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-
+                Step = ViewModel.Step,
             };
             View.AddSubview(_telescopeAngleKnob);
 
@@ -215,6 +251,8 @@ namespace TheQTablet.iOS.Views.Main
             _plotHeader.LeftAnchor.ConstraintEqualTo(_plotContainer.LeftAnchor).Active = true;
             _plotHeader.WidthAnchor.ConstraintEqualTo(_plotContainer.WidthAnchor).Active = true;
             _plotHeader.HeightAnchor.ConstraintEqualTo(64).Active = true;
+
+            _plotHeaderProgressBar.HeightAnchor.ConstraintEqualTo(10).Active = true;
 
             _plotView.TopAnchor.ConstraintEqualTo(_plotHeader.BottomAnchor).Active = true;
             _plotView.BottomAnchor.ConstraintEqualTo(_plotContainer.BottomAnchor).Active = true;
@@ -248,6 +286,8 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(_sceneView).For("Tap").To(vm => vm.CloseModalCommand);
             set.Bind(_closeCross).For("Tap").To(vm => vm.CloseModalCommand);
             set.Bind(_cosOverlayButton).For(v => v.Active).To(vm => vm.ShowCosOverlay);
+            set.Bind(_plotHeaderProgressTitle).To(vm => vm.Progress).WithConversion<ProgressLabelConverter>();
+            set.Bind(_plotHeaderProgressBar).To(vm => vm.Progress);
             set.Apply();
         }
 

@@ -46,6 +46,7 @@ namespace TheQTablet.Core.ViewModels.Main
             {
                 _results[i] = new Result();
             }
+            Step = 5;
             _telescopeAngle = 0;
             _atmosphereAngle = 30;
             _showCosOverlay = false;
@@ -134,7 +135,9 @@ namespace TheQTablet.Core.ViewModels.Main
 
         public PlotModel PhotonPlotModel => CreatePlotModel();
 
-        private Result[]_results;
+        private Result[] _results;
+        public int Step;
+
         private int _telescopeAngle;
         public int TelescopeAngle
         {
@@ -166,6 +169,16 @@ namespace TheQTablet.Core.ViewModels.Main
             }
         }
 
+        private float _progress;
+        public float Progress
+        {
+            get => _progress;
+            set
+            {
+                SetProperty(ref _progress, value);
+            }
+        }
+
         private Timer _runTimer;
 
         public override void ViewAppeared()
@@ -188,6 +201,17 @@ namespace TheQTablet.Core.ViewModels.Main
 
             _results[TelescopeAngle].total += result ? 1 : 0;
             _results[TelescopeAngle].count++;
+
+            int filledCount = 0;
+            int fillableCount = _results.Length / Step;
+            for(var i = 0; i < _results.Length; i++)
+            {
+                if(_results[i].count > 0)
+                {
+                    filledCount++;
+                }
+            }
+            Progress = (float) filledCount / fillableCount;
 
             await RaisePropertyChanged(() => PhotonPlotModel);
         }

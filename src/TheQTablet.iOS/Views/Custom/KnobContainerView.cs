@@ -13,6 +13,12 @@ namespace TheQTablet.iOS.Views.Custom
 
         private CAGradientLayer _knobContainerGradient;
 
+        public int Step
+        {
+            get => KnobControl.Step;
+            set => KnobControl.Step = value;
+        }
+
         public KnobContainerView()
         {
             BackgroundColor = UIColor.White;
@@ -34,10 +40,12 @@ namespace TheQTablet.iOS.Views.Custom
             Layer.ShadowOffset = new CGSize(5, 0);
             Layer.ShadowRadius = 0;
 
-            _knobContainerGradient = new CAGradientLayer();
-            _knobContainerGradient.Colors = new CGColor[] {
-                ColorPalette.PlotBackgroundLight.CGColor,
-                ColorPalette.PlotBackgroundDark.CGColor
+            _knobContainerGradient = new CAGradientLayer
+            {
+                Colors = new CGColor[] {
+                    ColorPalette.PlotBackgroundLight.CGColor,
+                    ColorPalette.PlotBackgroundDark.CGColor
+                }
             };
             Layer.AddSublayer(_knobContainerGradient);
 
@@ -54,7 +62,6 @@ namespace TheQTablet.iOS.Views.Custom
             KnobControl = new KnobView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Step = 5,
             };
             AddArrangedSubview(KnobControl);
         }
