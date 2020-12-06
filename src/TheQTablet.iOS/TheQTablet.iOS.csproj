@@ -160,7 +160,6 @@
     <ImageAsset Include="Resources\Media.xcassets\dial_background.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\dial_background.imageset\Group 1225.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\dial_top.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\dial_top.imageset\Group 1220.pdf" />
     <Compile Include="Views\Main\LessonInfoView.cs" />
     <Compile Include="Views\Main\LessonInfoView.designer.cs">
       <DependentUpon>LessonInfoView.cs</DependentUpon>
@@ -191,12 +190,17 @@
     <ImageAsset Include="Resources\Media.xcassets\text_background.imageset\Rectangle 181.pdf" />
     <Compile Include="Views\Main\PlotViewController.cs" />
     <Compile Include="Views\Custom\KnobView.cs" />
-    <BundleResource Include="Resources\dial.png" />
-    <BundleResource Include="Resources\dial_pointer.png" />
-    <BundleResource Include="Resources\circuit.png" />
-    <BundleResource Include="Resources\cross.png" />
     <Compile Include="Views\Custom\ToggleButton.cs" />
     <Compile Include="Views\Custom\KnobContainerView.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\plain_circuit.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\plain_circuit.imageset\circuit.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\cross.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\cross.imageset\cross.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_top.imageset\Group 1220 %281%29-1.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_top_background.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_top_pointer.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_top_pointer.imageset\Polygon 5.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_top_background.imageset\Ellipse 53.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -290,6 +294,10 @@
     <Folder Include="Resources\Media.xcassets\text_background.imageset\" />
     <Folder Include="Art.scnassets\" />
     <Folder Include="Views\Custom\" />
+    <Folder Include="Resources\Media.xcassets\plain_circuit.imageset\" />
+    <Folder Include="Resources\Media.xcassets\cross.imageset\" />
+    <Folder Include="Resources\Media.xcassets\dial_top_background.imageset\" />
+    <Folder Include="Resources\Media.xcassets\dial_top_pointer.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />

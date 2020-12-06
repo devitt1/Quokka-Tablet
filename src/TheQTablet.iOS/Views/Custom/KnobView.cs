@@ -8,7 +8,8 @@ namespace TheQTablet.iOS.Views.Custom
     public class KnobView : UIView
     {
         private UIImageView _outerRing;
-        private UIImageView _innerCircle;
+        private UIImageView _innerCircleContainer;
+        private UIImageView _innerCirclePointer;
         private UILabel _angleLabel;
 
         private float _startAngle;
@@ -23,8 +24,8 @@ namespace TheQTablet.iOS.Views.Custom
             set
             {
                 _angle = AsAngle(value);
-                _innerCircle.Transform = CGAffineTransform.MakeRotation((float) ToRad(SmoothAngle));
-                _innerCircle.Layer.ShadowOffset = AngleCorrectedOffset(SmoothAngle, _shadowOffset);
+                _innerCircleContainer.Transform = CGAffineTransform.MakeRotation((float) ToRad(SmoothAngle));
+                _innerCircleContainer.Layer.ShadowOffset = AngleCorrectedOffset(SmoothAngle, _shadowOffset);
                 _angleLabel.Text = AngleText(SteppedAngle);
                 SteppedAngleChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -44,20 +45,27 @@ namespace TheQTablet.iOS.Views.Custom
             _outerRing = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Image = new UIImage("dial.png"),
+                Image = UIImage.FromBundle("dial_background"),
             };
             AddSubview(_outerRing);
 
-            _innerCircle = new UIImageView
+            _innerCircleContainer = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Image = new UIImage("dial_pointer.png"),
+                Image = UIImage.FromBundle("dial_top_background"),
             };
-            _innerCircle.Layer.ShadowOpacity = 0.5f;
-            _innerCircle.Layer.ShadowRadius = 7;
-            _innerCircle.Layer.ShadowColor = UIColor.Black.CGColor;
-            _innerCircle.Layer.ShadowOffset = _shadowOffset;
-            AddSubview(_innerCircle);
+            _innerCircleContainer.Layer.ShadowOpacity = 0.5f;
+            _innerCircleContainer.Layer.ShadowRadius = 7;
+            _innerCircleContainer.Layer.ShadowColor = UIColor.Black.CGColor;
+            _innerCircleContainer.Layer.ShadowOffset = _shadowOffset;
+            AddSubview(_innerCircleContainer);
+
+            _innerCirclePointer = new UIImageView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Image = UIImage.FromBundle("dial_top_pointer"),
+            };
+            _innerCircleContainer.AddSubview(_innerCirclePointer);
 
             _angleLabel = new UILabel
             {
@@ -73,10 +81,15 @@ namespace TheQTablet.iOS.Views.Custom
             _outerRing.WidthAnchor.ConstraintEqualTo(WidthAnchor).Active = true;
             _outerRing.HeightAnchor.ConstraintEqualTo(HeightAnchor).Active = true;
 
-            _innerCircle.WidthAnchor.ConstraintEqualTo(WidthAnchor, 0.9f).Active = true;
-            _innerCircle.HeightAnchor.ConstraintEqualTo(_innerCircle.WidthAnchor).Active = true;
-            _innerCircle.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
-            _innerCircle.CenterYAnchor.ConstraintEqualTo(CenterYAnchor).Active = true;
+            _innerCircleContainer.WidthAnchor.ConstraintEqualTo(WidthAnchor, 0.7f).Active = true;
+            _innerCircleContainer.HeightAnchor.ConstraintEqualTo(_innerCircleContainer.WidthAnchor).Active = true;
+            _innerCircleContainer.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
+            _innerCircleContainer.CenterYAnchor.ConstraintEqualTo(CenterYAnchor).Active = true;
+
+            _innerCirclePointer.CenterXAnchor.ConstraintEqualTo(_innerCircleContainer.CenterXAnchor).Active = true;
+            _innerCirclePointer.BottomAnchor.ConstraintEqualTo(_innerCircleContainer.TopAnchor, 10).Active = true;
+            _innerCirclePointer.WidthAnchor.ConstraintEqualTo(_innerCircleContainer.WidthAnchor, 0.15f).Active = true;
+            _innerCirclePointer.HeightAnchor.ConstraintEqualTo(_innerCirclePointer.WidthAnchor).Active = true;
 
             _angleLabel.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
             _angleLabel.CenterYAnchor.ConstraintEqualTo(CenterYAnchor).Active = true;

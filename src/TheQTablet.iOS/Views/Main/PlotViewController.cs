@@ -82,7 +82,7 @@ namespace TheQTablet.iOS.Views.Main
             _closeCross = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Image = new UIImage("cross.png"),
+                Image = UIImage.FromBundle("cross"),
             };
             _closeCross.Layer.AffineTransform = CGAffineTransform.MakeRotation((float) Math.PI / 2.0f);
             View.AddSubview(_closeCross);
@@ -134,7 +134,7 @@ namespace TheQTablet.iOS.Views.Main
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 ContentMode = UIViewContentMode.ScaleAspectFit,
-                Image = new UIImage("circuit.png"),
+                Image = UIImage.FromBundle("plain_circuit"),
             };
             _plotHeaderCircuit.AddArrangedSubview(_plotHeaderCircuitImage);
 
