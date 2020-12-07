@@ -20,6 +20,7 @@ namespace TheQTablet.iOS
             NavigationController.NavigationBar.Hidden = false;
             NavigationController.NavigationBar.BarTintColor = ColorPalette.Primary;
             NavigationController.NavigationBar.TintColor = UIColor.White;
+            NavigationController.NavigationBar.SetBackgroundImage(UIImage.FromBundle("banner_gradient"), UIBarMetrics.Default);
 
             NavigationController.SetNeedsStatusBarAppearanceUpdate();
 

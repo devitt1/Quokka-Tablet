@@ -61,14 +61,18 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private PlotModel CreatePlotModel()
         {
+            var FadedOrange = OxyColor.Parse("#E69975");
+            var BrightOrange = OxyColor.Parse("#F47527");
+
             var model = new PlotModel()
             {
                 PlotAreaBorderColor = OxyColors.Transparent,
             };
+
             var xAxis = new LinearAxis()
             {
                 Position = AxisPosition.Bottom,
-                Title = "θ ANGLE",
+                Title = "Angle",
                 Minimum = -5, // Padding to show 0 values
                 Maximum = 365,
                 MajorStep = 30,
@@ -76,9 +80,10 @@ namespace TheQTablet.Core.ViewModels.Main
                 AxisTickToLabelDistance = 22,
                 AxisTitleDistance = 31,
                 AxislineStyle = LineStyle.Solid,
-                AxislineColor = OxyColors.White,
+                AxislineColor = FadedOrange,
                 AxislineThickness = 2,
-                TitleColor = OxyColor.Parse("#40506B"),
+                TextColor = FadedOrange,
+                TitleColor = OxyColors.White,
                 TitleFontWeight = FontWeights.Bold,
                 TitleFontSize = 12,
             };
@@ -87,28 +92,33 @@ namespace TheQTablet.Core.ViewModels.Main
             var yAxis = new LinearAxis()
             {
                 Position = AxisPosition.Left,
-                Title = "PHOTONS COLLECTED",
+                Title = "Photons Collected",
                 Minimum = -5, // Padding to show 0 values
                 Maximum = 105,
-                //MajorStep = 25,
+                MajorStep = 25,
                 TickStyle = TickStyle.None,
                 AxisTickToLabelDistance = 22,
                 AxisTitleDistance = 31,
                 AxislineStyle = LineStyle.Solid,
-                AxislineColor = OxyColors.White,
+                AxislineColor = FadedOrange,
                 AxislineThickness = 2,
-                TitleColor = OxyColor.Parse("#40506B"),
+                TextColor = FadedOrange,
+                TitleColor = OxyColors.White,
                 TitleFontWeight = FontWeights.Bold,
                 TitleFontSize = 12,
+                MajorGridlineColor = OxyColor.FromAColor(128, FadedOrange),
+                MajorGridlineThickness = 1,
+                MajorGridlineStyle = LineStyle.Solid,
             };
             model.Axes.Add(yAxis);
 
             if(_showCosOverlay)
             {
-                model.Series.Add(new FunctionSeries(PlotCosFunction, 0, 359, 0.1, "Cos(x + 30°)")
+                model.Series.Add(new FunctionSeries(PlotCosFunction, 0, 359, 0.1)
                 {
                     Color = OxyColor.Parse("#B6CFE9"),
                     StrokeThickness = 3,
+                    //Title = "Cos(x + 30°)",
                 });
             }
 
@@ -125,8 +135,8 @@ namespace TheQTablet.Core.ViewModels.Main
                 ItemsSource = points,
                 MarkerType = MarkerType.Circle,
                 MarkerSize = 4,
-                MarkerFill = OxyColor.Parse("#5B9CEF"),
-                Title = "Photons"
+                MarkerFill = BrightOrange,
+                //Title = "Photons",
             };
             model.Series.Add(scatterSeries);
 

@@ -15,6 +15,7 @@ namespace TheQTablet.iOS.Views.Custom
 
                 UpdateBackground();
                 UpdateTextColor();
+                UpdateBorder();
 
                 ActiveChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -71,17 +72,41 @@ namespace TheQTablet.iOS.Views.Custom
             }
         }
 
+        private UIColor _inactiveBorderColor;
+        public UIColor InactiveBorderColor
+        {
+            get => _inactiveBorderColor;
+            set
+            {
+                _inactiveBorderColor = value;
+                UpdateBorder();
+            }
+        }
+        private UIColor _activeBorderColor;
+        public UIColor ActiveBorderColor
+        {
+            get => _activeBorderColor;
+            set
+            {
+                _activeBorderColor = value;
+                UpdateBorder();
+            }
+        }
+
         private UILabel _label;
 
         public event EventHandler ActiveChanged;
 
         public ToggleButton()
         {
-            ActiveBackgroundColor = ColorPalette.PlotBlue;
-            InactiveBackgroundColor = ColorPalette.AccentLight;
+            ActiveBackgroundColor = ColorPalette.AccentLight;
+            InactiveBackgroundColor = UIColor.Clear;
+            ActiveBorderColor = UIColor.Clear;
+            InactiveBorderColor = ColorPalette.Border;
             Active = false;
 
             Layer.CornerRadius = 10;
+            Layer.BorderWidth = 2;
 
             _label = new UILabel
             {
@@ -90,7 +115,7 @@ namespace TheQTablet.iOS.Views.Custom
             };
             AddSubview(_label);
 
-            ActiveTextColor = ColorPalette.AccentLight;
+            ActiveTextColor = ColorPalette.PrimaryText;
             InactiveTextColor = ColorPalette.SecondaryText;
 
             _label.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
@@ -115,6 +140,13 @@ namespace TheQTablet.iOS.Views.Custom
             if (_label != null)
             {
                 _label.TextColor = Active ? ActiveTextColor : InactiveTextColor;
+            }
+        }
+        private void UpdateBorder()
+        {
+            if (ActiveBorderColor != null && InactiveBorderColor != null)
+            {
+                Layer.BorderColor = Active ? ActiveBorderColor.CGColor : InactiveBorderColor.CGColor;
             }
         }
     }

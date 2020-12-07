@@ -158,7 +158,6 @@
     <ImageAsset Include="Resources\Media.xcassets\light_graph.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\light_graph.imageset\Group 1308.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\dial_background.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\dial_background.imageset\Group 1225.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\dial_top.imageset\Contents.json" />
     <Compile Include="Views\Main\LessonInfoView.cs" />
     <Compile Include="Views\Main\LessonInfoView.designer.cs">
@@ -193,14 +192,19 @@
     <Compile Include="Views\Custom\ToggleButton.cs" />
     <Compile Include="Views\Custom\KnobContainerView.cs" />
     <ImageAsset Include="Resources\Media.xcassets\plain_circuit.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\plain_circuit.imageset\circuit.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\cross.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\cross.imageset\cross.pdf" />
-    <ImageAsset Include="Resources\Media.xcassets\dial_top.imageset\Group 1220 %281%29-1.pdf" />
-    <ImageAsset Include="Resources\Media.xcassets\dial_top_background.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\dial_top_pointer.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\dial_top_pointer.imageset\Polygon 5.pdf" />
-    <ImageAsset Include="Resources\Media.xcassets\dial_top_background.imageset\Ellipse 53.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\banner_gradient.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\banner_gradient.imageset\banner_gradient.pdf" />
+    <Compile Include="Views\Custom\GradientView.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\plain_circuit.imageset\11-layers 1.pdf" />
+    <Compile Include="Views\Custom\CompactStackView.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\progress_track.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\progress_track.imageset\progress_bar_border.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\modal_background_gradient.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\modal_background_gradient.imageset\Calque_17 1 1.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_background.imageset\3-layers%403x 1.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\dial_top.imageset\2-layers%403x 1.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -298,6 +302,9 @@
     <Folder Include="Resources\Media.xcassets\cross.imageset\" />
     <Folder Include="Resources\Media.xcassets\dial_top_background.imageset\" />
     <Folder Include="Resources\Media.xcassets\dial_top_pointer.imageset\" />
+    <Folder Include="Resources\Media.xcassets\banner_gradient.imageset\" />
+    <Folder Include="Resources\Media.xcassets\progress_track.imageset\" />
+    <Folder Include="Resources\Media.xcassets\modal_background_gradient.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />

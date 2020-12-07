@@ -24,18 +24,25 @@ namespace TheQTablet.iOS.Views.Main
     [MvxModalPresentation(WrapInNavigationController = false)]
     public partial class PlotViewController : MvxViewController<PlotViewModel>
     {
+        private UIImageView _backgroundGradient;
+
         private UILabel _heading;
         private UIImageView _closeCross;
 
+        private UIView _headingDivider;
+        private UIView _container;
+
+        private UIStackView _toolbar;
+
+        private CompactStackView _toolbarCircuit;
+        private UILabel _toolbarCircuitText;
+        private UIImageView _toolbarCircuitImage;
+
+        private CompactStackView _toolbarProgress;
+        private UILabel _toolbarProgressText;
+        private UIProgressView _toolbarProgressBar;
+
         private UIView _plotContainer;
-        private UIStackView _plotHeader;
-        private UIStackView _plotHeaderCircuit;
-        private UILabel _plotHeaderCircuitTitle;
-        private UIImageView _plotHeaderCircuitImage;
-        private UILabel _plotHeaderTitle;
-        private UIStackView _plotHeaderProgress;
-        private UILabel _plotHeaderProgressTitle;
-        private UIProgressView _plotHeaderProgressBar;
         private PlotView _plotView;
 
         private UIView _functionButtonsContainer;
@@ -47,33 +54,36 @@ namespace TheQTablet.iOS.Views.Main
 
         private UIView _sceneView;
 
-        private CAGradientLayer _viewGradient;
-        private CAGradientLayer _plotGradient;
-
         public PlotViewController()
         {
             
         }
 
+        //public override void LoadView()
+        //{
+        //    View = new GradientView
+        //    {
+        //        StartColor = ColorPalette.BackgroundLight,
+        //        EndColor = ColorPalette.BackgroundDark,
+        //    };
+        //}
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            View.BackgroundColor = UIColor.White;
-
-            _viewGradient = new CAGradientLayer
+            View.BackgroundColor = ColorPalette.BackgroundDark;
+            _backgroundGradient = new UIImageView
             {
-                Colors = new CGColor[] {
-                    ColorPalette.BackgroundLight.CGColor,
-                    ColorPalette.BackgroundDark.CGColor
-                }
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Image = UIImage.FromBundle("modal_background_gradient"),
             };
-            View.Layer.AddSublayer(_viewGradient);
+            View.AddSubview(_backgroundGradient);
 
             _heading = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Text = "Detailed View",
+                Text = "DETAIL VIEW: COMPUTER",
                 Font = FontGenerator.GenerateFont(24, UIFontWeight.Regular),
                 TextColor = ColorPalette.SecondaryText,
             };
@@ -87,40 +97,38 @@ namespace TheQTablet.iOS.Views.Main
             _closeCross.Layer.AffineTransform = CGAffineTransform.MakeRotation((float) Math.PI / 2.0f);
             View.AddSubview(_closeCross);
 
-            _plotContainer = new UIView
+            _headingDivider = new UIView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                BackgroundColor = ColorPalette.Border,
+            };
+            View.AddSubview(_headingDivider);
+
+            _container = new UIView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
             };
-            View.AddSubview(_plotContainer);
+            View.AddSubview(_container);
 
-            _plotGradient = new CAGradientLayer
-            {
-                Colors = new CGColor[] {
-                    ColorPalette.PlotBackgroundLight.CGColor,
-                    ColorPalette.PlotBackgroundDark.CGColor
-                }
-            };
-            _plotContainer.Layer.AddSublayer(_plotGradient);
-
-            _plotHeader = new UIStackView
+            _toolbar = new UIStackView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Axis = UILayoutConstraintAxis.Horizontal,
                 Distribution = UIStackViewDistribution.FillEqually,
                 Alignment = UIStackViewAlignment.Center,
             };
-            _plotContainer.AddSubview(_plotHeader);
+            _container.AddSubview(_toolbar);
 
-            _plotHeaderCircuit = new UIStackView
+            _toolbarCircuit = new CompactStackView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Axis = UILayoutConstraintAxis.Horizontal,
-                Distribution = UIStackViewDistribution.FillEqually,
                 Alignment = UIStackViewAlignment.Center,
+                Spacing = 20,
             };
-            _plotHeader.AddArrangedSubview(_plotHeaderCircuit);
+            _toolbar.AddArrangedSubview(_toolbarCircuit);
 
-            _plotHeaderCircuitTitle = new UILabel
+            _toolbarCircuitText = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Text = "QUANTUM CIRCUIT",
@@ -128,31 +136,21 @@ namespace TheQTablet.iOS.Views.Main
                 TextAlignment = UITextAlignment.Center,
                 TextColor = ColorPalette.SecondaryText,
             };
-            _plotHeaderCircuit.AddArrangedSubview(_plotHeaderCircuitTitle);
+            _toolbarCircuit.AddArrangedSubview(_toolbarCircuitText);
 
-            _plotHeaderCircuitImage = new UIImageView
+            _toolbarCircuitImage = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 ContentMode = UIViewContentMode.ScaleAspectFit,
                 Image = UIImage.FromBundle("plain_circuit"),
             };
-            _plotHeaderCircuit.AddArrangedSubview(_plotHeaderCircuitImage);
+            _toolbarCircuit.AddArrangedSubview(_toolbarCircuitImage);
 
-            _plotHeaderTitle = new UILabel
+            _toolbarProgress = new CompactStackView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Text = "COMPUTER",
-                Font = FontGenerator.GenerateFont(20, UIFontWeight.Bold),
-                TextAlignment = UITextAlignment.Center,
-                TextColor = ColorPalette.SecondaryText,
-            };
-            _plotHeader.AddArrangedSubview(_plotHeaderTitle);
-
-            _plotHeaderProgress = new UIStackView
-            {
-                TranslatesAutoresizingMaskIntoConstraints = false,
+                PadStart = true,
                 Axis = UILayoutConstraintAxis.Horizontal,
-                Distribution = UIStackViewDistribution.Fill,
                 Alignment = UIStackViewAlignment.Center,
                 LayoutMarginsRelativeArrangement = true,
                 LayoutMargins = new UIEdgeInsets
@@ -161,24 +159,34 @@ namespace TheQTablet.iOS.Views.Main
                 },
                 Spacing = 20,
             };
-            _plotHeader.AddArrangedSubview(_plotHeaderProgress);
+            _toolbar.AddArrangedSubview(_toolbarProgress);
 
-            _plotHeaderProgressTitle = new UILabel
+            _toolbarProgressText = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Font = FontGenerator.GenerateFont(14, UIFontWeight.Bold),
                 TextAlignment = UITextAlignment.Center,
                 TextColor = ColorPalette.SecondaryText,
             };
-            _plotHeaderProgress.AddArrangedSubview(_plotHeaderProgressTitle);
+            _toolbarProgress.AddArrangedSubview(_toolbarProgressText);
 
-            _plotHeaderProgressBar = new UIProgressView
+            _toolbarProgressBar = new UIProgressView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                TrackTintColor = UIColor.White,
+                TrackImage = UIImage.FromBundle("progress_track"),
+                ProgressTintColor = ColorPalette.ProgressStart,
             };
-            _plotHeaderProgressBar.Layer.CornerRadius = 10;
-            _plotHeaderProgress.AddArrangedSubview(_plotHeaderProgressBar);
+            _toolbarProgressBar.Layer.CornerRadius = 10;
+            _toolbarProgress.AddArrangedSubview(_toolbarProgressBar);
+
+            _plotContainer = new UIView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+            };
+            _plotContainer.Layer.BorderColor = ColorPalette.SecondaryText.CGColor;
+            _plotContainer.Layer.BorderWidth = 2;
+            _plotContainer.Layer.CornerRadius = 20;
+            _container.AddSubview(_plotContainer);
 
             _plotView = new PlotView()
             {
@@ -191,7 +199,7 @@ namespace TheQTablet.iOS.Views.Main
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
             };
-            _plotContainer.AddSubview(_functionButtonsContainer);
+            _container.AddSubview(_functionButtonsContainer);
 
             _functionButtonsStack = new UIStackView()
             {
@@ -234,6 +242,9 @@ namespace TheQTablet.iOS.Views.Main
             _sceneView.Layer.CornerRadius = 5;
             View.AddSubview(_sceneView);
 
+            _backgroundGradient.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
+            _backgroundGradient.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
+
             _heading.CenterXAnchor.ConstraintEqualTo(View.CenterXAnchor).Active = true;
             _heading.TopAnchor.ConstraintEqualTo(View.TopAnchor, 22).Active = true;
 
@@ -242,29 +253,45 @@ namespace TheQTablet.iOS.Views.Main
             _closeCross.WidthAnchor.ConstraintEqualTo(_closeCross.HeightAnchor).Active = true;
             _closeCross.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.03f).Active = true;
 
-            _plotContainer.TopAnchor.ConstraintEqualTo(_heading.BottomAnchor, 22).Active = true;
-            _plotContainer.BottomAnchor.ConstraintEqualTo(_sceneView.TopAnchor, -22).Active = true;
-            _plotContainer.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 16).Active = true;
-            _plotContainer.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
+            _headingDivider.TopAnchor.ConstraintEqualTo(_heading.BottomAnchor, 22).Active = true;
+            _headingDivider.LeftAnchor.ConstraintEqualTo(_container.LeftAnchor).Active = true;
+            _headingDivider.RightAnchor.ConstraintEqualTo(_container.RightAnchor).Active = true;
+            _headingDivider.HeightAnchor.ConstraintEqualTo(2).Active = true;
 
-            _plotHeader.TopAnchor.ConstraintEqualTo(_plotContainer.TopAnchor).Active = true;
-            _plotHeader.LeftAnchor.ConstraintEqualTo(_plotContainer.LeftAnchor).Active = true;
-            _plotHeader.WidthAnchor.ConstraintEqualTo(_plotContainer.WidthAnchor).Active = true;
-            _plotHeader.HeightAnchor.ConstraintEqualTo(64).Active = true;
+            _container.TopAnchor.ConstraintEqualTo(_headingDivider.BottomAnchor, 22).Active = true;
+            _container.BottomAnchor.ConstraintEqualTo(_sceneView.TopAnchor, -22).Active = true;
+            _container.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 16).Active = true;
+            _container.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
 
-            _plotHeaderProgressBar.HeightAnchor.ConstraintEqualTo(10).Active = true;
+            _toolbar.TopAnchor.ConstraintEqualTo(_container.TopAnchor).Active = true;
+            _toolbar.LeftAnchor.ConstraintEqualTo(_container.LeftAnchor).Active = true;
+            _toolbar.WidthAnchor.ConstraintEqualTo(_container.WidthAnchor).Active = true;
+            _toolbar.HeightAnchor.ConstraintEqualTo(64).Active = true;
 
-            _plotView.TopAnchor.ConstraintEqualTo(_plotHeader.BottomAnchor).Active = true;
-            _plotView.BottomAnchor.ConstraintEqualTo(_plotContainer.BottomAnchor).Active = true;
+            _toolbarCircuitText.HeightAnchor.ConstraintEqualTo(_toolbarCircuitText.Font.PointSize).Active = true;
+            _toolbarCircuitImage.HeightAnchor.ConstraintEqualTo(_toolbarCircuitText.HeightAnchor, 1.2f).Active = true;
+            _toolbarCircuitImage.WidthAnchor.ConstraintEqualTo(_toolbarCircuitImage.HeightAnchor, 8.5f).Active = true;
+
+            _toolbarProgressText.HeightAnchor.ConstraintEqualTo(_toolbarProgressText.Font.PointSize).Active = true;
+            _toolbarProgressBar.HeightAnchor.ConstraintEqualTo(_toolbarProgressText.HeightAnchor).Active = true;
+            _toolbarProgressBar.WidthAnchor.ConstraintEqualTo(_toolbarProgressBar.HeightAnchor, 13.13f).Active = true;
+
+            _plotContainer.TopAnchor.ConstraintEqualTo(_toolbar.BottomAnchor).Active = true;
+            _plotContainer.BottomAnchor.ConstraintEqualTo(_container.BottomAnchor).Active = true;
+            _plotContainer.LeftAnchor.ConstraintEqualTo(_container.LeftAnchor).Active = true;
+            _plotContainer.RightAnchor.ConstraintEqualTo(_functionButtonsContainer.LeftAnchor).Active = true;
+
+            _plotView.HeightAnchor.ConstraintEqualTo(_plotContainer.HeightAnchor, 0.9f).Active = true;
+            _plotView.WidthAnchor.ConstraintEqualTo(_plotContainer.WidthAnchor, 0.9f).Active = true;
             _plotView.LeftAnchor.ConstraintEqualTo(_plotContainer.LeftAnchor).Active = true;
-            _plotView.RightAnchor.ConstraintEqualTo(_functionButtonsContainer.LeftAnchor).Active = true;
+            _plotView.BottomAnchor.ConstraintEqualTo(_plotContainer.BottomAnchor).Active = true;
 
-            _functionButtonsContainer.WidthAnchor.ConstraintEqualTo(_plotContainer.WidthAnchor, 0.15f).Active = true;
-            _functionButtonsContainer.RightAnchor.ConstraintEqualTo(_plotContainer.RightAnchor).Active = true;
-            _functionButtonsContainer.TopAnchor.ConstraintEqualTo(_plotHeader.BottomAnchor).Active = true;
+            _functionButtonsContainer.WidthAnchor.ConstraintEqualTo(_container.WidthAnchor, 0.3f).Active = true;
+            _functionButtonsContainer.RightAnchor.ConstraintEqualTo(_container.RightAnchor).Active = true;
+            _functionButtonsContainer.TopAnchor.ConstraintEqualTo(_toolbar.BottomAnchor).Active = true;
             _functionButtonsContainer.BottomAnchor.ConstraintEqualTo(_plotView.BottomAnchor, -100).Active = true;
 
-            _functionButtonsStack.WidthAnchor.ConstraintEqualTo(_functionButtonsContainer.WidthAnchor).Active = true;
+            _functionButtonsStack.WidthAnchor.ConstraintEqualTo(_functionButtonsContainer.WidthAnchor, 0.5f).Active = true;
             _functionButtonsStack.CenterYAnchor.ConstraintEqualTo(_functionButtonsContainer.CenterYAnchor).Active = true;
             _functionButtonsStack.CenterXAnchor.ConstraintEqualTo(_functionButtonsContainer.CenterXAnchor).Active = true;
 
@@ -286,18 +313,9 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(_sceneView).For("Tap").To(vm => vm.CloseModalCommand);
             set.Bind(_closeCross).For("Tap").To(vm => vm.CloseModalCommand);
             set.Bind(_cosOverlayButton).For(v => v.Active).To(vm => vm.ShowCosOverlay);
-            set.Bind(_plotHeaderProgressTitle).To(vm => vm.Progress).WithConversion<ProgressLabelConverter>();
-            set.Bind(_plotHeaderProgressBar).To(vm => vm.Progress);
+            set.Bind(_toolbarProgressText).To(vm => vm.Progress).WithConversion<ProgressLabelConverter>();
+            set.Bind(_toolbarProgressBar).To(vm => vm.Progress);
             set.Apply();
-        }
-
-        public override void ViewDidLayoutSubviews()
-        {
-            base.ViewDidLayoutSubviews();
-
-            // Set gradient frame size after views have been laid out
-            _viewGradient.Frame = View.Bounds;
-            _plotGradient.Frame = _plotContainer.Bounds;
         }
     }
 }

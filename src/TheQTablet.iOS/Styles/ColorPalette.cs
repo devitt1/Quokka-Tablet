@@ -11,19 +11,19 @@ namespace TheQTablet.iOS
 
         public static UIColor Accent => FromHexString("#E6AF2E");
         public static UIColor AccentDark => FromHexString("#1C3351");
-        public static UIColor AccentLight => FromHexString("#FFFFFF");
+        public static UIColor AccentLight => FromHexString("#F47527");
 
-        public static UIColor PrimaryText => FromHexString("#101E57");
-        public static UIColor SecondaryText => FromHexString("#40506B");
+        public static UIColor PrimaryText => FromHexString("#FFFFFF");
+        public static UIColor SecondaryText => FromHexString("#E69975");
 
-        public static UIColor BackgroundLight => FromHexString("#F9FBFF");
-        public static UIColor BackgroundDark => FromHexString("#C5D5E2");
+        public static UIColor Border => FromHexString("#E69975");
 
-        public static UIColor PlotBackgroundLight => FromHexString("#EDF2F5");
-        public static UIColor PlotBackgroundDark => FromHexString("#D0DAE1");
+        public static UIColor BackgroundLight => FromHexString("#5e395a");
+        public static UIColor BackgroundDark => FromHexString("#30283F");
 
-        public static UIColor AngleText => FromHexString("#4B88D5");
         public static UIColor PlotBlue => FromHexString("#5B9CEF");
+
+        public static UIColor ProgressStart => FromHexString("#238ce8");
 
         private static UIColor FromHexString(string hexValue)
         {

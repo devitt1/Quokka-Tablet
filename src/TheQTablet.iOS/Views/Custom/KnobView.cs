@@ -8,7 +8,7 @@ namespace TheQTablet.iOS.Views.Custom
     public class KnobView : UIView
     {
         private UIImageView _outerRing;
-        private UIImageView _innerCircleContainer;
+        private UIView _innerCircleContainer;
         private UIImageView _innerCirclePointer;
         private UILabel _angleLabel;
 
@@ -49,29 +49,25 @@ namespace TheQTablet.iOS.Views.Custom
             };
             AddSubview(_outerRing);
 
-            _innerCircleContainer = new UIImageView
+            _innerCircleContainer = new UIView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Image = UIImage.FromBundle("dial_top_background"),
             };
-            _innerCircleContainer.Layer.ShadowOpacity = 0.5f;
-            _innerCircleContainer.Layer.ShadowRadius = 7;
-            _innerCircleContainer.Layer.ShadowColor = UIColor.Black.CGColor;
-            _innerCircleContainer.Layer.ShadowOffset = _shadowOffset;
             AddSubview(_innerCircleContainer);
 
             _innerCirclePointer = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Image = UIImage.FromBundle("dial_top_pointer"),
+                ContentMode = UIViewContentMode.ScaleAspectFill,
+                Image = UIImage.FromBundle("dial_top"),
             };
             _innerCircleContainer.AddSubview(_innerCirclePointer);
 
             _angleLabel = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Font = FontGenerator.GenerateFont(20, UIFontWeight.Regular),
-                TextColor = ColorPalette.AngleText,
+                Font = FontGenerator.GenerateFont(28, UIFontWeight.Regular),
+                TextColor = ColorPalette.SecondaryText,
                 Text = AngleText(SmoothAngle),
             };
             AddSubview(_angleLabel);
@@ -81,15 +77,17 @@ namespace TheQTablet.iOS.Views.Custom
             _outerRing.WidthAnchor.ConstraintEqualTo(WidthAnchor).Active = true;
             _outerRing.HeightAnchor.ConstraintEqualTo(HeightAnchor).Active = true;
 
-            _innerCircleContainer.WidthAnchor.ConstraintEqualTo(WidthAnchor, 0.7f).Active = true;
+            _innerCircleContainer.WidthAnchor.ConstraintEqualTo(WidthAnchor, 0.6f).Active = true;
             _innerCircleContainer.HeightAnchor.ConstraintEqualTo(_innerCircleContainer.WidthAnchor).Active = true;
             _innerCircleContainer.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
             _innerCircleContainer.CenterYAnchor.ConstraintEqualTo(CenterYAnchor).Active = true;
 
-            _innerCirclePointer.CenterXAnchor.ConstraintEqualTo(_innerCircleContainer.CenterXAnchor).Active = true;
-            _innerCirclePointer.BottomAnchor.ConstraintEqualTo(_innerCircleContainer.TopAnchor, 10).Active = true;
-            _innerCirclePointer.WidthAnchor.ConstraintEqualTo(_innerCircleContainer.WidthAnchor, 0.15f).Active = true;
-            _innerCirclePointer.HeightAnchor.ConstraintEqualTo(_innerCirclePointer.WidthAnchor).Active = true;
+            _innerCirclePointer.BottomAnchor.ConstraintEqualTo(_innerCircleContainer.BottomAnchor).Active = true;
+            _innerCirclePointer.LeftAnchor.ConstraintEqualTo(_innerCircleContainer.LeftAnchor).Active = true;
+            _innerCirclePointer.RightAnchor.ConstraintEqualTo(_innerCircleContainer.RightAnchor).Active = true;
+            // Have to manually define height due to lopsided pointer image
+            // 753 / 686 = 1.09....
+            _innerCirclePointer.HeightAnchor.ConstraintEqualTo(_innerCircleContainer.HeightAnchor, 1.0976676385f).Active = true;
 
             _angleLabel.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
             _angleLabel.CenterYAnchor.ConstraintEqualTo(CenterYAnchor).Active = true;
