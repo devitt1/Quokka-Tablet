@@ -160,6 +160,7 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(_lens).For(v => v.Position).To(vm => vm.LensPosition).WithConversion<PositionConverter>();
             set.Bind(_signalStrength).For(v => v.Progress).To(vm => vm.SignalStrength);
             set.Bind(_continue).For("Visible").To(vm => vm.StarFound);
+            set.Bind(_continue).To(vm => vm.ContinueCommand);
             set.Bind(_goodSignalContainer).For("Visible").To(vm => vm.StarFound);
             set.Apply();
         }

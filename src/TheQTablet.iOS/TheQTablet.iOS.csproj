@@ -193,7 +193,6 @@
     <Compile Include="Views\Custom\KnobContainerView.cs" />
     <ImageAsset Include="Resources\Media.xcassets\plain_circuit.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\cross.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\cross.imageset\cross.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\banner_gradient.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\banner_gradient.imageset\banner_gradient.pdf" />
     <Compile Include="Views\Custom\GradientView.cs" />
@@ -233,6 +232,7 @@
     <Compile Include="Views\Custom\DraggableView.cs" />
     <ImageAsset Include="Resources\Media.xcassets\back_logo.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\back_logo.imageset\logo_Q_top_01 1.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\cross.imageset\X%403x 1.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

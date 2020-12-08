@@ -88,7 +88,6 @@ namespace TheQTablet.iOS.Views.Main
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Image = UIImage.FromBundle("cross"),
             };
-            _closeCross.Layer.AffineTransform = CGAffineTransform.MakeRotation((float) Math.PI / 2.0f);
             View.AddSubview(_closeCross);
 
             _headingDivider = new UIView
@@ -253,7 +252,7 @@ namespace TheQTablet.iOS.Views.Main
             _closeCross.CenterYAnchor.ConstraintEqualTo(_heading.CenterYAnchor).Active = true;
             _closeCross.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
             _closeCross.WidthAnchor.ConstraintEqualTo(_closeCross.HeightAnchor).Active = true;
-            _closeCross.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.03f).Active = true;
+            _closeCross.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.02f).Active = true;
 
             _headingDivider.TopAnchor.ConstraintEqualTo(_heading.BottomAnchor, 22).Active = true;
             _headingDivider.LeftAnchor.ConstraintEqualTo(_container.LeftAnchor).Active = true;
@@ -272,11 +271,11 @@ namespace TheQTablet.iOS.Views.Main
 
             _toolbarCircuitText.HeightAnchor.ConstraintEqualTo(_toolbarCircuitText.Font.PointSize).Active = true;
             _toolbarCircuitImage.HeightAnchor.ConstraintEqualTo(_toolbarCircuitText.HeightAnchor, 1.2f).Active = true;
-            _toolbarCircuitImage.WidthAnchor.ConstraintEqualTo(_toolbarCircuitImage.HeightAnchor, 8.5f).Active = true;
+            _toolbarCircuitImage.WidthAnchor.ConstraintEqualTo(_toolbarCircuitImage.HeightAnchor, _toolbarCircuitImage.Image.Size.Width / _toolbarCircuitImage.Image.Size.Height).Active = true;
 
             _toolbarProgressText.HeightAnchor.ConstraintEqualTo(_toolbarProgressText.Font.PointSize).Active = true;
             _toolbarProgressBar.HeightAnchor.ConstraintEqualTo(_toolbarProgressText.HeightAnchor).Active = true;
-            _toolbarProgressBar.WidthAnchor.ConstraintEqualTo(_toolbarProgressBar.HeightAnchor, 13.13f).Active = true;
+            _toolbarProgressBar.WidthAnchor.ConstraintEqualTo(_toolbarProgressBar.HeightAnchor, _toolbarProgressBar.TrackImage.Size.Width / _toolbarProgressBar.TrackImage.Size.Height).Active = true;
 
             _plotContainer.TopAnchor.ConstraintEqualTo(_toolbar.BottomAnchor).Active = true;
             _plotContainer.BottomAnchor.ConstraintEqualTo(_container.BottomAnchor).Active = true;
