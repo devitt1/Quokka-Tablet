@@ -36,7 +36,7 @@ namespace TheQTablet.iOS.Views.Custom
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Text = "TELESCOPE LENS",
-                Font = FontGenerator.GenerateFont(16, UIFontWeight.Bold),
+                Font = FontGenerator.GenerateFont(22, UIFontWeight.Bold),
                 TextColor = ColorPalette.SecondaryText,
             };
             _knobHeader.SetContentCompressionResistancePriority((float)UILayoutPriority.Required, UILayoutConstraintAxis.Vertical);

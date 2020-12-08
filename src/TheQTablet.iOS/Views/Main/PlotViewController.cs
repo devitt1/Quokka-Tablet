@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 using MvvmCross.Converters;
@@ -21,8 +20,8 @@ namespace TheQTablet.iOS.Views.Main
         }
     }
 
-    [MvxModalPresentation(WrapInNavigationController = false)]
-    public partial class PlotViewController : MvxViewController<PlotViewModel>
+    [MvxModalPresentation(WrapInNavigationController = false, ModalPresentationStyle = UIModalPresentationStyle.FormSheet)]
+    public partial class PlotViewController : MvxViewController<PlotViewModel>, IUIAdaptivePresentationControllerDelegate
     {
         private UIImageView _backgroundGradient;
 
@@ -40,7 +39,7 @@ namespace TheQTablet.iOS.Views.Main
 
         private CompactStackView _toolbarProgress;
         private UILabel _toolbarProgressText;
-        private UIProgressView _toolbarProgressBar;
+        private InsetProgressBar _toolbarProgressBar;
 
         private UIView _plotContainer;
         private PlotView _plotView;
@@ -52,21 +51,16 @@ namespace TheQTablet.iOS.Views.Main
 
         private KnobContainerView _telescopeAngleKnob;
 
-        private UIView _sceneView;
+        private UIView _sceneViewBorder;
+        private UIImageView _sceneView;
 
-        public PlotViewController()
+        public override void ViewWillAppear(bool animated)
         {
-            
-        }
+            base.ViewWillAppear(animated);
 
-        //public override void LoadView()
-        //{
-        //    View = new GradientView
-        //    {
-        //        StartColor = ColorPalette.BackgroundLight,
-        //        EndColor = ColorPalette.BackgroundDark,
-        //    };
-        //}
+            PresentationController.Delegate = this;
+            PreferredContentSize = new CGSize(UIScreen.MainScreen.Bounds.Width - 80, UIScreen.MainScreen.Bounds.Height);
+        }
 
         public override void ViewDidLoad()
         {
@@ -83,9 +77,9 @@ namespace TheQTablet.iOS.Views.Main
             _heading = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Text = "DETAIL VIEW: COMPUTER",
+                Text = "DETAIL VIEW : COMPUTER",
                 Font = FontGenerator.GenerateFont(24, UIFontWeight.Regular),
-                TextColor = ColorPalette.SecondaryText,
+                TextColor = ColorPalette.PrimaryText,
             };
             View.AddSubview(_heading);
 
@@ -132,9 +126,9 @@ namespace TheQTablet.iOS.Views.Main
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Text = "QUANTUM CIRCUIT",
-                Font = FontGenerator.GenerateFont(14, UIFontWeight.Bold),
+                Font = FontGenerator.GenerateFont(22, UIFontWeight.Regular),
                 TextAlignment = UITextAlignment.Center,
-                TextColor = ColorPalette.SecondaryText,
+                TextColor = ColorPalette.PrimaryText,
             };
             _toolbarCircuit.AddArrangedSubview(_toolbarCircuitText);
 
@@ -164,19 +158,19 @@ namespace TheQTablet.iOS.Views.Main
             _toolbarProgressText = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Font = FontGenerator.GenerateFont(14, UIFontWeight.Bold),
+                Font = FontGenerator.GenerateFont(22, UIFontWeight.Regular),
                 TextAlignment = UITextAlignment.Center,
-                TextColor = ColorPalette.SecondaryText,
+                TextColor = ColorPalette.PrimaryText,
             };
             _toolbarProgress.AddArrangedSubview(_toolbarProgressText);
 
-            _toolbarProgressBar = new UIProgressView
+            _toolbarProgressBar = new InsetProgressBar
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                TrackImage = UIImage.FromBundle("progress_track"),
-                ProgressTintColor = ColorPalette.ProgressStart,
+                TrackImage = UIImage.FromBundle("progress_track_horizontal"),
+                ProgressImage = UIImage.FromBundle("progress_inner_horizontal"),
+                Inset = 5,
             };
-            _toolbarProgressBar.Layer.CornerRadius = 10;
             _toolbarProgress.AddArrangedSubview(_toolbarProgressBar);
 
             _plotContainer = new UIView
@@ -215,7 +209,7 @@ namespace TheQTablet.iOS.Views.Main
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Text = "GRAPH UNDERLAY",
-                Font = FontGenerator.GenerateFont(16, UIFontWeight.Bold),
+                Font = FontGenerator.GenerateFont(22, UIFontWeight.Regular),
                 TextAlignment = UITextAlignment.Center,
                 TextColor = ColorPalette.SecondaryText,
             };
@@ -234,13 +228,21 @@ namespace TheQTablet.iOS.Views.Main
             };
             View.AddSubview(_telescopeAngleKnob);
 
-            _sceneView = new UIView()
+            _sceneViewBorder = new UIView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                BackgroundColor = UIColor.Blue,
             };
-            _sceneView.Layer.CornerRadius = 5;
-            View.AddSubview(_sceneView);
+            _sceneViewBorder.Layer.BorderColor = ColorPalette.Border.CGColor;
+            _sceneViewBorder.Layer.BorderWidth = 2;
+            _sceneViewBorder.Layer.CornerRadius = 20;
+            View.AddSubview(_sceneViewBorder);
+
+            _sceneView = new UIImageView()
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Image= UIImage.FromBundle("scene_preview"),
+            };
+            _sceneViewBorder.AddSubview(_sceneView);
 
             _backgroundGradient.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
             _backgroundGradient.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
@@ -259,9 +261,9 @@ namespace TheQTablet.iOS.Views.Main
             _headingDivider.HeightAnchor.ConstraintEqualTo(2).Active = true;
 
             _container.TopAnchor.ConstraintEqualTo(_headingDivider.BottomAnchor, 22).Active = true;
-            _container.BottomAnchor.ConstraintEqualTo(_sceneView.TopAnchor, -22).Active = true;
-            _container.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 16).Active = true;
-            _container.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
+            _container.BottomAnchor.ConstraintEqualTo(_sceneViewBorder.TopAnchor, -22).Active = true;
+            _container.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 40).Active = true;
+            _container.RightAnchor.ConstraintEqualTo(View.RightAnchor, -40).Active = true;
 
             _toolbar.TopAnchor.ConstraintEqualTo(_container.TopAnchor).Active = true;
             _toolbar.LeftAnchor.ConstraintEqualTo(_container.LeftAnchor).Active = true;
@@ -298,14 +300,19 @@ namespace TheQTablet.iOS.Views.Main
             _cosOverlayButton.WidthAnchor.ConstraintEqualTo(_functionButtonsStack.WidthAnchor, 0.75f).Active = true;
 
             _telescopeAngleKnob.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.22f).Active = true;
-            _telescopeAngleKnob.TopAnchor.ConstraintEqualTo(_sceneView.TopAnchor).Active = true;
+            _telescopeAngleKnob.TopAnchor.ConstraintEqualTo(_sceneViewBorder.TopAnchor).Active = true;
             _telescopeAngleKnob.BottomAnchor.ConstraintEqualTo(View.BottomAnchor).Active = true;
             _telescopeAngleKnob.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 16).Active = true;
 
-            _sceneView.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.33f).Active = true;
-            _sceneView.HeightAnchor.ConstraintEqualTo(View.HeightAnchor, 0.25f).Active = true;
-            _sceneView.BottomAnchor.ConstraintEqualTo(View.BottomAnchor, -16).Active = true;
-            _sceneView.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
+            _sceneViewBorder.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.33f).Active = true;
+            _sceneViewBorder.BottomAnchor.ConstraintEqualTo(View.BottomAnchor, -16).Active = true;
+            _sceneViewBorder.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
+
+            _sceneView.WidthAnchor.ConstraintEqualTo(_sceneViewBorder.WidthAnchor, 1, -40).Active = true;
+            _sceneView.HeightAnchor.ConstraintEqualTo(_sceneViewBorder.HeightAnchor, 1, -40).Active = true;
+            _sceneView.HeightAnchor.ConstraintEqualTo(_sceneView.WidthAnchor, _sceneView.Image.Size.Height / _sceneView.Image.Size.Width).Active = true;
+            _sceneView.CenterXAnchor.ConstraintEqualTo(_sceneViewBorder.CenterXAnchor).Active = true;
+            _sceneView.CenterYAnchor.ConstraintEqualTo(_sceneViewBorder.CenterYAnchor).Active = true;
 
             var set = CreateBindingSet();
             set.Bind(_plotView).For(v => v.Model).To(vm => vm.PhotonPlotModel);
@@ -314,8 +321,14 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(_closeCross).For("Tap").To(vm => vm.CloseModalCommand);
             set.Bind(_cosOverlayButton).For(v => v.Active).To(vm => vm.ShowCosOverlay);
             set.Bind(_toolbarProgressText).To(vm => vm.Progress).WithConversion<ProgressLabelConverter>();
-            set.Bind(_toolbarProgressBar).To(vm => vm.Progress);
+            set.Bind(_toolbarProgressBar).For(v => v.Progress).To(vm => vm.Progress);
             set.Apply();
+        }
+
+        [Export("presentationControllerDidDismiss:")]
+        public void DidDismiss(UIPresentationController presentationController)
+        {
+            ViewModel.CloseModalCommand.Execute();
         }
     }
 }

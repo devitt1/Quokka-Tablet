@@ -67,7 +67,11 @@ namespace TheQTablet.Core.ViewModels.Main
             var model = new PlotModel()
             {
                 PlotAreaBorderColor = OxyColors.Transparent,
+                DefaultFont = "Akrobat-Regular.ttf",
             };
+
+            var titleFontSize = 18;
+            var fontSize = 18;
 
             var xAxis = new LinearAxis()
             {
@@ -85,7 +89,8 @@ namespace TheQTablet.Core.ViewModels.Main
                 TextColor = FadedOrange,
                 TitleColor = OxyColors.White,
                 TitleFontWeight = FontWeights.Bold,
-                TitleFontSize = 12,
+                TitleFontSize = titleFontSize,
+                FontSize = fontSize,
             };
             model.Axes.Add(xAxis);
 
@@ -105,7 +110,8 @@ namespace TheQTablet.Core.ViewModels.Main
                 TextColor = FadedOrange,
                 TitleColor = OxyColors.White,
                 TitleFontWeight = FontWeights.Bold,
-                TitleFontSize = 12,
+                TitleFontSize = titleFontSize,
+                FontSize = fontSize,
                 MajorGridlineColor = OxyColor.FromAColor(128, FadedOrange),
                 MajorGridlineThickness = 1,
                 MajorGridlineStyle = LineStyle.Solid,

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Foundation;
 using UIKit;
 
@@ -111,7 +111,7 @@ namespace TheQTablet.iOS.Views.Custom
             _label = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Font = FontGenerator.GenerateFont(16, UIFontWeight.Bold),
+                Font = FontGenerator.GenerateFont(18, UIFontWeight.Regular),
             };
             AddSubview(_label);
 

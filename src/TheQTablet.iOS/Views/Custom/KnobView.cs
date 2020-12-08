@@ -12,6 +12,8 @@ namespace TheQTablet.iOS.Views.Custom
         private UIImageView _innerCirclePointer;
         private UILabel _angleLabel;
 
+        private UIPanGestureRecognizer _gestureRecognizer;
+
         private float _startAngle;
         private int _angle;
         private int SmoothAngle
@@ -39,6 +41,10 @@ namespace TheQTablet.iOS.Views.Custom
 
         public KnobView()
         {
+            _gestureRecognizer = new UIPanGestureRecognizer();
+            _gestureRecognizer.AddTarget(() => Pan(_gestureRecognizer));
+            AddGestureRecognizer(_gestureRecognizer);
+
             Step = 5;
             _shadowOffset = new CGSize(0, 4);
 
@@ -85,41 +91,33 @@ namespace TheQTablet.iOS.Views.Custom
             _innerCirclePointer.BottomAnchor.ConstraintEqualTo(_innerCircleContainer.BottomAnchor).Active = true;
             _innerCirclePointer.LeftAnchor.ConstraintEqualTo(_innerCircleContainer.LeftAnchor).Active = true;
             _innerCirclePointer.RightAnchor.ConstraintEqualTo(_innerCircleContainer.RightAnchor).Active = true;
-            // Have to manually define height due to lopsided pointer image
-            // 753 / 686 = 1.09....
-            _innerCirclePointer.HeightAnchor.ConstraintEqualTo(_innerCircleContainer.HeightAnchor, 1.0976676385f).Active = true;
+            _innerCirclePointer.HeightAnchor.ConstraintEqualTo(_innerCircleContainer.HeightAnchor, _innerCirclePointer.Image.Size.Height / _innerCirclePointer.Image.Size.Width).Active = true;
 
             _angleLabel.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
             _angleLabel.CenterYAnchor.ConstraintEqualTo(CenterYAnchor).Active = true;
         }
 
-        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        public void Pan(UIPanGestureRecognizer _gesture)
         {
-            base.TouchesBegan(touches, evt);
-
-            var touch = touches.AnyObject as UITouch;
-            _startAngle = (float) ToRad(SmoothAngle) - GetTouchAngle(touch);
+            if(_gesture.State == UIGestureRecognizerState.Began)
+            {
+                _startAngle = (float)ToRad(SmoothAngle) - GetTouchAngle(_gesture);
+            }
+            else if(_gesture.State == UIGestureRecognizerState.Changed)
+            {
+                var angle = GetTouchAngle(_gesture) + _startAngle;
+                SteppedAngle = (int)ToDeg(angle);
+            }
+            else if(_gesture.State == UIGestureRecognizerState.Ended)
+            {
+                SteppedAngle = SteppedAngle;
+                TouchUp?.Invoke(this, EventArgs.Empty);
+            }
         }
 
-        public override void TouchesMoved(NSSet touches, UIEvent evt)
+        private float GetTouchAngle(UIPanGestureRecognizer _gesture)
         {
-            base.TouchesMoved(touches, evt);
-
-            var touch = touches.AnyObject as UITouch;
-            var angle = GetTouchAngle(touch) + _startAngle;
-            SteppedAngle = (int) ToDeg(angle);
-        }
-
-        public override void TouchesEnded(NSSet touches, UIEvent evt)
-        {
-            base.TouchesEnded(touches, evt);
-            SteppedAngle = SteppedAngle;
-            TouchUp?.Invoke(this, EventArgs.Empty);
-        }
-
-        private float GetTouchAngle(UITouch touch)
-        {
-            var touchLocation = touch.LocationInView(this);
+            var touchLocation = _gesture.LocationInView(this);
             var centre = new CGPoint(Frame.Width / 2.0f, Frame.Height / 2.0f);
 
             return (float)Math.Atan2((touchLocation.Y - centre.Y), (touchLocation.X - centre.X));

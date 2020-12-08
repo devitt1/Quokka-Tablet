@@ -13,18 +13,18 @@ namespace TheQTablet.iOS
             {
 
                 case UIFontWeight.Light:
-                    fontName = "Roboto-Thin";
+                    fontName = "Akrobat-Thin";
                     break;
                 case UIFontWeight.Regular:
-                    fontName = "Roboto-Regular";
+                    fontName = "Akrobat-Regular";
                     break;
                 case UIFontWeight.Medium:
 
                 case UIFontWeight.Semibold:
-                    fontName = "Roboto-Bold";
+                    fontName = "Akrobat-Bold";
                     break;
                 case UIFontWeight.Bold:
-                    fontName = "Roboto-Black";
+                    fontName = "Akrobat-Black";
                     break;
                     ;
             }
