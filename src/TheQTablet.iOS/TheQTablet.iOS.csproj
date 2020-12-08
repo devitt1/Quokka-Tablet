@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -203,6 +203,14 @@
     <ImageAsset Include="Resources\Media.xcassets\modal_background_gradient.imageset\Calque_17 1 1.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\dial_background.imageset\3-layers%403x 1.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\dial_top.imageset\2-layers%403x 1.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\stars_background_highlighted.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\stars_background.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\stars_background.imageset\star_back.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\stars_background_highlighted.imageset\star_back_highlights.pdf" />
+    <Compile Include="Views\Main\TelescopeSearchViewController.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\lens.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lens.imageset\lens.pdf" />
+    <Compile Include="Views\Custom\MaskedView.cs" />
     <ImageAsset Include="Resources\Media.xcassets\scene_preview.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\scene_preview.imageset\scene_preview.pdf" />
     <BundleResource Include="Resources\Fonts\Akrobat-Black.ttf" />
@@ -213,11 +221,18 @@
     <BundleResource Include="Resources\Fonts\Akrobat-Regular.ttf" />
     <BundleResource Include="Resources\Fonts\Akrobat-SemiBold.ttf" />
     <BundleResource Include="Resources\Fonts\Akrobat-Thin.ttf" />
+    <ImageAsset Include="Resources\Media.xcassets\progress_track_dark_vertical.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\progress_inner_vertical.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\progress_inner_vertical.imageset\gauge_grad_02 1.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\progress_inner_horizontal.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\progress_track_horizontal.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\progress_track_horizontal.imageset\progress_bar_border.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\progress_track_dark_vertical.imageset\gauge_back_01 1.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\progress_inner_horizontal.imageset\gauge_grad_02 1 %281%29.pdf" />
     <Compile Include="Views\Custom\InsetProgressBar.cs" />
+    <Compile Include="Views\Custom\DraggableView.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\back_logo.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\back_logo.imageset\logo_Q_top_01 1.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -317,9 +332,15 @@
     <Folder Include="Resources\Media.xcassets\dial_top_pointer.imageset\" />
     <Folder Include="Resources\Media.xcassets\banner_gradient.imageset\" />
     <Folder Include="Resources\Media.xcassets\modal_background_gradient.imageset\" />
+    <Folder Include="Resources\Media.xcassets\stars_background_highlighted.imageset\" />
+    <Folder Include="Resources\Media.xcassets\stars_background.imageset\" />
+    <Folder Include="Resources\Media.xcassets\lens.imageset\" />
     <Folder Include="Resources\Media.xcassets\scene_preview.imageset\" />
+    <Folder Include="Resources\Media.xcassets\progress_track_dark_vertical.imageset\" />
+    <Folder Include="Resources\Media.xcassets\progress_inner_vertical.imageset\" />
     <Folder Include="Resources\Media.xcassets\progress_inner_horizontal.imageset\" />
     <Folder Include="Resources\Media.xcassets\progress_track_horizontal.imageset\" />
+    <Folder Include="Resources\Media.xcassets\back_logo.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />
