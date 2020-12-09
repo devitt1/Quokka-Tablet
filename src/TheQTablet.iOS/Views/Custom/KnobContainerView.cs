@@ -17,7 +17,7 @@ namespace TheQTablet.iOS.Views.Custom
             set => KnobControl.Step = value;
         }
 
-        public KnobContainerView()
+        public KnobContainerView(string title = "ANGLE")
         {
             Axis = UILayoutConstraintAxis.Vertical;
             Alignment = UIStackViewAlignment.Center;
@@ -35,7 +35,7 @@ namespace TheQTablet.iOS.Views.Custom
             _knobHeader = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Text = "TELESCOPE LENS",
+                Text = title,
                 Font = FontGenerator.GenerateFont(22, UIFontWeight.Bold),
                 TextColor = ColorPalette.SecondaryText,
             };

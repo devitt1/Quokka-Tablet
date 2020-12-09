@@ -220,7 +220,7 @@ namespace TheQTablet.iOS.Views.Main
             };
             _functionButtonsStack.AddArrangedSubview(_cosOverlayButton);
 
-            _telescopeAngleKnob = new KnobContainerView()
+            _telescopeAngleKnob = new KnobContainerView("TELESCOPE LENS")
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Step = ViewModel.Step,

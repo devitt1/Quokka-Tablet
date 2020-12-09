@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Logging;
@@ -7,9 +7,9 @@ using MvvmCross.ViewModels;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
-    public class Lesson01StartViewModel : MvxNavigationViewModel
+    public class Lesson01WhatIsPolarisationViewModel : MvxNavigationViewModel
     {
-        public Lesson01StartViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService) : base(logProvider, navigationService)
+        public Lesson01WhatIsPolarisationViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService) : base(logProvider, navigationService)
         {
             ContinueCommand = new MvxAsyncCommand(NextPage);
             BackCommand = new MvxAsyncCommand(Back);
@@ -17,7 +17,7 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private async Task NextPage()
         {
-            await NavigationService.Navigate<Lesson01WhatIsPolarisationViewModel>();
+            await NavigationService.Navigate<TelescopeSearchViewModel>();
         }
 
         private async Task Back()

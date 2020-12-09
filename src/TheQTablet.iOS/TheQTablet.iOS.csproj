@@ -234,6 +234,9 @@
     <ImageAsset Include="Resources\Media.xcassets\lesson01_background_dark.imageset\lesson01_background_dark.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\logo.imageset\lesson01_logo.pdf" />
     <Compile Include="Views\Main\Lesson01\Lesson01StartViewController.cs" />
+    <Compile Include="Views\Main\Lesson01\Lesson01WhatIsPolarisationViewController.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\lesson01_field_graph.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -343,6 +346,7 @@
     <Folder Include="Resources\Media.xcassets\back_logo.imageset\" />
     <Folder Include="Resources\Media.xcassets\lesson01_background_dark.imageset\" />
     <Folder Include="Views\Main\Lesson01\" />
+    <Folder Include="Resources\Media.xcassets\lesson01_field_graph.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />
