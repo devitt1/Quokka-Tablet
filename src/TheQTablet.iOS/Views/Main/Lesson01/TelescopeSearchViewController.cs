@@ -24,7 +24,7 @@ namespace TheQTablet.iOS.Views.Main
         }
     }
 
-    public partial class TelescopeSearchViewController : BaseViewController<TelescopeSearchViewModel>
+    public partial class TelescopeSearchViewController : Lesson01BaseViewController<TelescopeSearchViewModel>
     {
         private UIImageView _background;
         private MaskedView _lensMask;

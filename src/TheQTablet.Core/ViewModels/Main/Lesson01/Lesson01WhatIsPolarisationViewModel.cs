@@ -5,9 +5,9 @@ using MvvmCross.Logging;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 
-namespace TheQTablet.Core.ViewModels.Main
+namespace TheQTablet.Core.ViewModels.Main.Lesson01
 {
-    public class Lesson01WhatIsPolarisationViewModel : MvxNavigationViewModel
+    public class Lesson01WhatIsPolarisationViewModel : LessonBaseViewModel
     {
         public Lesson01WhatIsPolarisationViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService) : base(logProvider, navigationService)
         {

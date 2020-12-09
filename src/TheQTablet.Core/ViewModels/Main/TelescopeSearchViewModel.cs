@@ -7,11 +7,11 @@ using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using TheQTablet.Core.Service.Interfaces;
+using TheQTablet.Core.ViewModels.Main.Lesson01;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
-    public class TelescopeSearchViewModel : MvxNavigationViewModel
+    public class TelescopeSearchViewModel : LessonBaseViewModel
     {
         public MvxAsyncCommand ContinueCommand { get; private set; }
 

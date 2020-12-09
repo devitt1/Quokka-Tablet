@@ -1,11 +1,11 @@
 ﻿using System;
-using TheQTablet.Core.ViewModels.Main;
+using TheQTablet.Core.ViewModels.Main.Lesson01;
 using TheQTablet.iOS.Views.Custom;
 using UIKit;
 
 namespace TheQTablet.iOS.Views.Main.Lesson01
 {
-    public class Lesson01WhatIsPolarisationViewController : BaseViewController<Lesson01WhatIsPolarisationViewModel>
+    public class Lesson01WhatIsPolarisationViewController : Lesson01BaseViewController<Lesson01WhatIsPolarisationViewModel>
     {
         private UIImageView _background;
 
@@ -23,9 +23,9 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
         private UIButton _backButton;
         private UIButton _continueButton;
 
-        public override void ViewDidLoad()
+        protected override void CreateView()
         {
-            base.ViewDidLoad();
+            base.CreateView();
 
             _background = new UIImageView
             {
@@ -127,6 +127,11 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             };
             _dialSubheader.SetContentCompressionResistancePriority((float)UILayoutPriority.Required, UILayoutConstraintAxis.Vertical);
             _dial.InsertArrangedSubview(_dialSubheader, 1);
+        }
+
+        protected override void LayoutView()
+        {
+            base.LayoutView();
 
             _background.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
             _background.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
@@ -165,6 +170,11 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             _dial.RightAnchor.ConstraintEqualTo(_continueButton.RightAnchor).Active = true;
             _dial.TopAnchor.ConstraintEqualTo(_fieldGraph.TopAnchor).Active = true;
             _dial.BottomAnchor.ConstraintEqualTo(_continueButton.TopAnchor, -20).Active = true;
+        }
+
+        protected override void BindView()
+        {
+            base.BindView();
 
             var set = CreateBindingSet();
             set.Bind(_backButton).To(vm => vm.BackCommand);

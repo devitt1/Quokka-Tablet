@@ -1,10 +1,11 @@
 ﻿using System;
-using TheQTablet.Core.ViewModels.Main;
+using TheQTablet.Core.ViewModels.Main.Lesson01;
+using TheQTablet.iOS.Views.Custom;
 using UIKit;
 
 namespace TheQTablet.iOS.Views.Main.Lesson01
 {
-    public class Lesson01StartViewController : BaseViewController<Lesson01StartViewModel>
+    public class Lesson01StartViewController : Lesson01BaseViewController<Lesson01StartViewModel>
     {
         private UIImageView _background;
         private UIView _logoCentringContainer;
@@ -20,9 +21,12 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
         private UILabel _lessonNumber;
         private UILabel _lessonName;
 
-        public override void ViewDidLoad()
+        private ExitLessonButton _exitButton;
+
+
+        protected override void CreateView()
         {
-            base.ViewDidLoad();
+            base.CreateView();
 
             _background = new UIImageView
             {
@@ -108,7 +112,11 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
                 TextColor = ColorPalette.PrimaryText,
             };
             _headingContainer.AddSubview(_lessonName);
+        }
 
+        protected override void LayoutView()
+        {
+            base.LayoutView();
 
             _background.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
             _background.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
@@ -153,10 +161,16 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             _lessonName.CenterXAnchor.ConstraintEqualTo(_headingContainer.CenterXAnchor).Active = true;
             _lessonName.BottomAnchor.ConstraintEqualTo(_headingContainer.BottomAnchor, -30).Active = true;
             _lessonName.HeightAnchor.ConstraintEqualTo(_lessonName.Font.PointSize).Active = true;
+        }
+
+        protected override void BindView()
+        {
+            base.BindView();
 
             var set = CreateBindingSet();
             set.Bind(_backButton).To(vm => vm.BackCommand);
             set.Bind(_continueButton).To(vm => vm.ContinueCommand);
+            set.Bind(_exitButton).For("Tapper").To(vm => vm.ExitCommand);
             set.Apply();
         }
     }

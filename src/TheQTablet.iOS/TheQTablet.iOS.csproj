@@ -203,7 +203,6 @@
     <ImageAsset Include="Resources\Media.xcassets\stars_background.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\stars_background.imageset\star_back.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\stars_background_highlighted.imageset\star_back_highlights.pdf" />
-    <Compile Include="Views\Main\TelescopeSearchViewController.cs" />
     <ImageAsset Include="Resources\Media.xcassets\lens.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\lens.imageset\lens.pdf" />
     <Compile Include="Views\Custom\MaskedView.cs" />
@@ -237,6 +236,9 @@
     <Compile Include="Views\Main\Lesson01\Lesson01WhatIsPolarisationViewController.cs" />
     <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\lesson01_field_graph.pdf" />
+    <Compile Include="Views\Custom\ExitLessonButton.cs" />
+    <Compile Include="Views\Main\Lesson01\Lesson01BaseViewController.cs" />
+    <Compile Include="Views\Main\Lesson01\TelescopeSearchViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

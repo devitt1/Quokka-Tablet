@@ -21,7 +21,7 @@ namespace TheQTablet.iOS.Views.Main
     }
 
     [MvxModalPresentation(WrapInNavigationController = false, ModalPresentationStyle = UIModalPresentationStyle.FormSheet)]
-    public partial class PlotViewController : MvxViewController<PlotViewModel>, IUIAdaptivePresentationControllerDelegate
+    public partial class PlotViewController : BaseViewController<PlotViewModel>, IUIAdaptivePresentationControllerDelegate
     {
         private UIImageView _backgroundGradient;
 
@@ -62,9 +62,9 @@ namespace TheQTablet.iOS.Views.Main
             PreferredContentSize = new CGSize(UIScreen.MainScreen.Bounds.Width - 80, UIScreen.MainScreen.Bounds.Height);
         }
 
-        public override void ViewDidLoad()
+        protected override void CreateView()
         {
-            base.ViewDidLoad();
+            base.CreateView();
 
             View.BackgroundColor = ColorPalette.BackgroundDark;
             _backgroundGradient = new UIImageView
@@ -239,9 +239,14 @@ namespace TheQTablet.iOS.Views.Main
             _sceneView = new UIImageView()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Image= UIImage.FromBundle("scene_preview"),
+                Image = UIImage.FromBundle("scene_preview"),
             };
             _sceneViewBorder.AddSubview(_sceneView);
+        }
+
+        protected override void LayoutView()
+        {
+            base.LayoutView();
 
             _backgroundGradient.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
             _backgroundGradient.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
@@ -312,6 +317,11 @@ namespace TheQTablet.iOS.Views.Main
             _sceneView.HeightAnchor.ConstraintEqualTo(_sceneView.WidthAnchor, _sceneView.Image.Size.Height / _sceneView.Image.Size.Width).Active = true;
             _sceneView.CenterXAnchor.ConstraintEqualTo(_sceneViewBorder.CenterXAnchor).Active = true;
             _sceneView.CenterYAnchor.ConstraintEqualTo(_sceneViewBorder.CenterYAnchor).Active = true;
+        }
+
+        protected override void BindView()
+        {
+            base.BindView();
 
             var set = CreateBindingSet();
             set.Bind(_plotView).For(v => v.Model).To(vm => vm.PhotonPlotModel);
