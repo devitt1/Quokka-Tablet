@@ -21,7 +21,7 @@ namespace TheQTablet.iOS
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            _nextButton = ButtonGenerator.DarkButton("CONTINUE");
+            _nextButton = ButtonGenerator.PrimaryButton("CONTINUE");
 
             this.View.AddSubview(_nextButton);
             _nextButton.BottomAnchor.ConstraintEqualTo(View.BottomAnchor, -46).Active = true;

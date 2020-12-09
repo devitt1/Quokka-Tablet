@@ -112,7 +112,7 @@ namespace TheQTablet.iOS.Views.Main
             };
             _goodSignalContainer.AddSubview(_goodSignalText);
 
-            _continue = ButtonGenerator.DarkButton("Continue");
+            _continue = ButtonGenerator.PrimaryButton("Continue");
             View.AddSubview(_continue);
 
             _lens.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
