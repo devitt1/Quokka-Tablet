@@ -152,6 +152,7 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
 
             _lessonName.CenterXAnchor.ConstraintEqualTo(_headingContainer.CenterXAnchor).Active = true;
             _lessonName.BottomAnchor.ConstraintEqualTo(_headingContainer.BottomAnchor, -30).Active = true;
+            _lessonName.HeightAnchor.ConstraintEqualTo(_lessonName.Font.PointSize).Active = true;
 
             var set = CreateBindingSet();
             set.Bind(_backButton).To(vm => vm.BackCommand);

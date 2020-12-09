@@ -271,11 +271,11 @@ namespace TheQTablet.iOS.Views.Main
 
             _toolbarCircuitText.HeightAnchor.ConstraintEqualTo(_toolbarCircuitText.Font.PointSize).Active = true;
             _toolbarCircuitImage.HeightAnchor.ConstraintEqualTo(_toolbarCircuitText.HeightAnchor, 1.2f).Active = true;
-            _toolbarCircuitImage.WidthAnchor.ConstraintEqualTo(_toolbarCircuitImage.HeightAnchor, _toolbarCircuitImage.Image.Size.Width / _toolbarCircuitImage.Image.Size.Height).Active = true;
+            _toolbarCircuitImage.WidthAnchor.ConstraintLessThanOrEqualTo(_toolbarCircuitImage.HeightAnchor, _toolbarCircuitImage.Image.Size.Width / _toolbarCircuitImage.Image.Size.Height).Active = true;
 
             _toolbarProgressText.HeightAnchor.ConstraintEqualTo(_toolbarProgressText.Font.PointSize).Active = true;
             _toolbarProgressBar.HeightAnchor.ConstraintEqualTo(_toolbarProgressText.HeightAnchor).Active = true;
-            _toolbarProgressBar.WidthAnchor.ConstraintEqualTo(_toolbarProgressBar.HeightAnchor, _toolbarProgressBar.TrackImage.Size.Width / _toolbarProgressBar.TrackImage.Size.Height).Active = true;
+            _toolbarProgressBar.WidthAnchor.ConstraintLessThanOrEqualTo(_toolbarProgressBar.HeightAnchor, _toolbarProgressBar.TrackImage.Size.Width / _toolbarProgressBar.TrackImage.Size.Height).Active = true;
 
             _plotContainer.TopAnchor.ConstraintEqualTo(_toolbar.BottomAnchor).Active = true;
             _plotContainer.BottomAnchor.ConstraintEqualTo(_container.BottomAnchor).Active = true;

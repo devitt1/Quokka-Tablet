@@ -107,6 +107,7 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             _fieldGraph = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
+                ContentMode = UIViewContentMode.ScaleAspectFit,
                 Image = UIImage.FromBundle("lesson01_field_graph"),
             };
             View.AddSubview(_fieldGraph);
