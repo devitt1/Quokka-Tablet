@@ -239,6 +239,9 @@
     <Compile Include="Views\Custom\ExitLessonButton.cs" />
     <Compile Include="Views\Main\Lesson01\Lesson01BaseViewController.cs" />
     <Compile Include="Views\Main\Lesson01\TelescopeSearchViewController.cs" />
+    <Compile Include="Views\Main\Lesson01\Lesson01SatelliteLensViewController.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\lens_wave_background.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lens_wave_background.imageset\lens_wave_back_01 1.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -349,6 +352,7 @@
     <Folder Include="Resources\Media.xcassets\lesson01_background_dark.imageset\" />
     <Folder Include="Views\Main\Lesson01\" />
     <Folder Include="Resources\Media.xcassets\lesson01_field_graph.imageset\" />
+    <Folder Include="Resources\Media.xcassets\lens_wave_background.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />
