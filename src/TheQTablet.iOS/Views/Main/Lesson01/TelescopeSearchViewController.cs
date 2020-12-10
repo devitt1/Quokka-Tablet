@@ -24,7 +24,7 @@ namespace TheQTablet.iOS.Views.Main
         }
     }
 
-    public partial class TelescopeSearchViewController : BaseViewController<TelescopeSearchViewModel>
+    public partial class TelescopeSearchViewController : Lesson01BaseViewController<TelescopeSearchViewModel>
     {
         private UIImageView _background;
         private MaskedView _lensMask;
@@ -112,7 +112,7 @@ namespace TheQTablet.iOS.Views.Main
             };
             _goodSignalContainer.AddSubview(_goodSignalText);
 
-            _continue = ButtonGenerator.DarkButton("Continue");
+            _continue = ButtonGenerator.PrimaryButton("Continue");
             View.AddSubview(_continue);
 
             _lens.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
@@ -160,6 +160,7 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(_lens).For(v => v.Position).To(vm => vm.LensPosition).WithConversion<PositionConverter>();
             set.Bind(_signalStrength).For(v => v.Progress).To(vm => vm.SignalStrength);
             set.Bind(_continue).For("Visible").To(vm => vm.StarFound);
+            set.Bind(_continue).To(vm => vm.ContinueCommand);
             set.Bind(_goodSignalContainer).For("Visible").To(vm => vm.StarFound);
             set.Apply();
         }

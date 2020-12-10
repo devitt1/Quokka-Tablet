@@ -10,8 +10,6 @@ namespace TheQTablet.iOS.Views.Custom
 
         public MaskedView()
         {
-            BackgroundColor = UIColor.Red;
-
             _maskLayer = new CAShapeLayer();
             Layer.Mask = _maskLayer;
         }

@@ -12,7 +12,7 @@ using UIKit;
 namespace TheQTablet.iOS
 {
     [MvxRootPresentation(WrapInNavigationController = true)]
-    public partial class RootViewController : BaseViewController<RootViewModel>
+    public partial class RootViewController : BaseNavbarViewController<RootViewModel>
     {
         private UILabel _labelWelcome, _labelMessage;
         private UIButton StartSimulationButton;

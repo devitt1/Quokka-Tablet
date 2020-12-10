@@ -20,7 +20,7 @@ namespace TheQTablet.iOS
         {
             base.ViewDidLoad();
 
-            _nextButton = ButtonGenerator.DarkButton("CONTINUE");
+            _nextButton = ButtonGenerator.PrimaryButton("CONTINUE");
            
             this.View.AddSubview(_nextButton);
 

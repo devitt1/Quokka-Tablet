@@ -19,7 +19,7 @@ using TheQTablet.iOS.Views;
 namespace TheQTablet.iOS.Views.Main
 {
     [MvxChildPresentation]
-    public partial class PolarisationExperimentViewController : BaseViewController<PolarisationExperimentViewModel>
+    public partial class PolarisationExperimentViewController : BaseNavbarViewController<PolarisationExperimentViewModel>
     {
         private UILabel
             _initialLabel,

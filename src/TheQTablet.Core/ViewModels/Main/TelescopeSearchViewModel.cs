@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Threading.Tasks;
+using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
-using TheQTablet.Core.Service.Interfaces;
+using TheQTablet.Core.ViewModels.Main.Lesson01;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
-    public class TelescopeSearchViewModel : MvxNavigationViewModel
+    public class TelescopeSearchViewModel : LessonBaseViewModel
     {
+        public MvxAsyncCommand ContinueCommand { get; private set; }
+
         public TelescopeSearchViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService) : base(logProvider, navigationService)
         {
             _starPositions = new List<PointF>
@@ -23,8 +27,10 @@ namespace TheQTablet.Core.ViewModels.Main
 
             SignalStrength = 0;
             LensPosition = new PointF(0.5f, 0.5f);
-        }
 
+            ContinueCommand = new MvxAsyncCommand(Continue);
+        }
+        
         private List<PointF> _starPositions;
 
         private PointF _lensPosition;
@@ -85,6 +91,11 @@ namespace TheQTablet.Core.ViewModels.Main
                     min = list[i];
             }
             return min;
+        }
+
+        private async Task Continue()
+        {
+            await NavigationService.Navigate<Lesson01SatelliteLensViewModel>();
         }
     }
 }

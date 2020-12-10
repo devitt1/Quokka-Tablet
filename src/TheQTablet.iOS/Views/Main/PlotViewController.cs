@@ -21,7 +21,7 @@ namespace TheQTablet.iOS.Views.Main
     }
 
     [MvxModalPresentation(WrapInNavigationController = false, ModalPresentationStyle = UIModalPresentationStyle.FormSheet)]
-    public partial class PlotViewController : MvxViewController<PlotViewModel>, IUIAdaptivePresentationControllerDelegate
+    public partial class PlotViewController : BaseViewController<PlotViewModel>, IUIAdaptivePresentationControllerDelegate
     {
         private UIImageView _backgroundGradient;
 
@@ -62,9 +62,9 @@ namespace TheQTablet.iOS.Views.Main
             PreferredContentSize = new CGSize(UIScreen.MainScreen.Bounds.Width - 80, UIScreen.MainScreen.Bounds.Height);
         }
 
-        public override void ViewDidLoad()
+        protected override void CreateView()
         {
-            base.ViewDidLoad();
+            base.CreateView();
 
             View.BackgroundColor = ColorPalette.BackgroundDark;
             _backgroundGradient = new UIImageView
@@ -88,7 +88,6 @@ namespace TheQTablet.iOS.Views.Main
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Image = UIImage.FromBundle("cross"),
             };
-            _closeCross.Layer.AffineTransform = CGAffineTransform.MakeRotation((float) Math.PI / 2.0f);
             View.AddSubview(_closeCross);
 
             _headingDivider = new UIView
@@ -221,7 +220,7 @@ namespace TheQTablet.iOS.Views.Main
             };
             _functionButtonsStack.AddArrangedSubview(_cosOverlayButton);
 
-            _telescopeAngleKnob = new KnobContainerView()
+            _telescopeAngleKnob = new KnobContainerView("TELESCOPE LENS")
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Step = ViewModel.Step,
@@ -240,9 +239,14 @@ namespace TheQTablet.iOS.Views.Main
             _sceneView = new UIImageView()
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Image= UIImage.FromBundle("scene_preview"),
+                Image = UIImage.FromBundle("scene_preview"),
             };
             _sceneViewBorder.AddSubview(_sceneView);
+        }
+
+        protected override void LayoutView()
+        {
+            base.LayoutView();
 
             _backgroundGradient.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
             _backgroundGradient.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
@@ -253,7 +257,7 @@ namespace TheQTablet.iOS.Views.Main
             _closeCross.CenterYAnchor.ConstraintEqualTo(_heading.CenterYAnchor).Active = true;
             _closeCross.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
             _closeCross.WidthAnchor.ConstraintEqualTo(_closeCross.HeightAnchor).Active = true;
-            _closeCross.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.03f).Active = true;
+            _closeCross.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.02f).Active = true;
 
             _headingDivider.TopAnchor.ConstraintEqualTo(_heading.BottomAnchor, 22).Active = true;
             _headingDivider.LeftAnchor.ConstraintEqualTo(_container.LeftAnchor).Active = true;
@@ -272,11 +276,11 @@ namespace TheQTablet.iOS.Views.Main
 
             _toolbarCircuitText.HeightAnchor.ConstraintEqualTo(_toolbarCircuitText.Font.PointSize).Active = true;
             _toolbarCircuitImage.HeightAnchor.ConstraintEqualTo(_toolbarCircuitText.HeightAnchor, 1.2f).Active = true;
-            _toolbarCircuitImage.WidthAnchor.ConstraintEqualTo(_toolbarCircuitImage.HeightAnchor, 8.5f).Active = true;
+            _toolbarCircuitImage.WidthAnchor.ConstraintLessThanOrEqualTo(_toolbarCircuitImage.HeightAnchor, _toolbarCircuitImage.Image.Size.Width / _toolbarCircuitImage.Image.Size.Height).Active = true;
 
             _toolbarProgressText.HeightAnchor.ConstraintEqualTo(_toolbarProgressText.Font.PointSize).Active = true;
             _toolbarProgressBar.HeightAnchor.ConstraintEqualTo(_toolbarProgressText.HeightAnchor).Active = true;
-            _toolbarProgressBar.WidthAnchor.ConstraintEqualTo(_toolbarProgressBar.HeightAnchor, 13.13f).Active = true;
+            _toolbarProgressBar.WidthAnchor.ConstraintLessThanOrEqualTo(_toolbarProgressBar.HeightAnchor, _toolbarProgressBar.TrackImage.Size.Width / _toolbarProgressBar.TrackImage.Size.Height).Active = true;
 
             _plotContainer.TopAnchor.ConstraintEqualTo(_toolbar.BottomAnchor).Active = true;
             _plotContainer.BottomAnchor.ConstraintEqualTo(_container.BottomAnchor).Active = true;
@@ -313,6 +317,11 @@ namespace TheQTablet.iOS.Views.Main
             _sceneView.HeightAnchor.ConstraintEqualTo(_sceneView.WidthAnchor, _sceneView.Image.Size.Height / _sceneView.Image.Size.Width).Active = true;
             _sceneView.CenterXAnchor.ConstraintEqualTo(_sceneViewBorder.CenterXAnchor).Active = true;
             _sceneView.CenterYAnchor.ConstraintEqualTo(_sceneViewBorder.CenterYAnchor).Active = true;
+        }
+
+        protected override void BindView()
+        {
+            base.BindView();
 
             var set = CreateBindingSet();
             set.Bind(_plotView).For(v => v.Model).To(vm => vm.PhotonPlotModel);

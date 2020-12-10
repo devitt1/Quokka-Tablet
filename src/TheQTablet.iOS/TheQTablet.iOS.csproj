@@ -151,10 +151,7 @@
     <Compile Include="Views\Main\StoryContainerView.designer.cs">
       <DependentUpon>StoryContainerView.cs</DependentUpon>
     </Compile>
-    <ImageAsset Include="Resources\Media.xcassets\story_background.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\story_background.imageset\story_background.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\logo.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\logo.imageset\logo.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\light_graph.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\light_graph.imageset\Group 1308.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\dial_background.imageset\Contents.json" />
@@ -193,7 +190,6 @@
     <Compile Include="Views\Custom\KnobContainerView.cs" />
     <ImageAsset Include="Resources\Media.xcassets\plain_circuit.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\cross.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\cross.imageset\cross.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\banner_gradient.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\banner_gradient.imageset\banner_gradient.pdf" />
     <Compile Include="Views\Custom\GradientView.cs" />
@@ -207,7 +203,6 @@
     <ImageAsset Include="Resources\Media.xcassets\stars_background.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\stars_background.imageset\star_back.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\stars_background_highlighted.imageset\star_back_highlights.pdf" />
-    <Compile Include="Views\Main\TelescopeSearchViewController.cs" />
     <ImageAsset Include="Resources\Media.xcassets\lens.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\lens.imageset\lens.pdf" />
     <Compile Include="Views\Custom\MaskedView.cs" />
@@ -233,6 +228,20 @@
     <Compile Include="Views\Custom\DraggableView.cs" />
     <ImageAsset Include="Resources\Media.xcassets\back_logo.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\back_logo.imageset\logo_Q_top_01 1.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\cross.imageset\X%403x 1.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\lesson01_background_dark.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lesson01_background_dark.imageset\lesson01_background_dark.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\logo.imageset\lesson01_logo.pdf" />
+    <Compile Include="Views\Main\Lesson01\Lesson01StartViewController.cs" />
+    <Compile Include="Views\Main\Lesson01\Lesson01WhatIsPolarisationViewController.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\lesson01_field_graph.pdf" />
+    <Compile Include="Views\Custom\ExitLessonButton.cs" />
+    <Compile Include="Views\Main\Lesson01\Lesson01BaseViewController.cs" />
+    <Compile Include="Views\Main\Lesson01\TelescopeSearchViewController.cs" />
+    <Compile Include="Views\Main\Lesson01\Lesson01SatelliteLensViewController.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\lens_wave_background.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lens_wave_background.imageset\lens_wave_back_01 1.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -318,7 +327,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Main\" />
-    <Folder Include="Resources\Media.xcassets\story_background.imageset\" />
     <Folder Include="Resources\Media.xcassets\logo.imageset\" />
     <Folder Include="Resources\Media.xcassets\light_graph.imageset\" />
     <Folder Include="Resources\Media.xcassets\dial_background.imageset\" />
@@ -344,6 +352,10 @@
     <Folder Include="Resources\Media.xcassets\progress_inner_horizontal.imageset\" />
     <Folder Include="Resources\Media.xcassets\progress_track_horizontal.imageset\" />
     <Folder Include="Resources\Media.xcassets\back_logo.imageset\" />
+    <Folder Include="Resources\Media.xcassets\lesson01_background_dark.imageset\" />
+    <Folder Include="Views\Main\Lesson01\" />
+    <Folder Include="Resources\Media.xcassets\lesson01_field_graph.imageset\" />
+    <Folder Include="Resources\Media.xcassets\lens_wave_background.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />

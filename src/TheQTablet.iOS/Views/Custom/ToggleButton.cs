@@ -99,7 +99,7 @@ namespace TheQTablet.iOS.Views.Custom
 
         public ToggleButton()
         {
-            ActiveBackgroundColor = ColorPalette.AccentLight;
+            ActiveBackgroundColor = ColorPalette.AccentDark;
             InactiveBackgroundColor = UIColor.Clear;
             ActiveBorderColor = UIColor.Clear;
             InactiveBorderColor = ColorPalette.Border;

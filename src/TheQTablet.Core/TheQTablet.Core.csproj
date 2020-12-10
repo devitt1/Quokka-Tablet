@@ -17,5 +17,6 @@
     <Folder Include="Service\Interfaces\" />
     <Folder Include="Service\Implementations\" />
     <Folder Include="DataModel\" />
+    <Folder Include="ViewModels\Main\Lesson01\" />
   </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@ using MvvmCross.Base;
 using TheQTablet.Core.Service.Interfaces;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using TheQTablet.Core.ViewModels.Main.Lesson01;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
@@ -36,7 +37,7 @@ namespace TheQTablet.Core.ViewModels.Main
         private async Task NavigateToPolarisationExperimentAsync()
         {
             _log.Trace(" Navigation to PolarisationSimulatorService: awaiting");
-            var result = await _navigationService.Navigate<StartLessonViewModel>();
+            var result = await _navigationService.Navigate<Lesson01StartViewModel>();
             _log.Trace(" Navigation to PolarisationSimulatorService: awaited");
         }
 
