@@ -64,7 +64,7 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             _introText.SetContentCompressionResistancePriority((float)UILayoutPriority.Required, UILayoutConstraintAxis.Vertical);
             _textContainer.AddSubview(_introText);
 
-            _backButton = ButtonGenerator.SecondaryButton("BACK");
+            _backButton = ButtonGenerator.SecondaryButton("Back");
             View.AddSubview(_backButton);
 
             _continueButton = ButtonGenerator.PrimaryButton("Continue");

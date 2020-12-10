@@ -16,7 +16,7 @@ namespace TheQTablet.Core.ViewModels.Main.Lesson01
 
         private async Task Exit()
         {
-            await NavigationService.Close(this);
+            await NavigationService.Navigate<RootViewModel>();
         }
 
         public MvxAsyncCommand ExitCommand { get; }

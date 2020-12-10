@@ -46,6 +46,7 @@ namespace TheQTablet.iOS.Views.Custom
             AddSubview(_label);
 
             _logo.LeftAnchor.ConstraintEqualTo(LeftAnchor).Active = true;
+            _logo.HeightAnchor.ConstraintEqualTo(30).Active = true;
             _label.RightAnchor.ConstraintEqualTo(RightAnchor).Active = true;
 
             _logo.RightAnchor.ConstraintEqualTo(_label.LeftAnchor, -14).Active = true;

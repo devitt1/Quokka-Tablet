@@ -73,7 +73,7 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             };
             _textContainer.AddSubview(_introText);
 
-            _backButton = ButtonGenerator.SecondaryButton("BACK");
+            _backButton = ButtonGenerator.SecondaryButton("Back");
             _textContainer.AddSubview(_backButton);
 
             _continueButton = ButtonGenerator.PrimaryButton("Continue");
