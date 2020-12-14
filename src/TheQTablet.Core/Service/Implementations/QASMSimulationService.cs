@@ -6,6 +6,7 @@ using MvvmCross.Logging;
 using TheQTablet.Core.DataModel;
 using TheQTablet.Core.Rest.Interfaces;
 using TheQTablet.Core.Service.Interfaces;
+using TheQTablet.Core.Utils;
 
 namespace TheQTablet.Core.Service.Implementations
 {
@@ -22,8 +23,8 @@ namespace TheQTablet.Core.Service.Implementations
 
         public async Task<QsamOperationResult> XRotation(float firstAngle, float secondAngle)
         {
-            var atm_rot_rad = (float)(2 * firstAngle * (2 * Math.PI) / 360);
-            var tel_rot_rad = (float)(2 * secondAngle * (2 * Math.PI) / 360);
+            var atm_rot_rad = MathHelpers.ToRadF(firstAngle);
+            var tel_rot_rad = MathHelpers.ToRadF(secondAngle);
             var QasmScript = string.Format("OPENQASM 2.0;\nqreg q[1];\ncreg c[1];\nrx({0}) q[0];\nrx({1}) q[0];\nmeasure q[0] -> c[0];", atm_rot_rad, tel_rot_rad);
 
             object data = new

@@ -1,6 +1,6 @@
 ﻿using System;
 using CoreGraphics;
-using Foundation;
+using TheQTablet.Core.Utils;
 using UIKit;
 
 namespace TheQTablet.iOS.Views.Custom
@@ -26,7 +26,7 @@ namespace TheQTablet.iOS.Views.Custom
             set
             {
                 _angle = AsAngle(value);
-                _innerCircleContainer.Transform = CGAffineTransform.MakeRotation((float) ToRad(SmoothAngle));
+                _innerCircleContainer.Transform = CGAffineTransform.MakeRotation(MathHelpers.ToRadF(SmoothAngle));
                 _innerCircleContainer.Layer.ShadowOffset = AngleCorrectedOffset(SmoothAngle, _shadowOffset);
                 _angleLabel.Text = AngleText(SteppedAngle);
                 SteppedAngleChanged?.Invoke(this, EventArgs.Empty);
@@ -101,12 +101,12 @@ namespace TheQTablet.iOS.Views.Custom
         {
             if(_gesture.State == UIGestureRecognizerState.Began)
             {
-                _startAngle = (float)ToRad(SmoothAngle) - GetTouchAngle(_gesture);
+                _startAngle = MathHelpers.ToRadF(SmoothAngle) - GetTouchAngle(_gesture);
             }
             else if(_gesture.State == UIGestureRecognizerState.Changed)
             {
                 var angle = GetTouchAngle(_gesture) + _startAngle;
-                SteppedAngle = (int)ToDeg(angle);
+                SteppedAngle = (int) MathHelpers.ToDegF(angle);
             }
             else if(_gesture.State == UIGestureRecognizerState.Ended)
             {
@@ -125,7 +125,7 @@ namespace TheQTablet.iOS.Views.Custom
 
         private static CGSize AngleCorrectedOffset(float angleDeg, CGSize offset)
         {
-            var angleRad = ToRad(angleDeg);
+            var angleRad = MathHelpers.ToRad(angleDeg);
             return new CGSize(
                 offset.Height * (float) Math.Sin(angleRad) + offset.Width * (float)Math.Cos(angleRad),
                 offset.Height * (float) Math.Cos(angleRad) + offset.Width * (float)Math.Sin(angleRad)
@@ -150,16 +150,6 @@ namespace TheQTablet.iOS.Views.Custom
         private double Round(double number, double increment, double offset = 0)
         {
             return Math.Round((number - offset) / increment) * increment + offset;
-        }
-
-        private static double ToRad(double deg)
-        {
-            return deg * (Math.PI / 180.0);
-        }
-
-        private static double ToDeg(double deg)
-        {
-            return deg * (180.0 / Math.PI);
         }
     }
 }

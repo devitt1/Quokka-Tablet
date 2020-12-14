@@ -8,6 +8,7 @@ using MvvmCross.Logging;
 using TheQTablet.Core.Service.Interfaces;
 using TheQTablet.Core.Rest.Interfaces;
 using TheQTablet.Core.DataModel;
+using TheQTablet.Core.Utils;
 
 namespace TheQTablet.Core.Service.Implementations
 {
@@ -158,8 +159,8 @@ namespace TheQTablet.Core.Service.Implementations
         {
             _log.Trace("SimulatorService:RunQASM()");
 
-            var atm_rot_rad = (float)(atmospheric_rot * (2 * Math.PI) / 360);
-            var tel_rot_rad = (float)(telescope_rot * (2 * Math.PI) / 360);
+            var atm_rot_rad = MathHelpers.ToRadF(atmospheric_rot);
+            var tel_rot_rad = MathHelpers.ToRadF(telescope_rot);
             var QasmScript = string.Format("OPENQASM 2.0;\nqreg q[1];\ncreg c[1];\nrx({0}) q[0];\nrx({1}) q[0];\nmeasure q[0] -> c[0];", atm_rot_rad, tel_rot_rad);
 
             try
@@ -231,7 +232,7 @@ namespace TheQTablet.Core.Service.Implementations
                     Operation = OperationType.GATE,
                     Gate = GateType.XROT,
                     Q = 0,
-                    Theta = (float) (atmospheric_rot * 2 * Math.PI / 360)
+                    Theta = MathHelpers.ToRadF(atmospheric_rot)
                 };
                 BoolOperationResult gateOperation1 = await GateOperationAsync(atmosphereGateOperationParam);
 
@@ -242,7 +243,7 @@ namespace TheQTablet.Core.Service.Implementations
                     Operation = OperationType.GATE,
                     Gate = GateType.XROT,
                     Q = 0,
-                    Theta = (float) (telescope_rot * (2 * Math.PI) / 360)
+                    Theta = MathHelpers.ToRadF(telescope_rot)
                 };
                 BoolOperationResult gateOperation2 = await GateOperationAsync(telescopeGateOperationParam);
 

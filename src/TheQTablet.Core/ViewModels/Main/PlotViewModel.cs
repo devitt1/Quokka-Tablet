@@ -12,6 +12,7 @@ using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using TheQTablet.Core.Service.Interfaces;
+using TheQTablet.Core.Utils;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
@@ -272,14 +273,9 @@ namespace TheQTablet.Core.ViewModels.Main
             return remainder;
         }
 
-        private static double ToRad(double deg)
-        {
-            return deg * (Math.PI / 180.0);
-        }
-
         private double PlotCosFunction(double x)
         {
-            var cos = Math.Cos(ToRad(x + AtmosphereAngle));
+            var cos = Math.Cos(MathHelpers.ToRad(x + AtmosphereAngle));
             return (1 + cos) * 100 * 0.5;
         }
     }

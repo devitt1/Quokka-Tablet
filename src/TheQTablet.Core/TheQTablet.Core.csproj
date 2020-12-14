@@ -19,6 +19,7 @@
     <Folder Include="DataModel\" />
     <Folder Include="ViewModels\Main\Lesson01\" />
     <Folder Include="Deprecated\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Deprecated\PolarisationExperimentViewModel.cs" />
