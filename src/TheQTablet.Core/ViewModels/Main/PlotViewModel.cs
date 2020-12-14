@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Timers;
+using Acr.UserDialogs;
 using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
@@ -33,14 +34,15 @@ namespace TheQTablet.Core.ViewModels.Main
     public class PlotViewModel : MvxNavigationViewModel
     {
         private ISimulatorService _simulatorService;
+        private readonly IUserDialogs _userDialogs;
 
         public MvxAsyncCommand TriggerOneTimeRunCommand { get; private set; }
         public MvxCommand CloseModalCommand { get; private set; }
 
-        public PlotViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService, ISimulatorService simulatorService) : base(logProvider, navigationService)
+        public PlotViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService, ISimulatorService simulatorService, IUserDialogs userDialogs) : base(logProvider, navigationService)
         {
             _simulatorService = simulatorService;
-
+            _userDialogs = userDialogs;
             _results = new Result[360];
             for (var i = 0; i < _results.Length; i++)
             {
@@ -50,10 +52,6 @@ namespace TheQTablet.Core.ViewModels.Main
             _telescopeAngle = 0;
             _atmosphereAngle = 30;
             _showCosOverlay = false;
-
-            _runTimer = new Timer(1000);
-            _runTimer.Elapsed += TimerCallback;
-            _runTimer.AutoReset = true;
 
             TriggerOneTimeRunCommand = new MvxAsyncCommand(RunOneTime);
             CloseModalCommand = new MvxCommand(Close);
@@ -201,35 +199,57 @@ namespace TheQTablet.Core.ViewModels.Main
         {
             base.ViewAppeared();
 
+            _runTimer = new Timer(1000);
+            _runTimer.Elapsed += TimerCallback;
+            _runTimer.AutoReset = true;
             _runTimer.Start();
         }
 
         public override void ViewDisappearing()
         {
-            base.ViewDisappearing();
-
+            _runTimer.Elapsed -= TimerCallback;
             _runTimer.Stop();
+
+            base.ViewDisappearing();
         }
 
         private async Task RunOneTime()
         {
-            var result = await _simulatorService.Run(AtmosphereAngle, TelescopeAngle, DataModel.ApiType.QASM_API);
+            var result = await _simulatorService.RunQASMAsync(AtmosphereAngle, TelescopeAngle);
 
-            _results[TelescopeAngle].total += result ? 1 : 0;
-            _results[TelescopeAngle].count++;
-
-            int filledCount = 0;
-            int fillableCount = _results.Length / Step;
-            for(var i = 0; i < _results.Length; i++)
+            if (!result.Error.Equals("no error"))
             {
-                if(_results[i].count > 0)
+                _runTimer.Stop();
+              await _userDialogs.AlertAsync(new AlertConfig()
                 {
-                    filledCount++;
-                }
-            }
-            Progress = (float) filledCount / fillableCount;
+                    Title = "Connection Error",
+                    Message = "Sorry, something went wrong.\nPlease check the connection with your Quantum Computer.",
+                    OkText = "OK, Start Again"
+                    
+                });
 
-            await RaisePropertyChanged(() => PhotonPlotModel);
+                CloseModalCommand.Execute();
+
+            }
+            else
+            {
+                var resultValue = result.Results[0];
+                _results[TelescopeAngle].total += resultValue ? 1 : 0;
+                _results[TelescopeAngle].count++;
+
+                int filledCount = 0;
+                int fillableCount = _results.Length / Step;
+                for (var i = 0; i < _results.Length; i++)
+                {
+                    if (_results[i].count > 0)
+                    {
+                        filledCount++;
+                    }
+                }
+                Progress = (float)filledCount / fillableCount;
+
+                await RaisePropertyChanged(() => PhotonPlotModel);
+            }
         }
 
         private async void TimerCallback(object source, ElapsedEventArgs args)

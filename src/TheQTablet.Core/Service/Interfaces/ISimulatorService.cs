@@ -7,14 +7,6 @@ namespace TheQTablet.Core.Service.Interfaces
 {
     public interface ISimulatorService
     {
-      
-        /// <summary>
-        /// Run basic simulation 
-        /// </summary>
-        /// <param name="atmospheric_rot"></param>
-        /// <param name="telescope_rot"></param>
-        /// <returns></returns>
-        Task<bool> Run(float atmospheric_rot, float telescope_rot);
 
         /// <summary>
         /// Run basic simulation 
@@ -23,7 +15,7 @@ namespace TheQTablet.Core.Service.Interfaces
         /// <param name="telescope_rot"></param>
         /// <param name="api_type"></param>
         /// <returns></returns>
-        Task<bool> Run(float atmospheric_rot, float telescope_rot, ApiType api_type);
+        Task<bool> RunClassicAPIAsync(float atmospheric_rot, float telescope_rot);
 
         /// <summary>
         /// Run basic simulation 
@@ -33,7 +25,7 @@ namespace TheQTablet.Core.Service.Interfaces
         /// <param name="api_type"></param>
         /// <param name="number_of_experiments"></param>
         /// <returns></returns>
-        Task<PolarisationResultList> Run(float atmospheric_rot, float telescope_rot, ApiType api_type, int number_of_experiments);
+        Task<QASMServiceResults> RunQASMAsync(float atmospheric_rot, float telescope_rot, int number_of_experiments = 1);
 
 
         /// <summary>

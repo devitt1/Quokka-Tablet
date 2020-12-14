@@ -7,6 +7,7 @@ using TheQTablet.Core.Service.Interfaces;
 using TheQTablet.Core.Rest.Implementations;
 using TheQTablet.Core.Rest.Interfaces;
 using TheQTablet.Core.ViewModels.Main;
+using Acr.UserDialogs;
 
 namespace TheQTablet.Core
 {
@@ -25,8 +26,8 @@ namespace TheQTablet.Core
                 .RegisterAsLazySingleton();
 
             Mvx.IoCProvider.RegisterType<ISimulatorService, SimulatorService>();
-            Mvx.IoCProvider.RegisterType<IResultAccumulatorService, ResultAccumulatorService>();
             Mvx.IoCProvider.RegisterType<IRestClient, RestClient>();
+            Mvx.IoCProvider.RegisterSingleton<IUserDialogs>(() => UserDialogs.Instance);
 
             RegisterAppStart<RootViewModel>();
         }
