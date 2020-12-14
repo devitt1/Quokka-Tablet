@@ -349,7 +349,7 @@ namespace TheQTablet.Core.ViewModels.Main
 
             _log.Trace("gatherExperimentResults() about to call QASM");
             _fetchingForStoredResults = true;
-            PolarisationResultList result = await _polarisationSimulatorService.Run(atmPolarisation, filterPolarisaton, ApiType.QASM_API, number);
+            QASMServiceResults result = await _polarisationSimulatorService.Run(atmPolarisation, filterPolarisaton, ApiType.QASM_API, number);
             _log.Trace("gatherExperimentResults() got result from QASM, enqueing...");
 
             foreach (bool element in result.Results)

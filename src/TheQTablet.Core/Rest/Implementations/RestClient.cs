@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 using MvvmCross.Base;
 using MvvmCross.Logging;
 using TheQTablet.Core.Rest.Interfaces;
@@ -56,9 +57,8 @@ namespace TheQTablet.Core.Rest.Implementations
                     _mvxLog.Trace("MakeApiCall failed", ex);
 
                     //TODO Handle Error Networks show error to user
-                    throw ex;
+                    return default;
                 }
-
 
 
                 //_mvxLog.Trace("RestClient:MakeApiCallAsync: awaiting response...");
@@ -75,9 +75,9 @@ namespace TheQTablet.Core.Rest.Implementations
                 {
                     _mvxLog.ErrorException("Parsing result error", ex);
                     _mvxLog.Trace("Parsing result error", ex.Message);
-
+                    return default;
                     //TODO Handle Parsing Errors show error to user
-                    throw ex;
+
                 }
 
             }

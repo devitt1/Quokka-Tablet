@@ -134,7 +134,6 @@
     <Compile Include="Views\Main\RootViewController.designer.cs">
         <DependentUpon>RootViewController.cs</DependentUpon>
       </Compile>
-    <Compile Include="Views\Main\PolarisationExperimentViewController.cs" />
     <Compile Include="Views\Main\DetailSimulationView.cs" />
     <Compile Include="Views\Main\DetailSimulationView.designer.cs">
       <DependentUpon>DetailSimulationView.cs</DependentUpon>
@@ -242,6 +241,7 @@
     <Compile Include="Views\Main\Lesson01\Lesson01SatelliteLensViewController.cs" />
     <ImageAsset Include="Resources\Media.xcassets\lens_wave_background.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\lens_wave_background.imageset\lens_wave_back_01 1.pdf" />
+    <None Include="Deprecated\PolarisationExperimentViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -356,6 +356,7 @@
     <Folder Include="Views\Main\Lesson01\" />
     <Folder Include="Resources\Media.xcassets\lesson01_field_graph.imageset\" />
     <Folder Include="Resources\Media.xcassets\lens_wave_background.imageset\" />
+    <Folder Include="Deprecated\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />

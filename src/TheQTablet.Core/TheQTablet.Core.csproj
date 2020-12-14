@@ -18,5 +18,18 @@
     <Folder Include="Service\Implementations\" />
     <Folder Include="DataModel\" />
     <Folder Include="ViewModels\Main\Lesson01\" />
+    <Folder Include="Deprecated\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Deprecated\PolarisationExperimentViewModel.cs" />
+    <Compile Remove="Deprecated\IResultAccumulatorService.cs" />
+    <Compile Remove="Deprecated\PolarisationAccumulator.cs" />
+    <Compile Remove="Deprecated\ResultAccumulatorService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Deprecated\PolarisationExperimentViewModel.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
+    <None Include="Deprecated\IResultAccumulatorService.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
+    <None Include="Deprecated\PolarisationAccumulator.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
+    <None Include="Deprecated\ResultAccumulatorService.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' " />
   </ItemGroup>
 </Project>
