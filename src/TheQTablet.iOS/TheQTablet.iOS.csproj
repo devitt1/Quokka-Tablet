@@ -359,13 +359,8 @@
     <Folder Include="Deprecated\" />
   </ItemGroup>
   <ItemGroup>
-    <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />
-    <SceneKitAsset Include="Art.scnassets\happyIdleProf.scn" />
-    <SceneKitAsset Include="Art.scnassets\environement01.scn" />
-    <SceneKitAsset Include="Art.scnassets\happyIdleProf2.scn" />
     <SceneKitAsset Include="Art.scnassets\environement.dae" />
     <SceneKitAsset Include="Art.scnassets\gradquoka.png" />
-    <SceneKitAsset Include="Art.scnassets\happyIdleProf.dae" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
