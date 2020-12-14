@@ -2,6 +2,8 @@
 using Foundation;
 using MvvmCross.Platforms.Ios.Presenters.Attributes;
 using TheQTablet.Core.ViewModels.Main.Lesson01;
+using TheQTablet.iOS.Views.Custom;
+
 using UIKit;
 
 namespace TheQTablet.iOS.Views.Main.Lesson01
@@ -20,7 +22,7 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
         private UIView _container;
 
         private UIView _videoContainer;
-        private UIView _video;
+        private VideoPlayer _video;
         private UILabel _videoText;
 
         private UILabel _explanationText;
@@ -110,7 +112,7 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             _videoContainer.Layer.CornerRadius = 20;
             _container.AddSubview(_videoContainer);
 
-            _video = new UIView
+            _video = new VideoPlayer("file_example_MP4_480_1_5MG.mp4")
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 BackgroundColor = UIColor.Green,
@@ -251,7 +253,6 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             _video.LeftAnchor.ConstraintEqualTo(_videoContainer.LayoutMarginsGuide.LeftAnchor).Active = true;
             _video.RightAnchor.ConstraintEqualTo(_videoContainer.LayoutMarginsGuide.RightAnchor).Active = true;
             _video.WidthAnchor.ConstraintEqualTo(_container.WidthAnchor, 0.5f).Active = true;
-            _video.HeightAnchor.ConstraintEqualTo(_video.WidthAnchor, 0.5f).Active = true;
 
             _videoText.TopAnchor.ConstraintEqualTo(_videoContainer.TopAnchor).Active = true;
             _videoText.BottomAnchor.ConstraintEqualTo(_videoContainer.BottomAnchor).Active = true;
