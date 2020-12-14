@@ -1,5 +1,4 @@
-﻿using System;
-using TheQTablet.Core.ViewModels.Main.Lesson01;
+﻿using TheQTablet.Core.ViewModels.Main.Lesson01;
 using TheQTablet.iOS.Views.Custom;
 using UIKit;
 

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
-using MvvmCross.ViewModels;
 
 namespace TheQTablet.Core.ViewModels.Main.Lesson01
 {

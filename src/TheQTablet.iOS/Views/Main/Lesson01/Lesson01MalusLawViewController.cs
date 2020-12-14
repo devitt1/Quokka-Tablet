@@ -1,14 +1,7 @@
-﻿using System;
-using System.Globalization;
-using CoreGraphics;
+﻿using CoreGraphics;
 using Foundation;
-using MvvmCross.Converters;
 using MvvmCross.Platforms.Ios.Presenters.Attributes;
-using MvvmCross.Platforms.Ios.Views;
-using OxyPlot.Xamarin.iOS;
-using TheQTablet.Core.ViewModels.Main;
 using TheQTablet.Core.ViewModels.Main.Lesson01;
-using TheQTablet.iOS.Views.Custom;
 using UIKit;
 
 namespace TheQTablet.iOS.Views.Main.Lesson01

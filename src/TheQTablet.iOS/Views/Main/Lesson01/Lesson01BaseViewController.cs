@@ -1,9 +1,4 @@
-﻿using System;
-using Cirrious.FluentLayouts.Touch;
-using MvvmCross.Platforms.Ios.Views;
-using MvvmCross.ViewModels;
-using TheQTablet.Core.ViewModels.Main.Lesson01;
-using TheQTablet.iOS;
+﻿using TheQTablet.Core.ViewModels.Main.Lesson01;
 using TheQTablet.iOS.Views.Custom;
 using UIKit;
 

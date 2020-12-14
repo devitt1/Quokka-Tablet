@@ -2,9 +2,7 @@
 using System.Drawing;
 using System.Globalization;
 using CoreGraphics;
-using Foundation;
 using MvvmCross.Converters;
-using MvvmCross.Platforms.Ios.Views;
 using TheQTablet.Core.ViewModels.Main;
 using TheQTablet.iOS.Views.Custom;
 using UIKit;

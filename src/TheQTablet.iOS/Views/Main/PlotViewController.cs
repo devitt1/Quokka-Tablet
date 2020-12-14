@@ -4,7 +4,6 @@ using CoreGraphics;
 using Foundation;
 using MvvmCross.Converters;
 using MvvmCross.Platforms.Ios.Presenters.Attributes;
-using MvvmCross.Platforms.Ios.Views;
 using OxyPlot.Xamarin.iOS;
 using TheQTablet.Core.ViewModels.Main;
 using TheQTablet.iOS.Views.Custom;

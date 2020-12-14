@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using MvvmCross.Logging;
-using MvvmCross;
-using MvvmCross.Base;
 
 using TheQTablet.Core.Service.Interfaces;
 using MvvmCross.Commands;
