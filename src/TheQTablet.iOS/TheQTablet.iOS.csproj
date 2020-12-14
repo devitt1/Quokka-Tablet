@@ -242,6 +242,8 @@
     <Compile Include="Views\Main\Lesson01\Lesson01SatelliteLensViewController.cs" />
     <ImageAsset Include="Resources\Media.xcassets\lens_wave_background.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\lens_wave_background.imageset\lens_wave_back_01 1.pdf" />
+    <Compile Include="Views\Main\Lesson01\Lesson01MalusLawViewController.cs" />
+    <Compile Include="Styles\AttributedStringGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
