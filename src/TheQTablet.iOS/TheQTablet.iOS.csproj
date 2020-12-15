@@ -252,6 +252,8 @@
     <ImageAsset Include="Resources\Media.xcassets\start_background.imageset\back_start_01 1.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\dark_logo.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\dark_logo.imageset\Vector.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\lesson01_preview.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lesson01_preview.imageset\vignet_level01_start_01 1.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -369,6 +371,7 @@
     <Folder Include="Deprecated\" />
     <Folder Include="Resources\Media.xcassets\start_background.imageset\" />
     <Folder Include="Resources\Media.xcassets\dark_logo.imageset\" />
+    <Folder Include="Resources\Media.xcassets\lesson01_preview.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />

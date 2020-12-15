@@ -27,6 +27,8 @@ namespace TheQTablet.iOS
         private UICollectionView _lessons;
         private UIView _lessonsBottomBorder;
 
+        private LessonSource _source;
+
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
@@ -150,8 +152,9 @@ namespace TheQTablet.iOS
                 BackgroundColor = UIColor.Clear,
             };
             _lessonsContainer.AddSubview(_lessons);
-            _lessons.RegisterClassForCell(typeof(LessonCell), LessonCell.CellId);
-            _lessons.Source = new LessonSource();
+
+            _source = new LessonSource(_lessons);
+            _lessons.Source = _source;
 
             _lessonsBottomBorder = new UIView
             {
@@ -213,6 +216,8 @@ namespace TheQTablet.iOS
             base.BindView();
 
             var set = this.CreateBindingSet<RootViewController, RootViewModel>();
+            set.Bind(_source).For(v => v.ItemsSource).To(vm => vm.Lessons);
+            set.Bind(_source).For(v => v.SelectionChangedCommand).To(vm => vm.NavigateToLessonCommand);
             set.Apply();
         }
     }

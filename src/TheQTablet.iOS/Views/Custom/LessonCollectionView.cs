@@ -1,51 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 using CoreGraphics;
 
 using Foundation;
 
+using MvvmCross.Binding.BindingContext;
+using MvvmCross.Converters;
+using MvvmCross.Platforms.Ios.Binding.Views;
+
+using TheQTablet.Core.ViewModels.Main;
+
 using UIKit;
 
 namespace TheQTablet.iOS.Views.Custom
 {
-
-    public class LessonSource : UICollectionViewSource
+    public class LessonSource : MvxCollectionViewSource
     {
-        public List<string> Lessons { get; private set; }
-
-        public LessonSource()
+        public LessonSource(UICollectionView collectionView)
+            : base(collectionView, LessonCell.CellId)
         {
-            Lessons = new List<string>
-            {
-                "Lesson 1",
-                "Lesson 2",
-                "Lesson 3",
-                "Lesson 4",
-                "Lesson 5",
-                "Lesson 6",
-                "Lesson 7",
-                "Lesson 8",
-                "Lesson 9",
-            };
-        }
-
-        public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
-        {
-            var cell = (LessonCell)collectionView.DequeueReusableCell(LessonCell.CellId, indexPath);
-
-            cell.Text = Lessons[indexPath.Row];
-
-            cell.Layer.CornerRadius = 20;
-
-            return cell;
-        }
-
-        public override nint GetItemsCount(UICollectionView collectionView, nint section)
-        {
-            return Lessons.Count;
+            collectionView.RegisterClassForCell(typeof(LessonCell), LessonCell.CellId);
+            ReloadOnAllItemsSourceSets = true;
         }
 
         [Export("collectionView:layout:sizeForItemAtIndexPath:"), CompilerGenerated]
@@ -67,37 +44,96 @@ namespace TheQTablet.iOS.Views.Custom
         public int CountPerRow;
     }
 
-    public class LessonCell : UICollectionViewCell
+    public class LessonNumberConverter : MvxValueConverter<int, string>
+    {
+        protected override string Convert(int value, Type targetType, object parameter, CultureInfo cultureInfo)
+        {
+            return "LESSON " + value;
+        }
+    }
+    
+    public class LessonImageConverter : MvxValueConverter<int, UIImage>
+    {
+        protected override UIImage Convert(int value, Type targetType, object parameter, CultureInfo cultureInfo)
+        {
+            return UIImage.FromBundle("lesson" + value.ToString("00") + "_preview");
+        }
+    }
+
+    public class LessonCell : MvxCollectionViewCell
     {
         public static readonly NSString CellId = new NSString("LessonCell");
 
+        private UIImageView _background;
+
+        private UIView _textContainer;
+        private UILabel _numberLabel;
         private UILabel _titleLabel;
 
-        private string _titleText;
-        public string Text
+        LessonCell(IntPtr handle) : base(handle)
         {
-            get => _titleText;
-            set
-            {
-                _titleText = value;
-                _titleLabel.Text = _titleText;
-            }
-        }
+            ContentView.ClipsToBounds = true;
+            ContentView.Layer.CornerRadius = 20;
+            ContentView.BackgroundColor = ColorPalette.BackgroundLight;
 
-        [Export("initWithFrame:")]
-        LessonCell(RectangleF frame) : base(frame)
-        {
-            BackgroundColor = UIColor.Yellow;
+            _background = new UIImageView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                ContentMode = UIViewContentMode.ScaleAspectFill,
+            };
+            ContentView.AddSubview(_background);
+
+            _textContainer = new UIView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                BackgroundColor = ColorPalette.BackgroundDark,
+                DirectionalLayoutMargins = new NSDirectionalEdgeInsets
+                {
+                    Leading = 20,
+                    Trailing = 20,
+                    Top = 20,
+                    Bottom = 20,
+                }
+            };
+            ContentView.AddSubview(_textContainer);
+
+            _numberLabel = new UILabel
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Font = FontGenerator.GenerateFont(24, UIFontWeight.Regular),
+                TextColor = ColorPalette.SecondaryText,
+            };
+            _textContainer.AddSubview(_numberLabel);
 
             _titleLabel = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                Text = _titleText,
+                Font = FontGenerator.GenerateFont(24, UIFontWeight.Regular),
+                TextColor = ColorPalette.PrimaryText,
             };
-            ContentView.AddSubview(_titleLabel);
+            _textContainer.AddSubview(_titleLabel);
 
-            _titleLabel.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
-            _titleLabel.CenterYAnchor.ConstraintEqualTo(CenterYAnchor).Active = true;
+            _background.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
+            _background.HeightAnchor.ConstraintEqualTo(ContentView.HeightAnchor).Active = true;
+
+            _textContainer.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
+            _textContainer.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
+
+            _numberLabel.LeftAnchor.ConstraintEqualTo(_textContainer.LayoutMarginsGuide.LeftAnchor).Active = true;
+            _numberLabel.TopAnchor.ConstraintEqualTo(_textContainer.LayoutMarginsGuide.TopAnchor).Active = true;
+
+            _titleLabel.TopAnchor.ConstraintEqualTo(_numberLabel.BottomAnchor).Active = true;
+            _titleLabel.LeftAnchor.ConstraintEqualTo(_textContainer.LayoutMarginsGuide.LeftAnchor).Active = true;
+            _titleLabel.BottomAnchor.ConstraintEqualTo(_textContainer.LayoutMarginsGuide.BottomAnchor).Active = true;
+
+            this.DelayBind(() =>
+            {
+                var set = this.CreateBindingSet<LessonCell, Lesson>();
+                set.Bind(_numberLabel).For(v => v.Text).To(vm => vm.Number).WithConversion<LessonNumberConverter>();
+                set.Bind(_titleLabel).For(v => v.Text).To(vm => vm.Title);
+                set.Bind(_background).For(v => v.Image).To(vm => vm.Number).WithConversion<LessonImageConverter>();
+                set.Apply();
+            });
         }
     }
 }

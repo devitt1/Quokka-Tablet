@@ -156,20 +156,14 @@ namespace TheQTablet.Core.ViewModels.Main
         public int TelescopeAngle
         {
             get => _telescopeAngle;
-            set
-            {
-                SetProperty(ref _telescopeAngle, AsAngle(value));
-            }
+            set => SetProperty(ref _telescopeAngle, AsAngle(value));
         }
 
         private int _atmosphereAngle;
         public int AtmosphereAngle
         {
             get => _atmosphereAngle;
-            set
-            {
-                SetProperty(ref _atmosphereAngle, AsAngle(value));
-            }
+            set => SetProperty(ref _atmosphereAngle, AsAngle(value));
         }
 
         private bool _showCosOverlay;
@@ -187,10 +181,7 @@ namespace TheQTablet.Core.ViewModels.Main
         public float Progress
         {
             get => _progress;
-            set
-            {
-                SetProperty(ref _progress, value);
-            }
+            set => SetProperty(ref _progress, value);
         }
 
         private Timer _runTimer;
