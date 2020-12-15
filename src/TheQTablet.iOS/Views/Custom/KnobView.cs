@@ -45,7 +45,7 @@ namespace TheQTablet.iOS.Views.Custom
             _gestureRecognizer.AddTarget(() => Pan(_gestureRecognizer));
             AddGestureRecognizer(_gestureRecognizer);
 
-            Step = 5;
+            Step = 10;
             _shadowOffset = new CGSize(0, 4);
 
             _outerRing = new UIImageView

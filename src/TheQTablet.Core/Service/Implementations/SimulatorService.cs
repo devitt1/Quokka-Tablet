@@ -159,8 +159,9 @@ namespace TheQTablet.Core.Service.Implementations
         {
             _log.Trace("SimulatorService:RunQASM()");
 
-            var atm_rot_rad = MathHelpers.ToRadF(atmospheric_rot);
-            var tel_rot_rad = MathHelpers.ToRadF(telescope_rot);
+            // 2x to emulate Malus' law
+            var atm_rot_rad = 2 * MathHelpers.ToRadF(atmospheric_rot);
+            var tel_rot_rad = 2 * MathHelpers.ToRadF(telescope_rot);
             var QasmScript = string.Format("OPENQASM 2.0;\nqreg q[1];\ncreg c[1];\nrx({0}) q[0];\nrx({1}) q[0];\nmeasure q[0] -> c[0];", atm_rot_rad, tel_rot_rad);
 
             try

@@ -215,7 +215,7 @@ namespace TheQTablet.iOS.Views.Main
 
             _cosOverlayButton = new ToggleButton
             {
-                Text = "Cos(x + 30°)",
+                Text = "Cos²(x + 30°)",
             };
             _functionButtonsStack.AddArrangedSubview(_cosOverlayButton);
 

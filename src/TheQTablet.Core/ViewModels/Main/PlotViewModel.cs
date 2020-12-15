@@ -48,7 +48,7 @@ namespace TheQTablet.Core.ViewModels.Main
             {
                 _results[i] = new Result();
             }
-            Step = 5;
+            Step = 10;
             _telescopeAngle = 0;
             _atmosphereAngle = 30;
             _showCosOverlay = false;
@@ -118,11 +118,11 @@ namespace TheQTablet.Core.ViewModels.Main
 
             if(_showCosOverlay)
             {
-                model.Series.Add(new FunctionSeries(PlotCosFunction, 0, 359, 0.1)
+                model.Series.Add(new FunctionSeries(PlotCosSquaredFunction, 0, 359, 0.1)
                 {
                     Color = OxyColor.Parse("#B6CFE9"),
                     StrokeThickness = 3,
-                    //Title = "Cos(x + 30°)",
+                    //Title = "Cos²(x + 30°)",
                 });
             }
 
@@ -190,7 +190,7 @@ namespace TheQTablet.Core.ViewModels.Main
         {
             base.ViewAppeared();
 
-            _runTimer = new Timer(1000);
+            _runTimer = new Timer(200);
             _runTimer.Elapsed += TimerCallback;
             _runTimer.AutoReset = true;
             _runTimer.Start();
@@ -220,7 +220,6 @@ namespace TheQTablet.Core.ViewModels.Main
                 });
 
                 CloseModalCommand.Execute();
-
             }
             else
             {
@@ -263,10 +262,10 @@ namespace TheQTablet.Core.ViewModels.Main
             return remainder;
         }
 
-        private double PlotCosFunction(double x)
+        private double PlotCosSquaredFunction(double x)
         {
             var cos = Math.Cos(MathHelpers.ToRad(x + AtmosphereAngle));
-            return (1 + cos) * 100 * 0.5;
+            return (cos * cos) * 100;
         }
     }
 }
