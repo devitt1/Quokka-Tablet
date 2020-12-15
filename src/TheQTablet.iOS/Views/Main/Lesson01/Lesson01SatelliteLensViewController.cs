@@ -92,7 +92,7 @@ namespace TheQTablet.iOS.Views.Main
             base.LayoutView();
 
             _background.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
-            _background.HeightAnchor.ConstraintEqualTo(_background.WidthAnchor, _background.Image.Size.Height / _background.Image.Size.Width).Active = true;
+            _background.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
 
             _signalStrengthText.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 32).Active = true;
             _signalStrengthText.BottomAnchor.ConstraintEqualTo(View.BottomAnchor, -32).Active = true;

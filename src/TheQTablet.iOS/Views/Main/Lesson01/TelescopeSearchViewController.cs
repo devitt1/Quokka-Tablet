@@ -122,7 +122,7 @@ namespace TheQTablet.iOS.Views.Main
             _lensImage.HeightAnchor.ConstraintEqualTo(_lensImage.WidthAnchor).Active = true;
 
             _background.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
-            _background.HeightAnchor.ConstraintEqualTo(_background.WidthAnchor, _background.Image.Size.Height / _background.Image.Size.Width).Active = true;
+            _background.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
 
             _highlightedBackground.WidthAnchor.ConstraintEqualTo(_background.WidthAnchor).Active = true;
             _highlightedBackground.HeightAnchor.ConstraintEqualTo(_background.HeightAnchor).Active = true;
