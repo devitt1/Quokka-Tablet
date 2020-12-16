@@ -5,7 +5,7 @@ using MvvmCross.Navigation;
 
 namespace TheQTablet.Core.ViewModels.Main.Lesson01
 {
-    public class Lesson01SatelliteLensViewModel : LessonBaseViewModel
+    public class Lesson01SatelliteLensViewModel : Lesson01BaseViewModel
     {
         public Lesson01SatelliteLensViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService) : base(logProvider, navigationService)
         {

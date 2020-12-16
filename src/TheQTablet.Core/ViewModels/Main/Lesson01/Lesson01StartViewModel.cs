@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
+
 using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
 
 namespace TheQTablet.Core.ViewModels.Main.Lesson01
 {
-    public class Lesson01StartViewModel : LessonBaseViewModel
+    public class Lesson01StartViewModel : Lesson01BaseViewModel
     {
         public Lesson01StartViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService) : base(logProvider, navigationService)
         {

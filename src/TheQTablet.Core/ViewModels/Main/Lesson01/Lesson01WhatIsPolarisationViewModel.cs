@@ -5,7 +5,7 @@ using MvvmCross.Navigation;
 
 namespace TheQTablet.Core.ViewModels.Main.Lesson01
 {
-    public class Lesson01WhatIsPolarisationViewModel : LessonBaseViewModel
+    public class Lesson01WhatIsPolarisationViewModel : Lesson01BaseViewModel
     {
         public Lesson01WhatIsPolarisationViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService) : base(logProvider, navigationService)
         {

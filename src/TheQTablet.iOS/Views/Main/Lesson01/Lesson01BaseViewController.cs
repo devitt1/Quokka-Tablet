@@ -1,4 +1,6 @@
-﻿using TheQTablet.Core.ViewModels.Main.Lesson01;
+﻿using System;
+
+using TheQTablet.Core.ViewModels.Main.Lesson01;
 using TheQTablet.iOS.Views.Custom;
 using UIKit;
 
@@ -38,12 +40,28 @@ namespace TheQTablet.iOS
     }
 
     public abstract class Lesson01BaseViewController<TViewModel> : LessonBaseViewController<TViewModel>
-        where TViewModel : LessonBaseViewModel
+        where TViewModel : Lesson01BaseViewModel
     {
+        private TextbookButtons _textbookButtons;
+
         public Lesson01BaseViewController()
         {
             _title = "LESSON 1 : LIGHT POLARISATION";
             _exitLabel = "EXIT LESSON 1";
+        }
+
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+
+            _textbookButtons = new TextbookButtons();
+            View.AddSubview(_textbookButtons);
+
+            NavigationItem.RightBarButtonItem = new UIBarButtonItem(_textbookButtons);
+
+            var set = CreateBindingSet();
+            set.Bind(_textbookButtons.MalusLawButton).For("Tap").To(vm => vm.MalusLawCommand);
+            set.Apply();
         }
     }
 }

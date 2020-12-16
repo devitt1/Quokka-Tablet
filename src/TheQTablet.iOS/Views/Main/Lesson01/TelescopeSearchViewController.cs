@@ -4,6 +4,7 @@ using System.Globalization;
 using CoreGraphics;
 using MvvmCross.Converters;
 using TheQTablet.Core.ViewModels.Main;
+using TheQTablet.Core.ViewModels.Main.Lesson01;
 using TheQTablet.iOS.Views.Custom;
 using UIKit;
 
@@ -45,6 +46,8 @@ namespace TheQTablet.iOS.Views.Main
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Image = UIImage.FromBundle("stars_background"),
+                // Ignore aspect ratio to maintain relative star positions in viewmodel
+                ContentMode = UIViewContentMode.ScaleToFill,
             };
             View.AddSubview(_background);
 
@@ -58,6 +61,7 @@ namespace TheQTablet.iOS.Views.Main
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Image = UIImage.FromBundle("stars_background_highlighted"),
+                ContentMode = _background.ContentMode,
             };
             _lensMask.AddSubview(_highlightedBackground);
 
