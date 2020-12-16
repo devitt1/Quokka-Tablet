@@ -64,6 +64,8 @@ namespace TheQTablet.iOS.Views.Custom
     {
         public static readonly NSString CellId = new NSString("LessonCell");
 
+        private UIView _clipView;
+
         private UIImageView _background;
 
         private UIView _textContainer;
@@ -72,16 +74,26 @@ namespace TheQTablet.iOS.Views.Custom
 
         LessonCell(IntPtr handle) : base(handle)
         {
-            ContentView.ClipsToBounds = true;
-            ContentView.Layer.CornerRadius = 20;
-            ContentView.BackgroundColor = ColorPalette.BackgroundLight;
+            ContentView.Layer.ShadowRadius = 5;
+            ContentView.Layer.ShadowOffset = new CGSize(5, 5);
+            ContentView.Layer.ShadowColor = UIColor.Black.CGColor;
+            ContentView.Layer.ShadowOpacity = 0.5f;
+
+            _clipView = new UIView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+            };
+            _clipView.Layer.CornerRadius = 20;
+            _clipView.BackgroundColor = ColorPalette.BackgroundLight;
+            _clipView.ClipsToBounds = true;
+            ContentView.AddSubview(_clipView);
 
             _background = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 ContentMode = UIViewContentMode.ScaleAspectFill,
             };
-            ContentView.AddSubview(_background);
+            _clipView.AddSubview(_background);
 
             _textContainer = new UIView
             {
@@ -95,7 +107,7 @@ namespace TheQTablet.iOS.Views.Custom
                     Bottom = 20,
                 }
             };
-            ContentView.AddSubview(_textContainer);
+            _clipView.AddSubview(_textContainer);
 
             _numberLabel = new UILabel
             {
@@ -113,11 +125,14 @@ namespace TheQTablet.iOS.Views.Custom
             };
             _textContainer.AddSubview(_titleLabel);
 
-            _background.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
-            _background.HeightAnchor.ConstraintEqualTo(ContentView.HeightAnchor).Active = true;
+            _clipView.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
+            _clipView.HeightAnchor.ConstraintEqualTo(ContentView.HeightAnchor).Active = true;
 
-            _textContainer.WidthAnchor.ConstraintEqualTo(ContentView.WidthAnchor).Active = true;
-            _textContainer.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor).Active = true;
+            _background.WidthAnchor.ConstraintEqualTo(_clipView.WidthAnchor).Active = true;
+            _background.HeightAnchor.ConstraintEqualTo(_clipView.HeightAnchor).Active = true;
+
+            _textContainer.WidthAnchor.ConstraintEqualTo(_clipView.WidthAnchor).Active = true;
+            _textContainer.BottomAnchor.ConstraintEqualTo(_clipView.BottomAnchor).Active = true;
 
             _numberLabel.LeftAnchor.ConstraintEqualTo(_textContainer.LayoutMarginsGuide.LeftAnchor).Active = true;
             _numberLabel.TopAnchor.ConstraintEqualTo(_textContainer.LayoutMarginsGuide.TopAnchor).Active = true;
