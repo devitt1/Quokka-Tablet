@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -254,6 +254,9 @@
     <ImageAsset Include="Resources\Media.xcassets\dark_logo.imageset\Vector.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\lesson01_preview.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\lesson01_preview.imageset\vignet_level01_start_01 1.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\settings_gear.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\settings_gear.imageset\settings_start_01 1.pdf" />
+    <Compile Include="Views\Custom\IconButton.cs" />
     <Compile Include="Views\Custom\TextbookButtons.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -373,6 +376,7 @@
     <Folder Include="Resources\Media.xcassets\start_background.imageset\" />
     <Folder Include="Resources\Media.xcassets\dark_logo.imageset\" />
     <Folder Include="Resources\Media.xcassets\lesson01_preview.imageset\" />
+    <Folder Include="Resources\Media.xcassets\settings_gear.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\happyIdleProf2.dae" />

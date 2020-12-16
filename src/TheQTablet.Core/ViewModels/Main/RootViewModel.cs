@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
+using MvvmCross.Commands;
 using MvvmCross.Logging;
+using MvvmCross.Navigation;
 
 using TheQTablet.Core.Service.Interfaces;
-using MvvmCross.Commands;
-using MvvmCross.Navigation;
 using TheQTablet.Core.ViewModels.Main.Lesson01;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
@@ -40,6 +39,9 @@ namespace TheQTablet.Core.ViewModels.Main
             set => SetProperty(ref _lessons, value);
         }
 
+        public MvxAsyncCommand<Lesson> NavigateToLessonCommand { get; private set; }
+        public MvxAsyncCommand SettingsCommand { get; private set; }
+
         public RootViewModel(
             IMvxLog log,
             ISimulatorService simulationService,
@@ -52,6 +54,7 @@ namespace TheQTablet.Core.ViewModels.Main
             _log.Trace("RootViewModel:RootViewModel()");
 
             NavigateToLessonCommand = new MvxAsyncCommand<Lesson>(NavigateToLesson);
+            SettingsCommand = new MvxAsyncCommand(Settings);
 
             Lessons = new ObservableCollection<Lesson>
             {
@@ -64,6 +67,9 @@ namespace TheQTablet.Core.ViewModels.Main
             await _navigationService.Navigate(value._startView);
         }
 
-        public MvxAsyncCommand<Lesson> NavigateToLessonCommand { get; private set; }
+        private async Task Settings()
+        {
+            //await _navigationService.Navigate();
+        }
     }
 }

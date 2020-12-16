@@ -27,7 +27,9 @@ namespace TheQTablet.iOS
         private UICollectionView _lessons;
         private UIView _lessonsBottomBorder;
 
-        private LessonSource _source;
+        private IconButton _settings;
+
+        private LessonSource _lessonSource;
 
         public override void ViewWillAppear(bool animated)
         {
@@ -40,6 +42,14 @@ namespace TheQTablet.iOS
 
         protected override void CreateView()
         {
+            View.DirectionalLayoutMargins = new NSDirectionalEdgeInsets
+            {
+                Top = 20,
+                Bottom = 60,
+                Leading = 40,
+                Trailing = 40,
+            };
+
             _background = new UIImageView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
@@ -153,8 +163,8 @@ namespace TheQTablet.iOS
             };
             _lessonsContainer.AddSubview(_lessons);
 
-            _source = new LessonSource(_lessons);
-            _lessons.Source = _source;
+            _lessonSource = new LessonSource(_lessons);
+            _lessons.Source = _lessonSource;
 
             _lessonsBottomBorder = new UIView
             {
@@ -162,6 +172,14 @@ namespace TheQTablet.iOS
                 BackgroundColor = ColorPalette.Border,
             };
             _lessonsContainer.AddSubview(_lessonsBottomBorder);
+
+            _settings = new IconButton
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Text = "SETTINGS",
+                Icon = UIImage.FromBundle("settings_gear"),
+            };
+            View.AddSubview(_settings);
         }
 
         protected override void LayoutView()
@@ -169,8 +187,10 @@ namespace TheQTablet.iOS
             _background.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
             _background.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
 
-            _viewSplit.WidthAnchor.ConstraintEqualTo(View.SafeAreaLayoutGuide.WidthAnchor).Active = true;
-            _viewSplit.HeightAnchor.ConstraintEqualTo(View.SafeAreaLayoutGuide.HeightAnchor).Active = true;
+            _viewSplit.LeftAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.LeftAnchor).Active = true;
+            _viewSplit.RightAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.RightAnchor).Active = true;
+            _viewSplit.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor).Active = true;
+            _viewSplit.BottomAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.BottomAnchor).Active = true;
 
             _leftContainer.HeightAnchor.ConstraintEqualTo(_viewSplit.HeightAnchor).Active = true;
 
@@ -190,9 +210,12 @@ namespace TheQTablet.iOS
             _utsLabel.TopAnchor.ConstraintEqualTo(_logoContainer.BottomAnchor, 20).Active = true;
             _utsLabel.CenterXAnchor.ConstraintEqualTo(_logoContainer.CenterXAnchor).Active = true;
 
+            _settings.LeftAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.LeftAnchor).Active = true;
+            _settings.BottomAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.BottomAnchor).Active = true;
 
-            _lessonsContainer.TopAnchor.ConstraintEqualTo(View.TopAnchor).Active = true;
-            _lessonsContainer.BottomAnchor.ConstraintEqualTo(View.BottomAnchor).Active = true;
+
+            _lessonsContainer.TopAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.TopAnchor).Active = true;
+            _lessonsContainer.BottomAnchor.ConstraintEqualTo(View.LayoutMarginsGuide.BottomAnchor).Active = true;
 
             _lessonTitle.TopAnchor.ConstraintEqualTo(_lessonsContainer.TopAnchor, 20).Active = true;
             _lessonTitle.CenterXAnchor.ConstraintEqualTo(_lessonsContainer.CenterXAnchor).Active = true;
@@ -206,7 +229,7 @@ namespace TheQTablet.iOS
             _lessons.CenterXAnchor.ConstraintEqualTo(_lessonsContainer.CenterXAnchor).Active = true;
 
             _lessonsBottomBorder.TopAnchor.ConstraintEqualTo(_lessons.BottomAnchor).Active = true;
-            _lessonsBottomBorder.BottomAnchor.ConstraintEqualTo(_lessonsContainer.BottomAnchor, -20).Active = true;
+            _lessonsBottomBorder.BottomAnchor.ConstraintEqualTo(_lessonsContainer.BottomAnchor).Active = true;
             _lessonsBottomBorder.HeightAnchor.ConstraintEqualTo(1).Active = true;
             _lessonsBottomBorder.WidthAnchor.ConstraintEqualTo(_lessonsContainer.WidthAnchor).Active = true;
         }
@@ -216,8 +239,9 @@ namespace TheQTablet.iOS
             base.BindView();
 
             var set = this.CreateBindingSet<RootViewController, RootViewModel>();
-            set.Bind(_source).For(v => v.ItemsSource).To(vm => vm.Lessons);
-            set.Bind(_source).For(v => v.SelectionChangedCommand).To(vm => vm.NavigateToLessonCommand);
+            set.Bind(_lessonSource).For(v => v.ItemsSource).To(vm => vm.Lessons);
+            set.Bind(_lessonSource).For(v => v.SelectionChangedCommand).To(vm => vm.NavigateToLessonCommand);
+            set.Bind(_settings).To(vm => vm.SettingsCommand);
             set.Apply();
         }
     }
