@@ -5,4 +5,7 @@
 ./src/TheQTablet.iOS/bin
 ./src/TheQTablet.iOS/obj
 
-
+src/TheQTablet.Core/bin
+src/TheQTablet.Core/obj
+src/TheQTablet.iOS/bin
+src/TheQTablet.iOS/obj

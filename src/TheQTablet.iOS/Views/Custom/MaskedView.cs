@@ -1,5 +1,4 @@
-﻿using System;
-using CoreAnimation;
+﻿using CoreAnimation;
 using UIKit;
 
 namespace TheQTablet.iOS.Views.Custom

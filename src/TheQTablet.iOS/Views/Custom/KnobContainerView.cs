@@ -1,8 +1,4 @@
-﻿using CoreAnimation;
-using CoreGraphics;
-using Foundation;
-using ObjCRuntime;
-using UIKit;
+﻿using UIKit;
 
 namespace TheQTablet.iOS.Views.Custom
 {

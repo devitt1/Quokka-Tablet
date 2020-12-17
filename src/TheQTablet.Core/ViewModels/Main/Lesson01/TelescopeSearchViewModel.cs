@@ -9,9 +9,9 @@ using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using TheQTablet.Core.ViewModels.Main.Lesson01;
 
-namespace TheQTablet.Core.ViewModels.Main
+namespace TheQTablet.Core.ViewModels.Main.Lesson01
 {
-    public class TelescopeSearchViewModel : LessonBaseViewModel
+    public class TelescopeSearchViewModel : Lesson01BaseViewModel
     {
         public MvxAsyncCommand ContinueCommand { get; private set; }
 
@@ -19,10 +19,10 @@ namespace TheQTablet.Core.ViewModels.Main
         {
             _starPositions = new List<PointF>
             {
-                new PointF(0.25f, 0.23f),
-                new PointF(0.5f, 0.58f),
-                new PointF(0.34f, 0.79f),
-                new PointF(0.77f, 0.53f),
+                new PointF(0.25f, 0.21f),
+                new PointF(0.5f, 0.55f),
+                new PointF(0.34f, 0.73f),
+                new PointF(0.77f, 0.49f),
             };
 
             SignalStrength = 0;

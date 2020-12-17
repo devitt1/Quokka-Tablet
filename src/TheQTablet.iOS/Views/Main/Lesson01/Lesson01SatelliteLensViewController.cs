@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Drawing;
-using System.Globalization;
 using CoreGraphics;
-using Foundation;
-using MvvmCross.Converters;
-using MvvmCross.Platforms.Ios.Views;
 using SceneKit;
-using TheQTablet.Core.ViewModels.Main;
+using TheQTablet.Core.Utils;
 using TheQTablet.Core.ViewModels.Main.Lesson01;
-using TheQTablet.iOS.Views.Custom;
 using UIKit;
 
 namespace TheQTablet.iOS.Views.Main
@@ -23,9 +17,24 @@ namespace TheQTablet.iOS.Views.Main
         private UILabel _infoText;
         private UIButton _continue;
 
+        private SCNScene _lensScene;
+        private SCNView _lensSceneView;
+
+        private CGPoint _lastTranslation;
+        private UIPanGestureRecognizer _gestureRecognizer;
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+
+            _gestureRecognizer = new UIPanGestureRecognizer();
+            _gestureRecognizer.AddTarget(() => Pan(_gestureRecognizer));
+            View.AddGestureRecognizer(_gestureRecognizer);
+        }
+
+        protected override void CreateView()
+        {
+            base.CreateView();
 
             _background = new UIImageView
             {
@@ -63,9 +72,27 @@ namespace TheQTablet.iOS.Views.Main
             _continue = ButtonGenerator.PrimaryButton("Continue");
             View.AddSubview(_continue);
 
+            _lensScene = SCNScene.FromFile("Art.scnassets/happyIdleProf.dae");
+            _lensScene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitY, MathHelpers.ToRadF(60)));
+            _lensScene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitX, MathHelpers.ToRadF(-30)));
+
+            _lensSceneView = new SCNView(View.Frame)
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+            };
+            _lensSceneView.BackgroundColor = UIColor.Clear;
+            _lensSceneView.AutoresizingMask = UIViewAutoresizing.All;
+            _lensSceneView.Scene = _lensScene;
+
+            View.AddSubview(_lensSceneView);
+        }
+
+        protected override void LayoutView()
+        {
+            base.LayoutView();
 
             _background.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
-            _background.HeightAnchor.ConstraintEqualTo(_background.WidthAnchor, _background.Image.Size.Height / _background.Image.Size.Width).Active = true;
+            _background.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
 
             _signalStrengthText.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, 32).Active = true;
             _signalStrengthText.BottomAnchor.ConstraintEqualTo(View.BottomAnchor, -32).Active = true;
@@ -82,9 +109,43 @@ namespace TheQTablet.iOS.Views.Main
             _continue.BottomAnchor.ConstraintEqualTo(_signalStrengthText.CenterYAnchor).Active = true;
             _continue.RightAnchor.ConstraintEqualTo(View.RightAnchor, -32).Active = true;
 
+            _lensSceneView.CenterXAnchor.ConstraintEqualTo(View.CenterXAnchor).Active = true;
+            _lensSceneView.CenterYAnchor.ConstraintEqualTo(View.CenterYAnchor).Active = true;
+            _lensSceneView.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.5f).Active = true;
+            _lensSceneView.HeightAnchor.ConstraintEqualTo(View.HeightAnchor, 0.5f).Active = true;
+        }
+
+        protected override void BindView()
+        {
+            base.BindView();
+
             var set = CreateBindingSet();
             set.Bind(_continue).To(vm => vm.ContinueCommand);
             set.Apply();
+        }
+
+        private void Pan(UIPanGestureRecognizer gesture)
+        {
+            if (gesture.State == UIGestureRecognizerState.Began)
+            {
+                _lastTranslation = new CGPoint(0, 0);
+            }
+
+            var pan = gesture.TranslationInView(View);
+            float diffX = (float) (pan.X - _lastTranslation.X);
+            float diffY = (float) (pan.Y - _lastTranslation.Y);
+
+            // Get drag distance along 30 degree line (match angle of lens)
+            var angle = MathHelpers.ToRad(30);
+            SCNVector3 axis = SCNVector3.Normalize(new SCNVector3((float) Math.Cos(angle), (float) Math.Sin(angle), 0)); 
+            SCNVector3 movement = new SCNVector3(diffX, diffY, 0);
+            var dist = SCNVector3.Dot(axis, movement);
+            _lensScene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitZ, dist / 100.0f));
+
+            // Use only vertical drag
+            //_lensScene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitZ, diffY / 100.0f));
+
+            _lastTranslation = pan;
         }
     }
 }

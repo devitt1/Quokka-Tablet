@@ -4,7 +4,6 @@ using CoreGraphics;
 using Foundation;
 using MvvmCross.Converters;
 using MvvmCross.Platforms.Ios.Presenters.Attributes;
-using MvvmCross.Platforms.Ios.Views;
 using OxyPlot.Xamarin.iOS;
 using TheQTablet.Core.ViewModels.Main;
 using TheQTablet.iOS.Views.Custom;
@@ -216,7 +215,7 @@ namespace TheQTablet.iOS.Views.Main
 
             _cosOverlayButton = new ToggleButton
             {
-                Text = "Cos(x + 30°)",
+                Text = "Cos²(x + 30°)",
             };
             _functionButtonsStack.AddArrangedSubview(_cosOverlayButton);
 

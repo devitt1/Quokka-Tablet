@@ -2,10 +2,9 @@
 using System.Drawing;
 using System.Globalization;
 using CoreGraphics;
-using Foundation;
 using MvvmCross.Converters;
-using MvvmCross.Platforms.Ios.Views;
 using TheQTablet.Core.ViewModels.Main;
+using TheQTablet.Core.ViewModels.Main.Lesson01;
 using TheQTablet.iOS.Views.Custom;
 using UIKit;
 
@@ -47,6 +46,8 @@ namespace TheQTablet.iOS.Views.Main
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Image = UIImage.FromBundle("stars_background"),
+                // Ignore aspect ratio to maintain relative star positions in viewmodel
+                ContentMode = UIViewContentMode.ScaleToFill,
             };
             View.AddSubview(_background);
 
@@ -60,6 +61,7 @@ namespace TheQTablet.iOS.Views.Main
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Image = UIImage.FromBundle("stars_background_highlighted"),
+                ContentMode = _background.ContentMode,
             };
             _lensMask.AddSubview(_highlightedBackground);
 
@@ -124,7 +126,7 @@ namespace TheQTablet.iOS.Views.Main
             _lensImage.HeightAnchor.ConstraintEqualTo(_lensImage.WidthAnchor).Active = true;
 
             _background.WidthAnchor.ConstraintEqualTo(View.WidthAnchor).Active = true;
-            _background.HeightAnchor.ConstraintEqualTo(_background.WidthAnchor, _background.Image.Size.Height / _background.Image.Size.Width).Active = true;
+            _background.HeightAnchor.ConstraintEqualTo(View.HeightAnchor).Active = true;
 
             _highlightedBackground.WidthAnchor.ConstraintEqualTo(_background.WidthAnchor).Active = true;
             _highlightedBackground.HeightAnchor.ConstraintEqualTo(_background.HeightAnchor).Active = true;
