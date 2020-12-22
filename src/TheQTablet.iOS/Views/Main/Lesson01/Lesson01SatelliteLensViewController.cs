@@ -7,6 +7,21 @@ using UIKit;
 
 namespace TheQTablet.iOS.Views.Main
 {
+    public class Rotaty : SCNSceneRendererDelegate
+    {
+        private bool _initialRotationDone = false;
+
+        public override void WillRenderScene(ISCNSceneRenderer renderer, SCNScene scene, double timeInSeconds)
+        {
+            if (!_initialRotationDone)
+            {
+                scene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitY, MathHelpers.ToRadF(60)));
+                scene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitX, MathHelpers.ToRadF(-30)));
+                _initialRotationDone = true;
+            }
+        }
+    }
+
     public partial class Lesson01SatelliteLensViewController : Lesson01BaseViewController<Lesson01SatelliteLensViewModel>
     {
         private UIImageView _background;
@@ -73,8 +88,6 @@ namespace TheQTablet.iOS.Views.Main
             View.AddSubview(_continue);
 
             _lensScene = SCNScene.FromFile("Art.scnassets/happyIdleProf.dae");
-            _lensScene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitY, MathHelpers.ToRadF(60)));
-            _lensScene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitX, MathHelpers.ToRadF(-30)));
 
             _lensSceneView = new SCNView(View.Frame)
             {
@@ -83,6 +96,7 @@ namespace TheQTablet.iOS.Views.Main
             _lensSceneView.BackgroundColor = UIColor.Clear;
             _lensSceneView.AutoresizingMask = UIViewAutoresizing.All;
             _lensSceneView.Scene = _lensScene;
+            _lensSceneView.SceneRendererDelegate = new Rotaty();
 
             View.AddSubview(_lensSceneView);
         }
@@ -132,15 +146,18 @@ namespace TheQTablet.iOS.Views.Main
             }
 
             var pan = gesture.TranslationInView(View);
-            float diffX = (float) (pan.X - _lastTranslation.X);
-            float diffY = (float) (pan.Y - _lastTranslation.Y);
+            float diffX = (float)(pan.X - _lastTranslation.X);
+            float diffY = (float)(pan.Y - _lastTranslation.Y);
 
             // Get drag distance along 30 degree line (match angle of lens)
             var angle = MathHelpers.ToRad(30);
-            SCNVector3 axis = SCNVector3.Normalize(new SCNVector3((float) Math.Cos(angle), (float) Math.Sin(angle), 0)); 
+            SCNVector3 axis = SCNVector3.Normalize(new SCNVector3((float)Math.Cos(angle), (float)Math.Sin(angle), 0));
             SCNVector3 movement = new SCNVector3(diffX, diffY, 0);
             var dist = SCNVector3.Dot(axis, movement);
-            _lensScene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitZ, dist / 100.0f));
+            if (_lensScene != null)
+            {
+                _lensScene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitZ, dist / 100.0f));
+            }
 
             // Use only vertical drag
             //_lensScene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitZ, diffY / 100.0f));
