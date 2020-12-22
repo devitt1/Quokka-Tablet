@@ -44,5 +44,9 @@
 		<string>Fonts/Akrobat-Regular.ttf</string>
 		<string>Fonts/Akrobat-Thin.ttf</string>
 	</array>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>We need Bluetooth to connect The Q box to the Internet.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>We need Bluetooth to connect The Q box to the Internet.</string>
 </dict>
 </plist>
