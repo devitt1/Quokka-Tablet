@@ -4,6 +4,9 @@ using MvvmCross.Base;
 using MvvmCross.Plugin.Json;
 
 using TheQTablet.Core;
+using TheQTablet.iOS.Service.Implementations;
+using TheQTablet.Core.Service.Interfaces;
+using MvvmCross.IoC;
 
 namespace TheQTablet.iOS
 {
@@ -13,6 +16,7 @@ namespace TheQTablet.iOS
         {
             base.InitializeFirstChance();
             Mvx.IoCProvider.RegisterType<IMvxJsonConverter, MvxJsonConverter>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IQBoxConnectionService, QBoxConnectionService>();
         }
 
     }

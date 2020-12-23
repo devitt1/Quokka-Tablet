@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -66,7 +66,7 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private async Task Settings()
         {
-            //await _navigationService.Navigate();
+            await _navigationService.Navigate<ConnectivityViewModel>();
         }
     }
 }

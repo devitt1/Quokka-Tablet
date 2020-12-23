@@ -28,6 +28,7 @@ namespace TheQTablet.Core
             Mvx.IoCProvider.RegisterType<ISimulatorService, SimulatorService>();
             Mvx.IoCProvider.RegisterType<IRestClient, RestClient>();
             Mvx.IoCProvider.RegisterSingleton<IUserDialogs>(() => UserDialogs.Instance);
+            Mvx.IoCProvider.RegisterSingleton<IQSimClient>(new QSimClient());
 
             RegisterAppStart<RootViewModel>();
         }

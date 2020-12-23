@@ -6,6 +6,7 @@ using Acr.UserDialogs;
 using MvvmCross.Base;
 using MvvmCross.Logging;
 using TheQTablet.Core.Rest.Interfaces;
+using TheQTablet.Core.Service.Interfaces;
 
 namespace TheQTablet.Core.Rest.Implementations
 {
@@ -13,25 +14,27 @@ namespace TheQTablet.Core.Rest.Implementations
     {
         private readonly IMvxJsonConverter _jsonConverter;
         private readonly IMvxLog _mvxLog;
+        private readonly IQSimClient _qsimClient;
         private readonly HttpClient _httpClient;
 
-#if DEBUG
-        private const string BASE_URL = "http://127.0.0.1:5002/qsim/";
-#else
+//#if DEBUG
+//        private const string BASE_URL = "http://127.0.0.1:5002/qsim/";
+//#else
 
-        private const string BASE_URL = "http://127.0.0.1:5002/qsim/"; // Production URL goes here
-#endif
+//        private const string BASE_URL = "http://127.0.0.1:5002/qsim/"; // Production URL goes here
+//#endif
 
-        public RestClient(IMvxJsonConverter jsonConverter, IMvxLog mvxLog)
+        public RestClient(IMvxJsonConverter jsonConverter, IMvxLog mvxLog, IQSimClient qsimClient)
         {
             _jsonConverter = jsonConverter;
             _mvxLog = mvxLog;
+            _qsimClient = qsimClient;
             _httpClient = new HttpClient();
         }
 
         public async Task<TResult> MakeApiCallAsync<TResult>(string url, HttpMethod method, object data = null) where TResult : class
         {
-            url = string.Format("{0}{1}", BASE_URL, url);
+            url = string.Format("{0}{1}", _qsimClient.BaseURL, url);
 
             HttpClient httpClient = _httpClient;
 
