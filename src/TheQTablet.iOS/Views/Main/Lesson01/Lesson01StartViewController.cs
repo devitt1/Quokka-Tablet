@@ -20,9 +20,6 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
         private UILabel _lessonNumber;
         private UILabel _lessonName;
 
-        private ExitLessonButton _exitButton;
-
-
         protected override void CreateView()
         {
             base.CreateView();
@@ -169,7 +166,6 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             var set = CreateBindingSet();
             set.Bind(_backButton).To(vm => vm.BackCommand);
             set.Bind(_continueButton).To(vm => vm.ContinueCommand);
-            set.Bind(_exitButton).For("Tapper").To(vm => vm.ExitCommand);
             set.Apply();
         }
     }

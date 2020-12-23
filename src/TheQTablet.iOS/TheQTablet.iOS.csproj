@@ -261,6 +261,7 @@
     <ImageAsset Include="Resources\Media.xcassets\settings_gear.imageset\settings_start_01 1.pdf" />
     <Compile Include="Views\Custom\IconButton.cs" />
     <Compile Include="Views\Custom\TextbookButtons.cs" />
+    <Compile Include="Views\Custom\Divider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

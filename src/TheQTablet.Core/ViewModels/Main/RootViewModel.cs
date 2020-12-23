@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -31,7 +31,6 @@ namespace TheQTablet.Core.ViewModels.Main
     {
         private readonly IMvxNavigationService _navigationService;
         private readonly IMvxLog _log;
-        private readonly ISimulatorService _simulationService;
 
         private ObservableCollection<Lesson> _lessons;
         public ObservableCollection<Lesson> Lessons {
@@ -44,11 +43,9 @@ namespace TheQTablet.Core.ViewModels.Main
 
         public RootViewModel(
             IMvxLog log,
-            ISimulatorService simulationService,
             IMvxNavigationService navigationService)
         {
             _log = log;
-            _simulationService = simulationService;
             _navigationService = navigationService;
 
             _log.Trace("RootViewModel:RootViewModel()");

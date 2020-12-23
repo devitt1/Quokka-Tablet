@@ -105,17 +105,17 @@ namespace TheQTablet.iOS.Views.Custom
 
     public class TextbookButtons : UIView
     {
-        private UIView _divider;
+        private Divider _divider;
         private TextbookButton _malusLawButton;
 
         public TextbookButton MalusLawButton => _malusLawButton;
 
         public TextbookButtons()
         {
-            _divider = new UIView
+            _divider = new Divider
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                BackgroundColor = ColorPalette.Border,
+                Axis = DividerAxis.Vertical,
             };
             AddSubview(_divider);
 
@@ -128,7 +128,6 @@ namespace TheQTablet.iOS.Views.Custom
             AddSubview(_malusLawButton);
 
             _divider.LeftAnchor.ConstraintEqualTo(LeftAnchor).Active = true;
-            _divider.WidthAnchor.ConstraintEqualTo(1).Active = true;
             _divider.HeightAnchor.ConstraintEqualTo(HeightAnchor).Active = true;
 
             _malusLawButton.LeftAnchor.ConstraintEqualTo(_divider.RightAnchor, 40).Active = true;

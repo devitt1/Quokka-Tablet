@@ -23,9 +23,9 @@ namespace TheQTablet.iOS
 
         private UIView _lessonsContainer;
         private PaddedLabel _lessonTitle;
-        private UIView _lessonsTopBorder;
+        private Divider _lessonsTopBorder;
         private UICollectionView _lessons;
-        private UIView _lessonsBottomBorder;
+        private Divider _lessonsBottomBorder;
 
         private IconButton _settings;
 
@@ -141,10 +141,10 @@ namespace TheQTablet.iOS
             _lessonTitle.Layer.CornerRadius = 10;
             _lessonsContainer.AddSubview(_lessonTitle);
 
-            _lessonsTopBorder = new UIView
+            _lessonsTopBorder = new Divider
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                BackgroundColor = ColorPalette.Border,
+                Axis = DividerAxis.Horizontal,
             };
             _lessonsContainer.AddSubview(_lessonsTopBorder);
 
@@ -166,10 +166,10 @@ namespace TheQTablet.iOS
             _lessonSource = new LessonSource(_lessons);
             _lessons.Source = _lessonSource;
 
-            _lessonsBottomBorder = new UIView
+            _lessonsBottomBorder = new Divider
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                BackgroundColor = ColorPalette.Border,
+                Axis = DividerAxis.Horizontal,
             };
             _lessonsContainer.AddSubview(_lessonsBottomBorder);
 
@@ -221,7 +221,6 @@ namespace TheQTablet.iOS
             _lessonTitle.CenterXAnchor.ConstraintEqualTo(_lessonsContainer.CenterXAnchor).Active = true;
 
             _lessonsTopBorder.TopAnchor.ConstraintEqualTo(_lessonTitle.BottomAnchor, 20).Active = true;
-            _lessonsTopBorder.HeightAnchor.ConstraintEqualTo(1).Active = true;
             _lessonsTopBorder.WidthAnchor.ConstraintEqualTo(_lessonsContainer.WidthAnchor).Active = true;
 
             _lessons.TopAnchor.ConstraintEqualTo(_lessonsTopBorder.BottomAnchor).Active = true;
@@ -230,7 +229,6 @@ namespace TheQTablet.iOS
 
             _lessonsBottomBorder.TopAnchor.ConstraintEqualTo(_lessons.BottomAnchor).Active = true;
             _lessonsBottomBorder.BottomAnchor.ConstraintEqualTo(_lessonsContainer.BottomAnchor).Active = true;
-            _lessonsBottomBorder.HeightAnchor.ConstraintEqualTo(1).Active = true;
             _lessonsBottomBorder.WidthAnchor.ConstraintEqualTo(_lessonsContainer.WidthAnchor).Active = true;
         }
 
