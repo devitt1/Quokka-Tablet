@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define MOCK_CONNECTION
+
+using System;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -72,11 +74,25 @@ namespace TheQTablet.iOS.Service.Implementations
         }
         public event EventHandler NetworksChanged;
 
+        private ObservableCollection<string> _devices;
+        public ObservableCollection<string> Devices
+        {
+            get => _devices;
+            private set
+            {
+                _devices = value;
+                DevicesChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        public event EventHandler DevicesChanged;
+
         public QBoxConnectionService(IUserDialogs userDialogs, ISimulatorService simulatorService, IQSimClient qsimClient)
         {
             _userDialogs = userDialogs;
             _simulatorService = simulatorService;
             _qsimClient = qsimClient;
+
+            _devices = new ObservableCollection<string>();
 
             Console.WriteLine("BT INIT?");
             _centralManager = new CBCentralManager(this, null);
@@ -106,13 +122,10 @@ namespace TheQTablet.iOS.Service.Implementations
 
         public override void DiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
         {
-            //TODO pick from list?
             Console.WriteLine("Discovered: " + peripheral);
-            _theQBox = new QBox(peripheral);
-            _centralManager.StopScan();
 
-            //_centralManager.ConnectPeripheral(_theQBox.Peripheral);
-            _theQBox.Peripheral.DiscoverServices();
+            _devices.Add(peripheral.Name);
+            DevicesChanged?.Invoke(this, EventArgs.Empty);
         }
 
         //public override void ConnectedPeripheral(CBCentralManager central, CBPeripheral peripheral)
@@ -122,16 +135,37 @@ namespace TheQTablet.iOS.Service.Implementations
         //    peripheral.DiscoverServices();
         //}
 
-        public void Connect()
+        public void ScanDevices()
         {
+#if MOCK_CONNECTION
+            _devices.Add("A DEVICE");
+            _devices.Add("ANOTHER DEVICE");
+            DevicesChanged?.Invoke(this, EventArgs.Empty);
+#else
             _centralManager.ScanForPeripherals(UUIDs.UartService);
+#endif
+        }
+
+        public void Connect(string peripheral)
+        {
+#if MOCK_CONNECTION
+            Console.WriteLine($"Fake connect: {peripheral}");
+#else
+            _centralManager.StopScan();
+
+            _theQBox = new QBox(cBPeripheral);
+            _theQBox.Peripheral.DiscoverServices();
+#endif
         }
 
         public void ScanNetworks()
         {
-            //_theQBox.Send("scan");
-            //_theQBox.DataReceived += ScanDataReceived;
+#if MOCK_CONNECTION
             ScanDataReceived(null, "Networks:DODO-D45A,NETGEAR35");
+#else
+            _theQBox.Send("scan");
+            _theQBox.DataReceived += ScanDataReceived;
+#endif
         }
 
         private void ScanDataReceived(object sender, NSData e)
@@ -143,7 +177,10 @@ namespace TheQTablet.iOS.Service.Implementations
                 var networks = match.Groups["networks"].Value.Split(",");
                 Networks = new ObservableCollection<string>(networks);
             }
-            //_theQBox.DataReceived -= ScanDataReceived;
+
+#if !MOCK_CONNECTION
+            _theQBox.DataReceived -= ScanDataReceived;
+#endif
         }
 
         public void EnsureBluetoothEnabled()
@@ -184,9 +221,12 @@ namespace TheQTablet.iOS.Service.Implementations
 
         public void GetQBoxDetails()
         {
-            //_theQBox.Send("details");
-            //_theQBox.DataReceived += DetailsDataReceived;
+#if MOCK_CONNECTION
             DetailsDataReceived(null, "ssid:DODO-D45A,ip:192.168.1.17");
+#else
+            _theQBox.Send("details");
+            _theQBox.DataReceived += DetailsDataReceived;
+#endif
         }
 
         private void DetailsDataReceived(object sender, NSData e)
@@ -198,7 +238,9 @@ namespace TheQTablet.iOS.Service.Implementations
                 QBoxSSID = match.Groups["ssid"].Value;
                 QBoxIP = match.Groups["ip"].Value;
             }
-            //_theQBox.DataReceived -= DetailsDataReceived;
+#if !MOCK_CONNECTION
+            _theQBox.DataReceived -= DetailsDataReceived;
+#endif
         }
 
         public async Task<bool> CheckConnection()
@@ -231,9 +273,13 @@ namespace TheQTablet.iOS.Service.Implementations
         {
             var toSend = $"connect:{ssid},{password}";
             Console.WriteLine($"Sent: {toSend}");
-            //_theQBox.Send($"connect:{ssid},{password}");
-            //_theQBox.DataReceived += SendNetworkCredentialsDataReceived;
+
+#if MOCK_CONNECTION
             SendNetworkCredentialsDataReceived(null, $"success,ssid:{ssid},ip:192.168.1.17");
+#else
+            _theQBox.Send($"connect:{ssid},{password}");
+            _theQBox.DataReceived += SendNetworkCredentialsDataReceived;
+#endif
         }
 
         private void SendNetworkCredentialsDataReceived(object sender, NSData e)
@@ -249,7 +295,9 @@ namespace TheQTablet.iOS.Service.Implementations
                 QBoxSSID = match.Groups["ssid"].Value;
                 QBoxIP = match.Groups["ip"].Value;
             }
-            //_theQBox.DataReceived -= DetailsDataReceived;
+#if !MOCK_CONNECTION
+            _theQBox.DataReceived -= DetailsDataReceived;
+#endif
         }
     }
 
@@ -261,6 +309,7 @@ namespace TheQTablet.iOS.Service.Implementations
         private CBCharacteristic _txCharacteristic;
 
         public event EventHandler<NSData> DataReceived;
+        public event EventHandler CharacteristicsFound;
 
         public QBox(CBPeripheral peripheral)
         {
@@ -301,6 +350,11 @@ namespace TheQTablet.iOS.Service.Implementations
                         _rxCharacteristic = characteristic;
                     }
                 }
+            }
+
+            if(_rxCharacteristic != null && _txCharacteristic != null)
+            {
+                CharacteristicsFound?.Invoke(this, EventArgs.Empty);
             }
         }
 

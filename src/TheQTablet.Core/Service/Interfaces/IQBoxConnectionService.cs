@@ -23,9 +23,11 @@ namespace TheQTablet.Core.Service.Interfaces
         event EventHandler QBoxIPChanged;
         ObservableCollection<string> Networks { get; }
         event EventHandler NetworksChanged;
+        ObservableCollection<string> Devices { get; }
+        event EventHandler DevicesChanged;
 
-
-        void Connect();
+        void ScanDevices();
+        void Connect(string peripheral);
         void ScanNetworks();
         void EnsureBluetoothEnabled();
         void GetQBoxDetails();

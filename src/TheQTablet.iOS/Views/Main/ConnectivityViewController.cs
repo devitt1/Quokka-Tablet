@@ -70,13 +70,68 @@ namespace TheQTablet.iOS.Views.Main
         }
     }
 
+    public class DeviceCell : MvxTableViewCell
+    {
+        public static readonly NSString CellId = new NSString("DeviceCell");
+
+        private UILabel _name;
+
+        DeviceCell(IntPtr handle) : base(handle)
+        {
+            ContentView.BackgroundColor = UIColor.Clear;
+            ContentView.DirectionalLayoutMargins = new NSDirectionalEdgeInsets
+            {
+                Top = 10,
+                Bottom = 10,
+                Leading = 10,
+                Trailing = 10,
+            };
+
+            _name = new UILabel
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Font = FontGenerator.GenerateFont(24, UIFontWeight.Regular),
+                TextColor = ColorPalette.PrimaryText,
+            };
+            ContentView.AddSubview(_name);
+
+            _name.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor).Active = true;
+            _name.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor).Active = true;
+            _name.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor).Active = true;
+            _name.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor).Active = true;
+
+            this.DelayBind(() =>
+            {
+                var set = this.CreateBindingSet<DeviceCell, string>();
+                set.Bind(_name).For(v => v.Text).To(vm => vm);
+                set.Apply();
+            });
+        }
+    }
+
+    public class DeviceSource : MvxTableViewSource
+    {
+        public DeviceSource(UITableView tableView)
+            : base(tableView)
+        {
+            tableView.RegisterClassForCellReuse(typeof(DeviceCell), DeviceCell.CellId);
+        }
+
+        protected override UITableViewCell GetOrCreateCellFor(UITableView tableView, NSIndexPath indexPath, object item)
+        {
+            var cell = tableView.DequeueReusableCell(DeviceCell.CellId, indexPath);
+            cell.BackgroundColor = UIColor.Clear;
+            return cell;
+        }
+    }
+
     [MvxModalPresentation(WrapInNavigationController = false, ModalPresentationStyle = UIModalPresentationStyle.FormSheet)]
     public class ConnectivityViewController : BaseViewController<ConnectivityViewModel>, IUIAdaptivePresentationControllerDelegate
     {
         private UIView _leftContainer;
         private UIStackView _buttons;
         private UIButton _bluetoothEnabled;
-        private UIButton _findQBox;
+        private UIButton _scanDevices;
         private UIButton _qBoxDetails;
         private UIButton _checkConnection;
         private UIButton _scanNetworks;
@@ -89,6 +144,8 @@ namespace TheQTablet.iOS.Views.Main
         private UIView _rightContainer;
         private NetworkSource _networks;
         private UITableView _networksList;
+        private DeviceSource _devices;
+        private UITableView _devicesList;
 
         public override void ViewWillAppear(bool animated)
         {
@@ -121,8 +178,8 @@ namespace TheQTablet.iOS.Views.Main
             _bluetoothEnabled = ButtonGenerator.PrimaryButton("Bluetooth");
             _buttons.AddArrangedSubview(_bluetoothEnabled);
 
-            _findQBox = ButtonGenerator.PrimaryButton("Find");
-            _buttons.AddArrangedSubview(_findQBox);
+            _scanDevices = ButtonGenerator.PrimaryButton("Scan Devices");
+            _buttons.AddArrangedSubview(_scanDevices);
 
             _qBoxDetails = ButtonGenerator.PrimaryButton("Details");
             _buttons.AddArrangedSubview(_qBoxDetails);
@@ -130,7 +187,7 @@ namespace TheQTablet.iOS.Views.Main
             _checkConnection = ButtonGenerator.PrimaryButton("Ping");
             _buttons.AddArrangedSubview(_checkConnection);
 
-            _scanNetworks = ButtonGenerator.PrimaryButton("Scan");
+            _scanNetworks = ButtonGenerator.PrimaryButton("Scan Networks");
             _buttons.AddArrangedSubview(_scanNetworks);
 
             _qboxSSID = new UILabel
@@ -170,6 +227,17 @@ namespace TheQTablet.iOS.Views.Main
             _networks = new NetworkSource(_networksList);
             _networksList.Source = _networks;
             _rightContainer.AddSubview(_networksList);
+
+            _devicesList = new UITableView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                BackgroundColor = UIColor.Clear,
+                TableFooterView = new UIView(),
+                SeparatorColor = ColorPalette.Border,
+            };
+            _devices = new DeviceSource(_devicesList);
+            _devicesList.Source = _devices;
+            _rightContainer.AddSubview(_devicesList);
         }
 
         protected override void LayoutView()
@@ -199,9 +267,14 @@ namespace TheQTablet.iOS.Views.Main
             _rightContainer.BottomAnchor.ConstraintEqualTo(View.BottomAnchor).Active = true;
             _rightContainer.LeftAnchor.ConstraintEqualTo(_divider.RightAnchor).Active = true;
 
+            _devicesList.LeftAnchor.ConstraintEqualTo(_rightContainer.LeftAnchor).Active = true;
+            _devicesList.RightAnchor.ConstraintEqualTo(_rightContainer.RightAnchor).Active = true;
+            _devicesList.TopAnchor.ConstraintEqualTo(_rightContainer.TopAnchor).Active = true;
+            _devicesList.BottomAnchor.ConstraintEqualTo(_rightContainer.CenterYAnchor).Active = true;
+
             _networksList.LeftAnchor.ConstraintEqualTo(_rightContainer.LeftAnchor).Active = true;
             _networksList.RightAnchor.ConstraintEqualTo(_rightContainer.RightAnchor).Active = true;
-            _networksList.TopAnchor.ConstraintEqualTo(_rightContainer.TopAnchor).Active = true;
+            _networksList.TopAnchor.ConstraintEqualTo(_rightContainer.CenterYAnchor).Active = true;
             _networksList.BottomAnchor.ConstraintEqualTo(_rightContainer.BottomAnchor).Active = true;
         }
 
@@ -211,7 +284,7 @@ namespace TheQTablet.iOS.Views.Main
 
             var set = CreateBindingSet();
             set.Bind(_bluetoothEnabled).For("Tap").To(vm => vm.CheckBluetoothCommand);
-            set.Bind(_findQBox).For("Tap").To(vm => vm.FindQBoxCommand);
+            set.Bind(_scanDevices).For("Tap").To(vm => vm.ScanDevicesCommand);
             set.Bind(_qBoxDetails).For("Tap").To(vm => vm.QBoxDetailsCommand);
             set.Bind(_checkConnection).For("Tap").To(vm => vm.CheckConnectionCommand);
             set.Bind(_scanNetworks).For("Tap").To(vm => vm.ScanCommand);
@@ -219,6 +292,8 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(_qboxIP).To(vm => vm.QBoxIP);
             set.Bind(_networks).For(v => v.ItemsSource).To(vm => vm.Networks);
             set.Bind(_networks).For(v => v.SelectionChangedCommand).To(vm => vm.JoinNetworkCommand);
+            set.Bind(_devices).For(v => v.ItemsSource).To(vm => vm.Devices);
+            set.Bind(_devices).For(v => v.SelectionChangedCommand).To(vm => vm.ConnectDeviceCommand);
             set.Apply();
         }
 

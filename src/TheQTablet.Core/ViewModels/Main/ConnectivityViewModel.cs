@@ -13,6 +13,18 @@ using TheQTablet.Core.Service.Interfaces;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
+    public enum ConnecivityState
+    {
+        Loading,
+        ScanningDevices,
+        ChooseDevice,
+        ConnectingDevice,
+        ScanningNetworks,
+        ChooseNetwork,
+        ConnectingNetwork,
+        Success,
+    }
+
     public class ConnectivityViewModel : MvxNavigationViewModel
     {
         private readonly IQBoxConnectionService _connectionService;
@@ -20,15 +32,19 @@ namespace TheQTablet.Core.ViewModels.Main
 
         public MvxAsyncCommand CloseCommand { get; }
         public MvxCommand CheckBluetoothCommand { get; }
-        public MvxCommand FindQBoxCommand { get; }
+        public MvxCommand ScanDevicesCommand { get; }
+        public MvxCommand<string> ConnectDeviceCommand { get; }
         public MvxCommand QBoxDetailsCommand { get; }
         public MvxAsyncCommand CheckConnectionCommand { get; }
         public MvxCommand ScanCommand { get; }
         public MvxAsyncCommand<string> JoinNetworkCommand { get; }
 
+        public ConnecivityState State;
+
         public string QBoxSSID => _connectionService.QBoxSSID;
         public string QBoxIP => _connectionService.QBoxIP;
         public ObservableCollection<string> Networks => _connectionService.Networks;
+        public ObservableCollection<string> Devices => _connectionService.Devices;
 
         public ConnectivityViewModel(
             IMvxLogProvider logProvider,
@@ -42,7 +58,8 @@ namespace TheQTablet.Core.ViewModels.Main
 
             CloseCommand = new MvxAsyncCommand(Close);
             CheckBluetoothCommand = new MvxCommand(CheckBluetooth);
-            FindQBoxCommand = new MvxCommand(FindQBox);
+            ScanDevicesCommand = new MvxCommand(ScanDevices);
+            ConnectDeviceCommand = new MvxCommand<string>(ConnectDevice);
             QBoxDetailsCommand = new MvxCommand(GetQBoxDetails);
             CheckConnectionCommand = new MvxAsyncCommand(CheckConnectionAsync);
             ScanCommand = new MvxCommand(Scan);
@@ -51,6 +68,7 @@ namespace TheQTablet.Core.ViewModels.Main
             _connectionService.QBoxSSIDChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(QBoxSSID));
             _connectionService.QBoxIPChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(QBoxIP));
             _connectionService.NetworksChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(Networks));
+            _connectionService.DevicesChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(Devices));
         }
 
         private async Task Close()
@@ -63,9 +81,14 @@ namespace TheQTablet.Core.ViewModels.Main
             _connectionService.EnsureBluetoothEnabled();
         }
 
-        private void FindQBox()
+        private void ScanDevices()
         {
-            _connectionService.Connect();
+            _connectionService.ScanDevices();
+        }
+
+        private void ConnectDevice(string peripheral)
+        {
+            _connectionService.Connect(peripheral);
         }
 
         private void GetQBoxDetails()
@@ -91,10 +114,9 @@ namespace TheQTablet.Core.ViewModels.Main
                 Title = networkSSID,
                 Message = "Enter network password.",
                 OkText = "Send Credentials",
-                IsCancellable = true,
-                
+                IsCancellable = true, 
             });
-            if(result.Ok)
+            if (result.Ok)
             {
                 _connectionService.SendNetworkCredentials(networkSSID, result.Text);
             }
