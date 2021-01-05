@@ -37,6 +37,7 @@ namespace TheQTablet.iOS.Views.Main
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Font = FontGenerator.GenerateFont(24, UIFontWeight.Regular),
                 TextColor = ColorPalette.PrimaryText,
+                Lines = 0,
             };
             ContentView.AddSubview(_ssid);
 
@@ -142,8 +143,10 @@ namespace TheQTablet.iOS.Views.Main
         private Divider _divider;
 
         private UIView _rightContainer;
+        private UILabel _devicesTitle;
         private NetworkSource _networks;
         private UITableView _networksList;
+        private UILabel _networksTitle;
         private DeviceSource _devices;
         private UITableView _devicesList;
 
@@ -194,6 +197,7 @@ namespace TheQTablet.iOS.Views.Main
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 TextColor = ColorPalette.PrimaryText,
+                Lines = 0,
             };
             _leftContainer.AddSubview(_qboxSSID);
 
@@ -217,16 +221,14 @@ namespace TheQTablet.iOS.Views.Main
             };
             View.AddSubview(_rightContainer);
 
-            _networksList = new UITableView
+            _devicesTitle = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
-                BackgroundColor = UIColor.Clear,
-                TableFooterView = new UIView(),
-                SeparatorColor = ColorPalette.Border,
+                TextColor = ColorPalette.SecondaryText,
+                Font = FontGenerator.GenerateFont(32, UIFontWeight.Regular),
+                Text = "Devices",
             };
-            _networks = new NetworkSource(_networksList);
-            _networksList.Source = _networks;
-            _rightContainer.AddSubview(_networksList);
+            _rightContainer.AddSubview(_devicesTitle);
 
             _devicesList = new UITableView
             {
@@ -238,6 +240,26 @@ namespace TheQTablet.iOS.Views.Main
             _devices = new DeviceSource(_devicesList);
             _devicesList.Source = _devices;
             _rightContainer.AddSubview(_devicesList);
+
+            _networksTitle = new UILabel
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                TextColor = ColorPalette.SecondaryText,
+                Font = FontGenerator.GenerateFont(32, UIFontWeight.Regular),
+                Text = "Networks",
+            };
+            _rightContainer.AddSubview(_networksTitle);
+
+            _networksList = new UITableView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                BackgroundColor = UIColor.Clear,
+                TableFooterView = new UIView(),
+                SeparatorColor = ColorPalette.Border,
+            };
+            _networks = new NetworkSource(_networksList);
+            _networksList.Source = _networks;
+            _rightContainer.AddSubview(_networksList);
         }
 
         protected override void LayoutView()
@@ -267,14 +289,22 @@ namespace TheQTablet.iOS.Views.Main
             _rightContainer.BottomAnchor.ConstraintEqualTo(View.BottomAnchor).Active = true;
             _rightContainer.LeftAnchor.ConstraintEqualTo(_divider.RightAnchor).Active = true;
 
+            _devicesTitle.TopAnchor.ConstraintEqualTo(_rightContainer.TopAnchor).Active = true;
+            _devicesTitle.LeftAnchor.ConstraintEqualTo(_rightContainer.LeftAnchor, 10).Active = true;
+            _devicesTitle.RightAnchor.ConstraintEqualTo(_rightContainer.RightAnchor).Active = true;
+
             _devicesList.LeftAnchor.ConstraintEqualTo(_rightContainer.LeftAnchor).Active = true;
             _devicesList.RightAnchor.ConstraintEqualTo(_rightContainer.RightAnchor).Active = true;
-            _devicesList.TopAnchor.ConstraintEqualTo(_rightContainer.TopAnchor).Active = true;
+            _devicesList.TopAnchor.ConstraintEqualTo(_devicesTitle.BottomAnchor).Active = true;
             _devicesList.BottomAnchor.ConstraintEqualTo(_rightContainer.CenterYAnchor).Active = true;
+
+            _networksTitle.TopAnchor.ConstraintEqualTo(_devicesList.BottomAnchor).Active = true;
+            _networksTitle.LeftAnchor.ConstraintEqualTo(_rightContainer.LeftAnchor, 10).Active = true;
+            _networksTitle.RightAnchor.ConstraintEqualTo(_rightContainer.RightAnchor).Active = true;
 
             _networksList.LeftAnchor.ConstraintEqualTo(_rightContainer.LeftAnchor).Active = true;
             _networksList.RightAnchor.ConstraintEqualTo(_rightContainer.RightAnchor).Active = true;
-            _networksList.TopAnchor.ConstraintEqualTo(_rightContainer.CenterYAnchor).Active = true;
+            _networksList.TopAnchor.ConstraintEqualTo(_networksTitle.BottomAnchor).Active = true;
             _networksList.BottomAnchor.ConstraintEqualTo(_rightContainer.BottomAnchor).Active = true;
         }
 

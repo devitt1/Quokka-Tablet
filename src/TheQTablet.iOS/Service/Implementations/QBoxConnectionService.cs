@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -161,21 +163,37 @@ namespace TheQTablet.iOS.Service.Implementations
         public void ScanNetworks()
         {
 #if MOCK_CONNECTION
-            ScanDataReceived(null, "Networks:DODO-D45A,NETGEAR35");
+            var encodedSSIDA = BitConverter.ToString(Encoding.Default.GetBytes("'    T\n\n  \n   P'")).Replace("-", "");
+            var encodedSSIDB = BitConverter.ToString(Encoding.Default.GetBytes("NETGEAR35")).Replace("-", "");
+            Console.WriteLine(encodedSSIDA);
+            Console.WriteLine(encodedSSIDB);
+            ScanDataReceived(null, $"networks:{encodedSSIDA},{encodedSSIDB}");
 #else
             _theQBox.Send("scan");
             _theQBox.DataReceived += ScanDataReceived;
 #endif
         }
 
+        private string FromHex(string hexString)
+        {
+            int length = hexString.Length;
+            byte[] bytes = new byte[length / 2];
+            for(int i = 0; i < length; i += 2)
+            {
+                bytes[i / 2] = Convert.ToByte(hexString.Substring(i, 2), 16);
+            }
+            return Encoding.Default.GetString(bytes);
+        }
+
         private void ScanDataReceived(object sender, NSData e)
         {
-            Regex rx = new Regex(@"^Networks:(?<networks>.*)$", RegexOptions.Compiled);
+            Regex rx = new Regex(@"^networks:(?<networks>.*)$", RegexOptions.Compiled);
             var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
             if (match.Success)
             {
                 var networks = match.Groups["networks"].Value.Split(",");
-                Networks = new ObservableCollection<string>(networks);
+                var decoded_networks = networks.Select(encodedSSID => FromHex(encodedSSID)).ToArray();
+                Networks = new ObservableCollection<string>(decoded_networks);
             }
 
 #if !MOCK_CONNECTION
@@ -222,7 +240,8 @@ namespace TheQTablet.iOS.Service.Implementations
         public void GetQBoxDetails()
         {
 #if MOCK_CONNECTION
-            DetailsDataReceived(null, "ssid:DODO-D45A,ip:192.168.1.17");
+            var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes("DODO-D45A")).Replace("-", "");
+            DetailsDataReceived(null, $"ssid:{encodedSSID},ip:192.168.1.9");
 #else
             _theQBox.Send("details");
             _theQBox.DataReceived += DetailsDataReceived;
@@ -235,7 +254,7 @@ namespace TheQTablet.iOS.Service.Implementations
             var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
             if (match.Success)
             {
-                QBoxSSID = match.Groups["ssid"].Value;
+                QBoxSSID = FromHex(match.Groups["ssid"].Value);
                 QBoxIP = match.Groups["ip"].Value;
             }
 #if !MOCK_CONNECTION
@@ -271,11 +290,12 @@ namespace TheQTablet.iOS.Service.Implementations
 
         public void SendNetworkCredentials(string ssid, string password)
         {
-            var toSend = $"connect:{ssid},{password}";
+            var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes(ssid)).Replace("-", "");
+            var toSend = $"connect:{encodedSSID},{password}";
             Console.WriteLine($"Sent: {toSend}");
 
 #if MOCK_CONNECTION
-            SendNetworkCredentialsDataReceived(null, $"success,ssid:{ssid},ip:192.168.1.17");
+            SendNetworkCredentialsDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.9");
 #else
             _theQBox.Send($"connect:{ssid},{password}");
             _theQBox.DataReceived += SendNetworkCredentialsDataReceived;
@@ -292,7 +312,7 @@ namespace TheQTablet.iOS.Service.Implementations
                 {
                     Console.WriteLine("Failed");
                 }
-                QBoxSSID = match.Groups["ssid"].Value;
+                QBoxSSID = FromHex(match.Groups["ssid"].Value);
                 QBoxIP = match.Groups["ip"].Value;
             }
 #if !MOCK_CONNECTION
