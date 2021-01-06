@@ -37,13 +37,13 @@ namespace TheQTablet.Core.ViewModels.Main
         public MvxCommand QBoxDetailsCommand { get; }
         public MvxAsyncCommand CheckConnectionCommand { get; }
         public MvxCommand ScanCommand { get; }
-        public MvxAsyncCommand<string> JoinNetworkCommand { get; }
+        public MvxAsyncCommand<WiFiNetwork> JoinNetworkCommand { get; }
 
         public ConnecivityState State;
 
         public string QBoxSSID => _connectionService.QBoxSSID;
         public string QBoxIP => _connectionService.QBoxIP;
-        public ObservableCollection<string> Networks => _connectionService.Networks;
+        public ObservableCollection<WiFiNetwork> Networks => _connectionService.Networks;
         public ObservableCollection<string> Devices => _connectionService.Devices;
 
         public ConnectivityViewModel(
@@ -63,7 +63,7 @@ namespace TheQTablet.Core.ViewModels.Main
             QBoxDetailsCommand = new MvxCommand(GetQBoxDetails);
             CheckConnectionCommand = new MvxAsyncCommand(CheckConnectionAsync);
             ScanCommand = new MvxCommand(Scan);
-            JoinNetworkCommand = new MvxAsyncCommand<string>(JoinNetwork);
+            JoinNetworkCommand = new MvxAsyncCommand<WiFiNetwork>(JoinNetwork);
 
             _connectionService.QBoxSSIDChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(QBoxSSID));
             _connectionService.QBoxIPChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(QBoxIP));
@@ -107,18 +107,39 @@ namespace TheQTablet.Core.ViewModels.Main
             _connectionService.ScanNetworks();
         }
 
-        private async Task JoinNetwork(string networkSSID)
+        private async Task JoinNetwork(WiFiNetwork network)
         {
-            var result = await _userDialogs.PromptAsync(new PromptConfig()
+            if(network.Auth == AuthType.None)
             {
-                Title = networkSSID,
-                Message = "Enter network password.",
-                OkText = "Send Credentials",
-                IsCancellable = true, 
-            });
-            if (result.Ok)
+                _connectionService.ConnectNetwork(network.SSID);
+            }
+            else if(network.Auth == AuthType.Password)
             {
-                _connectionService.SendNetworkCredentials(networkSSID, result.Text);
+                var result = await _userDialogs.PromptAsync(new PromptConfig()
+                {
+                    Title = network.SSID,
+                    Message = "Enter network password.",
+                    OkText = "Connect",
+                    IsCancellable = true,
+                    InputType = InputType.Password,
+                });
+                if (result.Ok)
+                {
+                    _connectionService.ConnectNetwork(network.SSID, result.Text);
+                }
+            }
+            else if(network.Auth == AuthType.UsernamePassword)
+            {
+                var result = await _userDialogs.LoginAsync(new LoginConfig()
+                {
+                    Title = network.SSID,
+                    Message = "Enter network credentials.",
+                    OkText = "Connect",
+                });
+                if (result.Ok)
+                {
+                    _connectionService.ConnectNetwork(network.SSID, result.LoginText, result.Password);
+                }
             }
         }
     }

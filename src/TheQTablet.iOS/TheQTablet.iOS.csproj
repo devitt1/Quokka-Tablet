@@ -264,6 +264,8 @@
     <Compile Include="Service\Implementations\QBoxConnectionService.cs" />
     <Compile Include="Views\Main\ConnectivityViewController.cs" />
     <Compile Include="Views\Custom\Divider.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\lock.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lock.imageset\coloured-lock.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -385,6 +387,7 @@
     <Folder Include="Resources\Media.xcassets\settings_gear.imageset\" />
     <Folder Include="Service\" />
     <Folder Include="Service\Implementations\" />
+    <Folder Include="Resources\Media.xcassets\lock.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\environement.dae" />

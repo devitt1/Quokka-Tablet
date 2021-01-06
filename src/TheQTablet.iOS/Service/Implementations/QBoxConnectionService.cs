@@ -64,8 +64,8 @@ namespace TheQTablet.iOS.Service.Implementations
         }
         public event EventHandler QBoxIPChanged;
 
-        private ObservableCollection<string> _networks;
-        public ObservableCollection<string> Networks
+        private ObservableCollection<WiFiNetwork> _networks;
+        public ObservableCollection<WiFiNetwork> Networks
         {
             get => _networks;
             private set
@@ -163,11 +163,12 @@ namespace TheQTablet.iOS.Service.Implementations
         public void ScanNetworks()
         {
 #if MOCK_CONNECTION
-            var encodedSSIDA = BitConverter.ToString(Encoding.Default.GetBytes("'    T\n\n  \n   P'")).Replace("-", "");
+            var encodedSSIDA = BitConverter.ToString(Encoding.Default.GetBytes("tim_open_w")).Replace("-", "");
             var encodedSSIDB = BitConverter.ToString(Encoding.Default.GetBytes("NETGEAR35")).Replace("-", "");
+            var encodedSSIDC = BitConverter.ToString(Encoding.Default.GetBytes("tim_test_w")).Replace("-", "");
             Console.WriteLine(encodedSSIDA);
             Console.WriteLine(encodedSSIDB);
-            ScanDataReceived(null, $"networks:{encodedSSIDA},{encodedSSIDB}");
+            ScanDataReceived(null, $"networks:{encodedSSIDA}:none,{encodedSSIDB}:password,{encodedSSIDC}:usernamepassword");
 #else
             _theQBox.Send("scan");
             _theQBox.DataReceived += ScanDataReceived;
@@ -185,15 +186,35 @@ namespace TheQTablet.iOS.Service.Implementations
             return Encoding.Default.GetString(bytes);
         }
 
+        private AuthType StringToAuth(string authString)
+        {
+            switch(authString)
+            {
+                case "usernamepassword":
+                    return AuthType.UsernamePassword;
+                case "none":
+                    return AuthType.None;
+                case "password":
+                default:
+                    return AuthType.Password;
+            }
+        }
+
         private void ScanDataReceived(object sender, NSData e)
         {
             Regex rx = new Regex(@"^networks:(?<networks>.*)$", RegexOptions.Compiled);
             var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
             if (match.Success)
             {
-                var networks = match.Groups["networks"].Value.Split(",");
-                var decoded_networks = networks.Select(encodedSSID => FromHex(encodedSSID)).ToArray();
-                Networks = new ObservableCollection<string>(decoded_networks);
+                var networkStrings = match.Groups["networks"].Value.Split(",");
+                var networks = new Collection<WiFiNetwork>();
+                foreach(var networkString in networkStrings)
+                {
+                    var split = networkString.Split(":");
+                    var network = new WiFiNetwork(FromHex(split[0]), StringToAuth(split[1]));
+                    networks.Add(network);
+                }
+                Networks = new ObservableCollection<WiFiNetwork>(networks);
             }
 
 #if !MOCK_CONNECTION
@@ -288,14 +309,42 @@ namespace TheQTablet.iOS.Service.Implementations
             }
         }
 
-        public void SendNetworkCredentials(string ssid, string password)
+        public void ConnectNetwork(string ssid)
+        {
+            var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes(ssid)).Replace("-", "");
+            var toSend = $"connect:{encodedSSID}";
+            Console.WriteLine($"Sent: {toSend}");
+
+#if MOCK_CONNECTION
+            SendNetworkCredentialsDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.9");
+#else
+            _theQBox.Send($"connect:{ssid},{password}");
+            _theQBox.DataReceived += SendNetworkCredentialsDataReceived;
+#endif
+        }
+
+        public void ConnectNetwork(string ssid, string password)
         {
             var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes(ssid)).Replace("-", "");
             var toSend = $"connect:{encodedSSID},{password}";
             Console.WriteLine($"Sent: {toSend}");
 
 #if MOCK_CONNECTION
-            SendNetworkCredentialsDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.9");
+            SendNetworkCredentialsDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.20");
+#else
+            _theQBox.Send($"connect:{ssid},{password}");
+            _theQBox.DataReceived += SendNetworkCredentialsDataReceived;
+#endif
+        }
+
+        public void ConnectNetwork(string ssid, string username, string password)
+        {
+            var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes(ssid)).Replace("-", "");
+            var toSend = $"connect:{encodedSSID},{username},{password}";
+            Console.WriteLine($"Sent: {toSend}");
+
+#if MOCK_CONNECTION
+            SendNetworkCredentialsDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.199");
 #else
             _theQBox.Send($"connect:{ssid},{password}");
             _theQBox.DataReceived += SendNetworkCredentialsDataReceived;

@@ -14,6 +14,25 @@ namespace TheQTablet.Core.Service.Interfaces
         Unauthorized,
     }
 
+    public enum AuthType
+    {
+        None,
+        Password,
+        UsernamePassword,
+    }
+
+    public class WiFiNetwork
+    {
+        public string SSID { get; }
+        public AuthType Auth { get; }
+
+        public WiFiNetwork(string ssid, AuthType auth)
+        {
+            SSID = ssid;
+            Auth = auth;
+        }
+    }
+
     public interface IQBoxConnectionService
     {
         BluetoothState BluetoothState { get; }
@@ -21,7 +40,7 @@ namespace TheQTablet.Core.Service.Interfaces
         event EventHandler QBoxSSIDChanged;
         string QBoxIP { get; }
         event EventHandler QBoxIPChanged;
-        ObservableCollection<string> Networks { get; }
+        ObservableCollection<WiFiNetwork> Networks { get; }
         event EventHandler NetworksChanged;
         ObservableCollection<string> Devices { get; }
         event EventHandler DevicesChanged;
@@ -32,6 +51,8 @@ namespace TheQTablet.Core.Service.Interfaces
         void EnsureBluetoothEnabled();
         void GetQBoxDetails();
         Task<bool> CheckConnection();
-        void SendNetworkCredentials(string ssid, string password);
+        void ConnectNetwork(string ssid);
+        void ConnectNetwork(string ssid, string password);
+        void ConnectNetwork(string ssid, string username, string password);
     }
 }

@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Globalization;
 
 using CoreGraphics;
 
 using Foundation;
 
 using MvvmCross.Binding.BindingContext;
+using MvvmCross.Converters;
 using MvvmCross.Platforms.Ios.Binding.Views;
 using MvvmCross.Platforms.Ios.Presenters.Attributes;
 
+using TheQTablet.Core.Service.Interfaces;
 using TheQTablet.Core.ViewModels.Main;
 using TheQTablet.iOS.Views.Custom;
 
@@ -15,10 +18,27 @@ using UIKit;
 
 namespace TheQTablet.iOS.Views.Main
 {
+    public static class UIImageViewExtensions
+    {
+        public static NSLayoutConstraint AspectRatioConstraint(this UIImageView imageView)
+        {
+            return imageView.WidthAnchor.ConstraintEqualTo(imageView.HeightAnchor, imageView.Image.Size.Width / imageView.Image.Size.Height);
+        }
+    }
+
+    public class AuthHideLockConverter : MvxValueConverter<AuthType, bool>
+    {
+        protected override bool Convert(AuthType value, Type targetType, object parameter, CultureInfo cultureInfo)
+        {
+            return value == AuthType.None;
+        }
+    }
+
     public class NetworkCell : MvxTableViewCell
     {
         public static readonly NSString CellId = new NSString("NetworkCell");
 
+        private UIImageView _lock;
         private UILabel _ssid;
 
         NetworkCell(IntPtr handle) : base(handle)
@@ -32,6 +52,13 @@ namespace TheQTablet.iOS.Views.Main
                 Trailing = 10,
             };
 
+            _lock = new UIImageView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Image = UIImage.FromBundle("lock"),
+            };
+            ContentView.AddSubview(_lock);
+
             _ssid = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
@@ -41,15 +68,22 @@ namespace TheQTablet.iOS.Views.Main
             };
             ContentView.AddSubview(_ssid);
 
+            _lock.TopAnchor.ConstraintGreaterThanOrEqualTo(ContentView.LayoutMarginsGuide.TopAnchor).Active = true;
+            _lock.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor).Active = true;
+            _lock.BottomAnchor.ConstraintLessThanOrEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor).Active = true;
+            _lock.HeightAnchor.ConstraintEqualTo(24).Active = true;
+            _lock.AspectRatioConstraint().Active = true;
+
             _ssid.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor).Active = true;
-            _ssid.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor).Active = true;
+            _ssid.LeadingAnchor.ConstraintEqualTo(_lock.TrailingAnchor).Active = true;
             _ssid.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor).Active = true;
             _ssid.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor).Active = true;
 
             this.DelayBind(() =>
             {
-                var set = this.CreateBindingSet<NetworkCell, string>();
-                set.Bind(_ssid).For(v => v.Text).To(vm => vm);
+                var set = this.CreateBindingSet<NetworkCell, WiFiNetwork>();
+                set.Bind(_ssid).For(v => v.Text).To(vm => vm.SSID);
+                set.Bind(_lock).For(v => v.Hidden).To(vm => vm.Auth).WithConversion<AuthHideLockConverter>();
                 set.Apply();
             });
         }
