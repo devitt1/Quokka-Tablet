@@ -18,14 +18,6 @@ using UIKit;
 
 namespace TheQTablet.iOS.Views.Main
 {
-    public static class UIImageViewExtensions
-    {
-        public static NSLayoutConstraint AspectRatioConstraint(this UIImageView imageView)
-        {
-            return imageView.WidthAnchor.ConstraintEqualTo(imageView.HeightAnchor, imageView.Image.Size.Width / imageView.Image.Size.Height);
-        }
-    }
-
     public class AuthHideLockConverter : MvxValueConverter<AuthType, bool>
     {
         protected override bool Convert(AuthType value, Type targetType, object parameter, CultureInfo cultureInfo)

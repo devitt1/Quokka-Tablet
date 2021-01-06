@@ -228,7 +228,7 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
             _headingContainer.TopAnchor.ConstraintEqualTo(View.TopAnchor, 22).Active = true;
 
             _headingIcon.HeightAnchor.ConstraintEqualTo(_heading.Font.PointSize * 1.5f).Active = true;
-            _headingIcon.WidthAnchor.ConstraintEqualTo(_headingIcon.HeightAnchor).Active = true;
+            _headingIcon.AspectRatioConstraint().Active = true;
 
             _closeCross.CenterYAnchor.ConstraintEqualTo(_heading.CenterYAnchor).Active = true;
             _closeCross.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;

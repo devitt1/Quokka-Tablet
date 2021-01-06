@@ -50,7 +50,7 @@ namespace TheQTablet.iOS.Views.Custom
             _label.RightAnchor.ConstraintEqualTo(RightAnchor).Active = true;
 
             _logo.RightAnchor.ConstraintEqualTo(_label.LeftAnchor, -14).Active = true;
-            _logo.WidthAnchor.ConstraintEqualTo(_logo.HeightAnchor, _logo.Image.Size.Width / _logo.Image.Size.Height).Active = true;
+            _logo.AspectRatioConstraint().Active = true;
 
             TopAnchor.ConstraintLessThanOrEqualTo(_logo.TopAnchor).Active = true;
             TopAnchor.ConstraintLessThanOrEqualTo(_label.TopAnchor).Active = true;

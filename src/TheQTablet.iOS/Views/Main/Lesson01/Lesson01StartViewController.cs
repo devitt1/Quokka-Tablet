@@ -127,7 +127,7 @@ namespace TheQTablet.iOS.Views.Main.Lesson01
 
             _logo.LeftAnchor.ConstraintEqualTo(_logoCentringContainer.LeftAnchor).Active = true;
             _logo.BottomAnchor.ConstraintEqualTo(_logoCentringContainer.BottomAnchor).Active = true;
-            _logo.HeightAnchor.ConstraintEqualTo(_logo.WidthAnchor, _logo.Image.Size.Height / _logo.Image.Size.Width).Active = true;
+            _logo.AspectRatioConstraint().Active = true;
 
             var viewMargin = 30;
             _textContainer.LeftAnchor.ConstraintEqualTo(View.LeftAnchor, viewMargin).Active = true;

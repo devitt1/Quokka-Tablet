@@ -91,7 +91,7 @@ namespace TheQTablet.iOS.Views.Custom
             _innerCirclePointer.BottomAnchor.ConstraintEqualTo(_innerCircleContainer.BottomAnchor).Active = true;
             _innerCirclePointer.LeftAnchor.ConstraintEqualTo(_innerCircleContainer.LeftAnchor).Active = true;
             _innerCirclePointer.RightAnchor.ConstraintEqualTo(_innerCircleContainer.RightAnchor).Active = true;
-            _innerCirclePointer.HeightAnchor.ConstraintEqualTo(_innerCircleContainer.HeightAnchor, _innerCirclePointer.Image.Size.Height / _innerCirclePointer.Image.Size.Width).Active = true;
+            _innerCirclePointer.AspectRatioConstraint().Active = true;
 
             _angleLabel.CenterXAnchor.ConstraintEqualTo(CenterXAnchor).Active = true;
             _angleLabel.CenterYAnchor.ConstraintEqualTo(CenterYAnchor).Active = true;

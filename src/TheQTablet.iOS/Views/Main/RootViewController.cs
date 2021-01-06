@@ -198,7 +198,7 @@ namespace TheQTablet.iOS
             _logoContainer.CenterYAnchor.ConstraintEqualTo(_leftContainer.CenterYAnchor).Active = true;
 
             _logo.HeightAnchor.ConstraintEqualTo(View.HeightAnchor, 0.1f).Active = true;
-            _logo.WidthAnchor.ConstraintEqualTo(_logo.HeightAnchor, _logo.Image.Size.Width / _logo.Image.Size.Height).Active = true;
+            _logo.AspectRatioConstraint().Active = true;
             _logo.LeftAnchor.ConstraintEqualTo(_logoContainer.LayoutMarginsGuide.LeftAnchor).Active = true;
             _logo.TopAnchor.ConstraintEqualTo(_logoContainer.LayoutMarginsGuide.TopAnchor).Active = true;
             _logo.BottomAnchor.ConstraintEqualTo(_logoContainer.LayoutMarginsGuide.BottomAnchor).Active = true;

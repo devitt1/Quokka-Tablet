@@ -266,6 +266,7 @@
     <Compile Include="Views\Custom\Divider.cs" />
     <ImageAsset Include="Resources\Media.xcassets\lock.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\lock.imageset\coloured-lock.png" />
+    <Compile Include="Views\Custom\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

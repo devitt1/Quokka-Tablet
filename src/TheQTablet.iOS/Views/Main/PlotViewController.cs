@@ -313,7 +313,7 @@ namespace TheQTablet.iOS.Views.Main
 
             _sceneView.WidthAnchor.ConstraintEqualTo(_sceneViewBorder.WidthAnchor, 1, -40).Active = true;
             _sceneView.HeightAnchor.ConstraintEqualTo(_sceneViewBorder.HeightAnchor, 1, -40).Active = true;
-            _sceneView.HeightAnchor.ConstraintEqualTo(_sceneView.WidthAnchor, _sceneView.Image.Size.Height / _sceneView.Image.Size.Width).Active = true;
+            _sceneView.AspectRatioConstraint().Active = true;
             _sceneView.CenterXAnchor.ConstraintEqualTo(_sceneViewBorder.CenterXAnchor).Active = true;
             _sceneView.CenterYAnchor.ConstraintEqualTo(_sceneViewBorder.CenterYAnchor).Active = true;
         }

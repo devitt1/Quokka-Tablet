@@ -97,7 +97,7 @@ namespace TheQTablet.iOS.Views.Custom
             }
             if (_icon.Image != null)
             {
-                _imageSizeConstraint = _icon.WidthAnchor.ConstraintEqualTo(_icon.HeightAnchor, _icon.Image.Size.Width / _icon.Image.Size.Height);
+                _imageSizeConstraint = _icon.AspectRatioConstraint();
                 _imageSizeConstraint.Active = true;
             }
         }
