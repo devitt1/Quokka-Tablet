@@ -53,6 +53,6 @@ namespace TheQTablet.Core.Service.Interfaces
         Task<bool> CheckConnection();
         void ConnectNetwork(string ssid);
         void ConnectNetwork(string ssid, string password);
-        void ConnectNetwork(string ssid, string username, string password);
+        void ConnectToNetwork(string ssid, string username, string password);
     }
 }

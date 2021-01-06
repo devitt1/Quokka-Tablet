@@ -13,7 +13,7 @@ using TheQTablet.Core.Service.Interfaces;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
-    public enum ConnecivityState
+    public enum ConnectivityState
     {
         Loading,
         ScanningDevices,
@@ -39,7 +39,7 @@ namespace TheQTablet.Core.ViewModels.Main
         public MvxCommand ScanCommand { get; }
         public MvxAsyncCommand<WiFiNetwork> JoinNetworkCommand { get; }
 
-        public ConnecivityState State;
+        public ConnectivityState State;
 
         public string QBoxSSID => _connectionService.QBoxSSID;
         public string QBoxIP => _connectionService.QBoxIP;
@@ -138,7 +138,7 @@ namespace TheQTablet.Core.ViewModels.Main
                 });
                 if (result.Ok)
                 {
-                    _connectionService.ConnectNetwork(network.SSID, result.LoginText, result.Password);
+                    _connectionService.ConnectToNetwork(network.SSID, result.LoginText, result.Password);
                 }
             }
         }

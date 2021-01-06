@@ -267,6 +267,8 @@
     <ImageAsset Include="Resources\Media.xcassets\lock.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\lock.imageset\coloured-lock.png" />
     <Compile Include="Views\Custom\Extensions.cs" />
+    <Compile Include="Views\Custom\NetworkTableView.cs" />
+    <Compile Include="Views\Custom\DeviceTableView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

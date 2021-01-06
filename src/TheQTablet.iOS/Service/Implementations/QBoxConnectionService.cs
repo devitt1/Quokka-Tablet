@@ -316,10 +316,10 @@ namespace TheQTablet.iOS.Service.Implementations
             Console.WriteLine($"Sent: {toSend}");
 
 #if MOCK_CONNECTION
-            SendNetworkCredentialsDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.9");
+            ConnectToNetworkDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.9");
 #else
-            _theQBox.Send($"connect:{ssid},{password}");
-            _theQBox.DataReceived += SendNetworkCredentialsDataReceived;
+            _theQBox.Send(toSend);
+            _theQBox.DataReceived += ConnectToNetworkDataReceived;
 #endif
         }
 
@@ -330,28 +330,28 @@ namespace TheQTablet.iOS.Service.Implementations
             Console.WriteLine($"Sent: {toSend}");
 
 #if MOCK_CONNECTION
-            SendNetworkCredentialsDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.20");
+            ConnectToNetworkDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.20");
 #else
-            _theQBox.Send($"connect:{ssid},{password}");
-            _theQBox.DataReceived += SendNetworkCredentialsDataReceived;
+            _theQBox.Send(toSend);
+            _theQBox.DataReceived += ConnectToNetworkDataReceived;
 #endif
         }
 
-        public void ConnectNetwork(string ssid, string username, string password)
+        public void ConnectToNetwork(string ssid, string username, string password)
         {
             var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes(ssid)).Replace("-", "");
             var toSend = $"connect:{encodedSSID},{username},{password}";
             Console.WriteLine($"Sent: {toSend}");
 
 #if MOCK_CONNECTION
-            SendNetworkCredentialsDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.199");
+            ConnectToNetworkDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.199");
 #else
-            _theQBox.Send($"connect:{ssid},{password}");
-            _theQBox.DataReceived += SendNetworkCredentialsDataReceived;
+            _theQBox.Send(toSend);
+            _theQBox.DataReceived += ConnectToNetworkDataReceived;
 #endif
         }
 
-        private void SendNetworkCredentialsDataReceived(object sender, NSData e)
+        private void ConnectToNetworkDataReceived(object sender, NSData e)
         {
             Regex rx = new Regex(@"^(?<success>success,)ssid:(?<ssid>.*),ip:(?<ip>.*)$", RegexOptions.Compiled);
             var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
@@ -365,7 +365,7 @@ namespace TheQTablet.iOS.Service.Implementations
                 QBoxIP = match.Groups["ip"].Value;
             }
 #if !MOCK_CONNECTION
-            _theQBox.DataReceived -= DetailsDataReceived;
+            _theQBox.DataReceived -= ConnectToNetworkDataReceived;
 #endif
         }
     }
