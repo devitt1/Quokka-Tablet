@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -12,8 +11,6 @@ using Acr.UserDialogs;
 using CoreBluetooth;
 
 using Foundation;
-
-using MvvmCross.ViewModels;
 
 using TheQTablet.Core.Rest.Interfaces;
 using TheQTablet.Core.Service.Interfaces;
@@ -38,6 +35,18 @@ namespace TheQTablet.iOS.Service.Implementations
 
         public BluetoothState BluetoothState => CBStateToBTState(_centralManager.State);
         public event EventHandler BluetoothStateChanged;
+
+        private string _qBoxBTName;
+        public string QBoxBTName
+        {
+            get => _qBoxBTName;
+            private set
+            {
+                _qBoxBTName = value;
+                QBoxBTNameChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+        public event EventHandler QBoxBTNameChanged;
 
         private string _qBoxSSID;
         public string QBoxSSID
@@ -139,6 +148,8 @@ namespace TheQTablet.iOS.Service.Implementations
 
         public void ScanDevices()
         {
+            Devices = new ObservableCollection<string>();
+
 #if MOCK_CONNECTION
             _devices.Add("A DEVICE");
             _devices.Add("ANOTHER DEVICE");
@@ -148,15 +159,17 @@ namespace TheQTablet.iOS.Service.Implementations
 #endif
         }
 
-        public void Connect(string peripheral)
+        public void Connect(object peripheral)
         {
 #if MOCK_CONNECTION
             Console.WriteLine($"Fake connect: {peripheral}");
+            QBoxBTName = peripheral as string;
 #else
             _centralManager.StopScan();
 
-            _theQBox = new QBox(cBPeripheral);
+            _theQBox = new QBox(peripheral as CBPeripheral);
             _theQBox.Peripheral.DiscoverServices();
+            QBoxBTName = _theQBox.Peripheral.Name;
 #endif
         }
 
@@ -170,8 +183,11 @@ namespace TheQTablet.iOS.Service.Implementations
             Console.WriteLine(encodedSSIDB);
             ScanDataReceived(null, $"networks:{encodedSSIDA}:none,{encodedSSIDB}:password,{encodedSSIDC}:usernamepassword");
 #else
-            _theQBox.Send("scan");
-            _theQBox.DataReceived += ScanDataReceived;
+            if (_theQBox != null)
+            {
+                _theQBox.Send("scan");
+                _theQBox.DataReceived += ScanDataReceived;
+            }
 #endif
         }
 
@@ -264,8 +280,11 @@ namespace TheQTablet.iOS.Service.Implementations
             var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes("DODO-D45A")).Replace("-", "");
             DetailsDataReceived(null, $"ssid:{encodedSSID},ip:192.168.1.9");
 #else
-            _theQBox.Send("details");
-            _theQBox.DataReceived += DetailsDataReceived;
+            if (_theQBox != null)
+            {
+                _theQBox.Send("details");
+                _theQBox.DataReceived += DetailsDataReceived;
+            }
 #endif
         }
 

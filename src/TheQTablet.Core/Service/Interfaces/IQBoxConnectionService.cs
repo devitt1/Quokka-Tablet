@@ -36,6 +36,8 @@ namespace TheQTablet.Core.Service.Interfaces
     public interface IQBoxConnectionService
     {
         BluetoothState BluetoothState { get; }
+        string QBoxBTName { get; }
+        event EventHandler QBoxBTNameChanged;
         string QBoxSSID { get; }
         event EventHandler QBoxSSIDChanged;
         string QBoxIP { get; }
@@ -46,7 +48,7 @@ namespace TheQTablet.Core.Service.Interfaces
         event EventHandler DevicesChanged;
 
         void ScanDevices();
-        void Connect(string peripheral);
+        void Connect(object peripheral);
         void ScanNetworks();
         void EnsureBluetoothEnabled();
         void GetQBoxDetails();
