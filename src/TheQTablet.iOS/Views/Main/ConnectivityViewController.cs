@@ -42,7 +42,7 @@ namespace TheQTablet.iOS.Views.Main
             {
                 case ConnectivityState.Loading: return "Loading";
                 case ConnectivityState.ScanningDevices: return "Scanning Devices";
-                case ConnectivityState.ConnectingDevice: return "Connecting Devices";
+                case ConnectivityState.ConnectingDevice: return "Connecting Device";
                 case ConnectivityState.GettingDetails: return "Getting Details";
                 case ConnectivityState.CheckingConnection: return "Checking Connection";
                 case ConnectivityState.ScanningNetworks: return "Scanning Networks";
@@ -53,85 +53,45 @@ namespace TheQTablet.iOS.Views.Main
         }
     }
 
-    public class ItemTable<SourceType> : UIView where SourceType : MvxTableViewSource
+    public class InstructionsTextConverter : MvxValueConverter<ConnectivityState, string>
     {
-        private UILabel _title;
-        private UITableView _list;
-        private SourceType _source;
-
-        public SourceType Source => _source;
-
-        public ItemTable(string title)
+        protected override string Convert(ConnectivityState value, Type targetType, object parameter, CultureInfo cultureInfo)
         {
-            TranslatesAutoresizingMaskIntoConstraints = false;
-
-            _title = new UILabel
+            switch (value)
             {
-                TranslatesAutoresizingMaskIntoConstraints = false,
-                TextColor = ColorPalette.SecondaryText,
-                Font = FontGenerator.GenerateFont(32, UIFontWeight.Regular),
-                Text = title,
-            };
-            AddSubview(_title);
-
-            _list = new UITableView
-            {
-                TranslatesAutoresizingMaskIntoConstraints = false,
-                BackgroundColor = UIColor.Clear,
-                TableFooterView = new UIView(),
-                SeparatorColor = ColorPalette.Border,
-            };
-            _source = (SourceType)Activator.CreateInstance(typeof(SourceType), _list);//new DeviceSource(_list);
-            _list.Source = _source;
-            AddSubview(_list);
-
-            _title.TopAnchor.ConstraintEqualTo(_title.Superview.TopAnchor).Active = true;
-            _title.LeftAnchor.ConstraintEqualTo(_title.Superview.LeftAnchor).Active = true;
-            _title.RightAnchor.ConstraintEqualTo(_title.Superview.RightAnchor).Active = true;
-
-            _list.LeftAnchor.ConstraintEqualTo(_list.Superview.LeftAnchor).Active = true;
-            _list.RightAnchor.ConstraintEqualTo(_list.Superview.RightAnchor).Active = true;
-            _list.TopAnchor.ConstraintEqualTo(_title.BottomAnchor).Active = true;
-            _list.BottomAnchor.ConstraintEqualTo(_list.Superview.BottomAnchor).Active = true;
+                case ConnectivityState.ChooseDevice: return "Scanning for Bluetooth devices.\nPlease select your device on the right.";
+                case ConnectivityState.ChooseNetwork: return "Choose Wi-Fi network for The Q to connect to";
+                case ConnectivityState.ConnectedToNetworkNoAPI: return "Connected to Wi-Fi but unable to communicate with server, please choose another network";
+                default:
+                    return null;
+            }
         }
     }
+
 
     [MvxModalPresentation(WrapInNavigationController = false, ModalPresentationStyle = UIModalPresentationStyle.FormSheet)]
     public class ConnectivityViewController : BaseViewController<ConnectivityViewModel>, IUIAdaptivePresentationControllerDelegate
     {
+        private UIImageView _closeCross;
+
         private UIView _loadingContainer;
         private UIImageView _loading;
         private UILabel _loadingText;
 
-        private UIView _container;
+        private UIView _contentContainer;
 
         private UIView _leftContainer;
-        private UIStackView _buttons;
-        private UIButton _bluetoothEnabled;
-        private UIButton _scanDevices;
-        private UIButton _qBoxDetails;
-        private UIButton _checkConnection;
-        private UIButton _scanNetworks;
-
-        private UILabel _qboxName;
-        private UILabel _qboxSSID;
-        private UILabel _qboxIP;
+        private UILabel _instructions;
 
         private Divider _divider;
 
         private UIView _rightContainer;
+        private ConnectivityTableView<DeviceSource> _devicesContainer;
+        private ConnectivityTableView<NetworkSource> _networksContainer;
 
-        private UILabel _success;
-
-        private ItemTable<DeviceSource> _devicesContainer;
-        //private UILabel _devicesTitle;
-        //private DeviceSource _devices;
-        //private UITableView _devicesList;
-
-        private ItemTable<NetworkSource> _networksContainer;
-        //private UILabel _networksTitle;
-        //private NetworkSource _networks;
-        //private UITableView _networksList;
+        private UIView _successContainer;
+        private UIView _successText;
+        private UIButton _successCloseButton;
 
         public override void ViewWillAppear(bool animated)
         {
@@ -168,72 +128,41 @@ namespace TheQTablet.iOS.Views.Main
             };
             _loadingContainer.AddSubview(_loadingText);
 
-            _container = new UIView
+            _contentContainer = new UIView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
+                DirectionalLayoutMargins = new NSDirectionalEdgeInsets
+                {
+                    Top = 20,
+                    Bottom = 20,
+                    Leading = 20,
+                    Trailing = 20,
+                }
             };
-            View.AddSubview(_container);
+            View.AddSubview(_contentContainer);
 
             _leftContainer = new UIView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
             };
-            _container.AddSubview(_leftContainer);
+            _contentContainer.AddSubview(_leftContainer);
 
-            _buttons = new UIStackView
-            {
-                TranslatesAutoresizingMaskIntoConstraints = false,
-                Spacing = 20,
-                Axis = UILayoutConstraintAxis.Vertical,
-            };
-            _leftContainer.AddSubview(_buttons);
-
-            _bluetoothEnabled = ButtonGenerator.PrimaryButton("Bluetooth");
-            _buttons.AddArrangedSubview(_bluetoothEnabled);
-
-            _scanDevices = ButtonGenerator.PrimaryButton("Scan Devices");
-            _buttons.AddArrangedSubview(_scanDevices);
-
-            _qBoxDetails = ButtonGenerator.PrimaryButton("Get Details");
-            _buttons.AddArrangedSubview(_qBoxDetails);
-
-            _checkConnection = ButtonGenerator.PrimaryButton("Check Connection");
-            _buttons.AddArrangedSubview(_checkConnection);
-
-            _scanNetworks = ButtonGenerator.PrimaryButton("Scan Networks");
-            _buttons.AddArrangedSubview(_scanNetworks);
-
-            _qboxName = new UILabel
+            _instructions = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 TextColor = ColorPalette.PrimaryText,
-                Font = FontGenerator.GenerateFont(20, UIFontWeight.Regular),
-            };
-            _leftContainer.AddSubview(_qboxName);
-
-            _qboxSSID = new UILabel
-            {
-                TranslatesAutoresizingMaskIntoConstraints = false,
-                TextColor = ColorPalette.PrimaryText,
-                Font = FontGenerator.GenerateFont(20, UIFontWeight.Regular),
+                Font = FontGenerator.GenerateFont(24, UIFontWeight.Regular),
                 Lines = 0,
+                LineBreakMode = UILineBreakMode.WordWrap,
             };
-            _leftContainer.AddSubview(_qboxSSID);
-
-            _qboxIP = new UILabel
-            {
-                TranslatesAutoresizingMaskIntoConstraints = false,
-                TextColor = ColorPalette.PrimaryText,
-                Font = FontGenerator.GenerateFont(20, UIFontWeight.Regular),
-            };
-            _leftContainer.AddSubview(_qboxIP);
+            _leftContainer.AddSubview(_instructions);
 
             _divider = new Divider
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 Axis = DividerAxis.Vertical,
             };
-            _container.AddSubview(_divider);
+            _contentContainer.AddSubview(_divider);
 
             _rightContainer = new UIView
             {
@@ -246,73 +175,50 @@ namespace TheQTablet.iOS.Views.Main
                     Bottom = 10,
                 },
             };
-            _container.AddSubview(_rightContainer);
+            _contentContainer.AddSubview(_rightContainer);
 
-            _success = new UILabel
+            _successContainer = new UIView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+            };
+            View.AddSubview(_successContainer);
+
+            _successText = new UILabel
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 TextColor = ColorPalette.PrimaryText,
                 Font = FontGenerator.GenerateFont(40, UIFontWeight.Regular),
-                Text = "Successfully connected to The Q server"
+                Text = "Successfully connected to The Q server",
+                Lines = 0,
+                LineBreakMode = UILineBreakMode.WordWrap,
             };
-            _rightContainer.AddSubview(_success);
+            _successContainer.AddSubview(_successText);
 
-            _devicesContainer = new ItemTable<DeviceSource>("Devices");
+            _successCloseButton = ButtonGenerator.PrimaryButton("Close");
+            _successContainer.AddSubview(_successCloseButton);
+
+            _devicesContainer = new ConnectivityTableView<DeviceSource>("Devices");
             _rightContainer.AddSubview(_devicesContainer);
 
-            _networksContainer = new ItemTable<NetworkSource>("Networks");
+            _networksContainer = new ConnectivityTableView<NetworkSource>("Networks");
             _rightContainer.AddSubview(_networksContainer);
 
-            //_devicesTitle = new UILabel
-            //{
-            //    TranslatesAutoresizingMaskIntoConstraints = false,
-            //    TextColor = ColorPalette.SecondaryText,
-            //    Font = FontGenerator.GenerateFont(32, UIFontWeight.Regular),
-            //    Text = "Devices",
-            //};
-            //_devicesContainer.AddSubview(_devicesTitle);
-
-            //_devicesList = new UITableView
-            //{
-            //    TranslatesAutoresizingMaskIntoConstraints = false,
-            //    BackgroundColor = UIColor.Clear,
-            //    TableFooterView = new UIView(),
-            //    SeparatorColor = ColorPalette.Border,
-            //};
-            //_devices = new DeviceSource(_devicesList);
-            //_devicesList.Source = _devices;
-            //_devicesContainer.AddSubview(_devicesList);
-
-            //_networksContainer = new UIView
-            //{
-            //    TranslatesAutoresizingMaskIntoConstraints = false,
-            //};
-            //_container.AddSubview(_networksContainer);
-
-            //_networksTitle = new UILabel
-            //{
-            //    TranslatesAutoresizingMaskIntoConstraints = false,
-            //    TextColor = ColorPalette.SecondaryText,
-            //    Font = FontGenerator.GenerateFont(32, UIFontWeight.Regular),
-            //    Text = "Networks",
-            //};
-            //_networksContainer.AddSubview(_networksTitle);
-
-            //_networksList = new UITableView
-            //{
-            //    TranslatesAutoresizingMaskIntoConstraints = false,
-            //    BackgroundColor = UIColor.Clear,
-            //    TableFooterView = new UIView(),
-            //    SeparatorColor = ColorPalette.Border,
-            //};
-            //_networks = new NetworkSource(_networksList);
-            //_networksList.Source = _networks;
-            //_networksContainer.AddSubview(_networksList);
+            _closeCross = new UIImageView
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                Image = UIImage.FromBundle("cross"),
+            };
+            View.AddSubview(_closeCross);
         }
 
         protected override void LayoutView()
         {
             base.LayoutView();
+
+            _closeCross.TopAnchor.ConstraintEqualTo(View.TopAnchor, 16).Active = true;
+            _closeCross.RightAnchor.ConstraintEqualTo(View.RightAnchor, -16).Active = true;
+            _closeCross.WidthAnchor.ConstraintEqualTo(_closeCross.HeightAnchor).Active = true;
+            _closeCross.WidthAnchor.ConstraintEqualTo(View.WidthAnchor, 0.02f).Active = true;
 
             _loadingContainer.LeftAnchor.ConstraintEqualTo(View.LeftAnchor).Active = true;
             _loadingContainer.TopAnchor.ConstraintEqualTo(View.TopAnchor).Active = true;
@@ -327,139 +233,98 @@ namespace TheQTablet.iOS.Views.Main
             _loadingText.CenterXAnchor.ConstraintEqualTo(_loading.Superview.CenterXAnchor).Active = true;
             _loadingText.TopAnchor.ConstraintEqualTo(_loading.BottomAnchor, 20).Active = true;
 
-            _container.LeftAnchor.ConstraintEqualTo(View.LeftAnchor).Active = true;
-            _container.TopAnchor.ConstraintEqualTo(View.TopAnchor).Active = true;
-            _container.BottomAnchor.ConstraintEqualTo(View.BottomAnchor).Active = true;
-            _container.RightAnchor.ConstraintEqualTo(View.RightAnchor).Active = true;
+            _contentContainer.LeftAnchor.ConstraintEqualTo(View.LeftAnchor).Active = true;
+            _contentContainer.TopAnchor.ConstraintEqualTo(View.TopAnchor).Active = true;
+            _contentContainer.BottomAnchor.ConstraintEqualTo(View.BottomAnchor).Active = true;
+            _contentContainer.RightAnchor.ConstraintEqualTo(View.RightAnchor).Active = true;
 
-            _leftContainer.LeftAnchor.ConstraintEqualTo(_container.LeftAnchor).Active = true;
-            _leftContainer.TopAnchor.ConstraintEqualTo(_container.TopAnchor).Active = true;
-            _leftContainer.BottomAnchor.ConstraintEqualTo(_container.BottomAnchor).Active = true;
+            _leftContainer.LeftAnchor.ConstraintEqualTo(_contentContainer.LeftAnchor).Active = true;
+            _leftContainer.TopAnchor.ConstraintEqualTo(_contentContainer.TopAnchor).Active = true;
+            _leftContainer.BottomAnchor.ConstraintEqualTo(_contentContainer.BottomAnchor).Active = true;
             _leftContainer.RightAnchor.ConstraintEqualTo(_divider.LeftAnchor).Active = true;
 
-            _buttons.CenterXAnchor.ConstraintEqualTo(_leftContainer.CenterXAnchor).Active = true;
-            _buttons.CenterYAnchor.ConstraintEqualTo(_leftContainer.CenterYAnchor).Active = true;
+            _instructions.CenterYAnchor.ConstraintEqualTo(_leftContainer.CenterYAnchor).Active = true;
+            _instructions.CenterXAnchor.ConstraintEqualTo(_leftContainer.CenterXAnchor).Active = true;
+            _instructions.WidthAnchor.ConstraintLessThanOrEqualTo(_leftContainer.LayoutMarginsGuide.WidthAnchor).Active = true;
 
-            _qboxName.TopAnchor.ConstraintEqualTo(_buttons.BottomAnchor).Active = true;
-            _qboxName.CenterXAnchor.ConstraintEqualTo(_buttons.CenterXAnchor).Active = true;
+            _divider.CenterXAnchor.ConstraintEqualTo(_contentContainer.CenterXAnchor).Active = true;
+            _divider.CenterYAnchor.ConstraintEqualTo(_contentContainer.CenterYAnchor).Active = true;
+            _divider.TopAnchor.ConstraintEqualTo(_contentContainer.LayoutMarginsGuide.TopAnchor).Active = true;
+            _divider.BottomAnchor.ConstraintEqualTo(_contentContainer.LayoutMarginsGuide.BottomAnchor).Active = true;
 
-            _qboxSSID.TopAnchor.ConstraintEqualTo(_qboxName.BottomAnchor).Active = true;
-            _qboxSSID.CenterXAnchor.ConstraintEqualTo(_qboxName.CenterXAnchor).Active = true;
-
-            _qboxIP.TopAnchor.ConstraintEqualTo(_qboxSSID.BottomAnchor).Active = true;
-            _qboxIP.CenterXAnchor.ConstraintEqualTo(_qboxSSID.CenterXAnchor).Active = true;
-
-            _divider.CenterXAnchor.ConstraintEqualTo(_container.CenterXAnchor).Active = true;
-            _divider.CenterYAnchor.ConstraintEqualTo(_container.CenterYAnchor).Active = true;
-            _divider.HeightAnchor.ConstraintEqualTo(_container.HeightAnchor, 0.9f).Active = true;
-
-            _rightContainer.RightAnchor.ConstraintEqualTo(_container.RightAnchor).Active = true;
-            _rightContainer.TopAnchor.ConstraintEqualTo(_container.TopAnchor).Active = true;
-            _rightContainer.BottomAnchor.ConstraintEqualTo(_container.BottomAnchor).Active = true;
+            _rightContainer.RightAnchor.ConstraintEqualTo(_contentContainer.LayoutMarginsGuide.RightAnchor).Active = true;
+            _rightContainer.TopAnchor.ConstraintEqualTo(_contentContainer.LayoutMarginsGuide.TopAnchor).Active = true;
+            _rightContainer.BottomAnchor.ConstraintEqualTo(_contentContainer.LayoutMarginsGuide.BottomAnchor).Active = true;
             _rightContainer.LeftAnchor.ConstraintEqualTo(_divider.RightAnchor).Active = true;
 
-            _success.CenterXAnchor.ConstraintEqualTo(_rightContainer.CenterXAnchor).Active = true;
-            _success.CenterYAnchor.ConstraintEqualTo(_rightContainer.CenterYAnchor).Active = true;
+            _successContainer.CenterXAnchor.ConstraintEqualTo(View.CenterXAnchor).Active = true;
+            _successContainer.CenterYAnchor.ConstraintEqualTo(View.CenterYAnchor).Active = true;
+            _successContainer.WidthAnchor.ConstraintLessThanOrEqualTo(View.WidthAnchor).Active = true;
+
+            _successContainer.WidthAnchor.ConstraintGreaterThanOrEqualTo(_successText.WidthAnchor).Active = true;
+            _successContainer.WidthAnchor.ConstraintGreaterThanOrEqualTo(_successCloseButton.WidthAnchor).Active = true;
+
+            _successText.TopAnchor.ConstraintEqualTo(_successContainer.TopAnchor).Active = true;
+            _successText.CenterXAnchor.ConstraintEqualTo(_successContainer.CenterXAnchor).Active = true;
+
+            _successCloseButton.TopAnchor.ConstraintEqualTo(_successText.BottomAnchor, 20).Active = true;
+            _successCloseButton.BottomAnchor.ConstraintEqualTo(_successContainer.BottomAnchor).Active = true;
+            _successCloseButton.CenterXAnchor.ConstraintEqualTo(_successText.CenterXAnchor).Active = true;
 
             _devicesContainer.TopAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.TopAnchor).Active = true;
             _devicesContainer.BottomAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.BottomAnchor).Active = true;
             _devicesContainer.LeftAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.LeftAnchor).Active = true;
             _devicesContainer.RightAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.RightAnchor).Active = true;
 
-            //_devicesTitle.TopAnchor.ConstraintEqualTo(_devicesTitle.Superview.TopAnchor).Active = true;
-            //_devicesTitle.LeftAnchor.ConstraintEqualTo(_devicesTitle.Superview.LeftAnchor).Active = true;
-            //_devicesTitle.RightAnchor.ConstraintEqualTo(_devicesTitle.Superview.RightAnchor).Active = true;
-
-            //_devicesList.LeftAnchor.ConstraintEqualTo(_devicesList.Superview.LeftAnchor).Active = true;
-            //_devicesList.RightAnchor.ConstraintEqualTo(_devicesList.Superview.RightAnchor).Active = true;
-            //_devicesList.TopAnchor.ConstraintEqualTo(_devicesTitle.BottomAnchor).Active = true;
-            //_devicesList.BottomAnchor.ConstraintEqualTo(_devicesList.Superview.BottomAnchor).Active = true;
-
             _networksContainer.TopAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.TopAnchor).Active = true;
             _networksContainer.BottomAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.BottomAnchor).Active = true;
             _networksContainer.LeftAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.LeftAnchor).Active = true;
             _networksContainer.RightAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.RightAnchor).Active = true;
-
-            //_networksTitle.TopAnchor.ConstraintEqualTo(_networksTitle.Superview.TopAnchor).Active = true;
-            //_networksTitle.LeftAnchor.ConstraintEqualTo(_networksTitle.Superview.LeftAnchor).Active = true;
-            //_networksTitle.RightAnchor.ConstraintEqualTo(_networksTitle.Superview.RightAnchor).Active = true;
-
-            //_networksList.LeftAnchor.ConstraintEqualTo(_networksList.Superview.LeftAnchor).Active = true;
-            //_networksList.RightAnchor.ConstraintEqualTo(_networksList.Superview.RightAnchor).Active = true;
-            //_networksList.TopAnchor.ConstraintEqualTo(_networksTitle.BottomAnchor).Active = true;
-            //_networksList.BottomAnchor.ConstraintEqualTo(_networksList.Superview.BottomAnchor).Active = true;
         }
-
-        static ConnectivityState[] _loadingStates = {
-            ConnectivityState.Loading,
-            ConnectivityState.ScanningDevices,
-            ConnectivityState.ConnectingDevice,
-            ConnectivityState.GettingDetails,
-            ConnectivityState.CheckingConnection,
-            ConnectivityState.ScanningNetworks,
-            ConnectivityState.ConnectingNetwork,
-        };
-        static ConnectivityState[] _loadedStates = {
-            ConnectivityState.Loaded,
-            ConnectivityState.ChooseDevice,
-            ConnectivityState.ConnectedDevice,
-            ConnectivityState.GotDetails,
-            ConnectivityState.CheckedConnection,
-            ConnectivityState.ChooseNetwork,
-            ConnectivityState.ConnectedNetwork,
-        };
 
         protected override void BindView()
         {
             base.BindView();
 
             var set = CreateBindingSet();
-            set.Bind(_container).For(v => v.Hidden).To(vm => vm.State).WithConversion<ShowDuringStateConverter>(_loadingStates);
-            set.Bind(_loadingContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(_loadingStates);
-            set.Bind(_loadingText).To(vm => vm.State).WithConversion<LoadingTextConverter>();
-
-            set.Bind(_bluetoothEnabled).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(_loadedStates);
-            set.Bind(_scanDevices).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
+            set.Bind(_contentContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.Loaded,
-            });
-            set.Bind(_devicesContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.ChooseDevice,
-            });
-            set.Bind(_qBoxDetails).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.ConnectedDevice,
                 ConnectivityState.GotDetails,
                 ConnectivityState.CheckedConnection,
                 ConnectivityState.ChooseNetwork,
-                ConnectivityState.ConnectedNetwork,
+                ConnectivityState.ConnectedToNetworkNoAPI,
             });
-            set.Bind(_checkConnection).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
-                ConnectivityState.GotDetails,
-                ConnectivityState.CheckedConnection,
-                ConnectivityState.ChooseNetwork,
-                ConnectivityState.ConnectedNetwork,
+            set.Bind(_loadingContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
+                ConnectivityState.Loading,
+                ConnectivityState.ScanningDevices,
+                ConnectivityState.ConnectingDevice,
+                ConnectivityState.GettingDetails,
+                ConnectivityState.CheckingConnection,
+                ConnectivityState.ScanningNetworks,
+                ConnectivityState.ConnectingNetwork,
             });
-            set.Bind(_scanNetworks).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
-                ConnectivityState.CheckedConnection,
+            set.Bind(_loadingText).To(vm => vm.State).WithConversion<LoadingTextConverter>();
+
+            set.Bind(_devicesContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
+                ConnectivityState.ChooseDevice,
             });
             set.Bind(_networksContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.ChooseNetwork,
+                ConnectivityState.ConnectedToNetworkNoAPI,
             });
-            set.Bind(_success).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
+            set.Bind(_successContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.Success,
             });
 
-            set.Bind(_bluetoothEnabled).For("Tap").To(vm => vm.CheckBluetoothCommand);
-            set.Bind(_scanDevices).For("Tap").To(vm => vm.ScanDevicesCommand);
-            set.Bind(_qBoxDetails).For("Tap").To(vm => vm.QBoxDetailsCommand);
-            set.Bind(_checkConnection).For("Tap").To(vm => vm.CheckConnectionCommand);
-            set.Bind(_scanNetworks).For("Tap").To(vm => vm.ScanCommand);
-            set.Bind(_qboxName).To(vm => vm.QBoxBTName);
-            set.Bind(_qboxSSID).To(vm => vm.QBoxSSID);
-            set.Bind(_qboxIP).To(vm => vm.QBoxIP);
+            set.Bind(_instructions).To(vm => vm.State).WithConversion<InstructionsTextConverter>();
             set.Bind(_networksContainer.Source).For(v => v.ItemsSource).To(vm => vm.Networks).WithConversion<TestConverter>();
             set.Bind(_networksContainer.Source).For(v => v.SelectionChangedCommand).To(vm => vm.JoinNetworkCommand);
             set.Bind(_devicesContainer.Source).For(v => v.ItemsSource).To(vm => vm.Devices);
             set.Bind(_devicesContainer.Source).For(v => v.SelectionChangedCommand).To(vm => vm.ConnectDeviceCommand);
+            set.Bind(_closeCross).For("Tap").To(vm => vm.CloseCommand);
+            set.Bind(_successCloseButton).For("Tap").To(vm => vm.CloseCommand);
             set.Apply();
         }
 

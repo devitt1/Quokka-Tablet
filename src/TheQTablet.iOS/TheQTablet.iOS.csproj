@@ -269,6 +269,7 @@
     <Compile Include="Views\Custom\Extensions.cs" />
     <Compile Include="Views\Custom\NetworkTableView.cs" />
     <Compile Include="Views\Custom\DeviceTableView.cs" />
+    <Compile Include="Views\Custom\ConnectivityTableView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

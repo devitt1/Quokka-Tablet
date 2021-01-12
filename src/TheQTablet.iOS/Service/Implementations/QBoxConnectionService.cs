@@ -137,13 +137,27 @@ namespace TheQTablet.iOS.Service.Implementations
         {
             Console.WriteLine("Discovered: " + peripheral);
 
-            _devices.Add(new Peripheral
+            var identifier = peripheral.Identifier.AsString();
+
+            bool found = false;
+            foreach(var device in _devices)
             {
-                Identifier = peripheral.Identifier.AsString(),
-                Name = peripheral.Name,
-            });
-            _cbDevices.Add(peripheral);
-            DevicesChanged?.Invoke(this, EventArgs.Empty);
+                if(device.Identifier == identifier)
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                _devices.Add(new Peripheral
+                {
+                    Identifier = identifier,
+                    Name = peripheral.Name,
+                });
+                _cbDevices.Add(peripheral);
+                DevicesChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private TaskCompletionSource<bool> connectedTask;
@@ -371,6 +385,8 @@ namespace TheQTablet.iOS.Service.Implementations
                     }
                     else
                     {
+                        QBoxSSID = null;
+                        QBoxIP = null;
                         task.TrySetResult(false);
                     }
                 }

@@ -16,7 +16,7 @@ namespace TheQTablet.iOS
         {
             base.InitializeFirstChance();
             Mvx.IoCProvider.RegisterType<IMvxJsonConverter, MvxJsonConverter>();
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IQBoxConnectionService, QBoxConnectionService>();
+            Mvx.IoCProvider.RegisterType<IQBoxConnectionService, QBoxConnectionService>();
         }
 
     }
