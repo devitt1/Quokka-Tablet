@@ -32,6 +32,8 @@ namespace TheQTablet.Core.ViewModels.Main
         ChooseNetwork,
         ConnectingNetwork,
         ConnectedNetwork,
+
+        Success,
     }
 
     public class ConnectivityViewModel : MvxNavigationViewModel
@@ -42,7 +44,7 @@ namespace TheQTablet.Core.ViewModels.Main
         public MvxAsyncCommand CloseCommand { get; }
         public MvxAsyncCommand CheckBluetoothCommand { get; }
         public MvxAsyncCommand ScanDevicesCommand { get; }
-        public MvxAsyncCommand<object> ConnectDeviceCommand { get; }
+        public MvxAsyncCommand<Peripheral> ConnectDeviceCommand { get; }
         public MvxAsyncCommand QBoxDetailsCommand { get; }
         public MvxAsyncCommand CheckConnectionCommand { get; }
         public MvxAsyncCommand ScanCommand { get; }
@@ -59,7 +61,7 @@ namespace TheQTablet.Core.ViewModels.Main
         public string QBoxSSID => _connectionService.QBoxSSID;
         public string QBoxIP => _connectionService.QBoxIP;
         public ObservableCollection<WiFiNetwork> Networks => _connectionService.Networks;
-        public ObservableCollection<string> Devices => _connectionService.Devices;
+        public ObservableCollection<Peripheral> Devices => _connectionService.Devices;
 
         public ConnectivityViewModel(
             IMvxLogProvider logProvider,
@@ -74,7 +76,7 @@ namespace TheQTablet.Core.ViewModels.Main
             CloseCommand = new MvxAsyncCommand(Close);
             CheckBluetoothCommand = new MvxAsyncCommand(CheckBluetooth);
             ScanDevicesCommand = new MvxAsyncCommand(ScanDevices);
-            ConnectDeviceCommand = new MvxAsyncCommand<object>(ConnectDevice);
+            ConnectDeviceCommand = new MvxAsyncCommand<Peripheral>(ConnectDevice);
             QBoxDetailsCommand = new MvxAsyncCommand(GetQBoxDetails);
             CheckConnectionCommand = new MvxAsyncCommand(CheckConnectionAsync);
             ScanCommand = new MvxAsyncCommand(Scan);
@@ -85,9 +87,15 @@ namespace TheQTablet.Core.ViewModels.Main
             _connectionService.QBoxIPChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(QBoxIP));
             _connectionService.NetworksChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(Networks));
             _connectionService.DevicesChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(Devices));
+            //State = ConnectivityState.Loading;
+        }
 
-            //CheckBluetoothCommand.ExecuteAsync();
-            State = ConnectivityState.Loaded;
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+
+            await CheckBluetooth();
+            await ScanDevices();
         }
 
         private async Task Close()
@@ -98,60 +106,73 @@ namespace TheQTablet.Core.ViewModels.Main
         private async Task CheckBluetooth()
         {
             State = ConnectivityState.Loading;
-            _connectionService.EnsureBluetoothEnabled();
-            await Task.Delay(500);
+            await _connectionService.EnsureBluetoothEnabled();
+            //await Task.Delay(500);
             State = ConnectivityState.Loaded;
-            // scan devices
         }
 
         private async Task ScanDevices()
         {
             State = ConnectivityState.ScanningDevices;
             _connectionService.ScanDevices();
-            await Task.Delay(500);
+            //await Task.Delay(500);
             State = ConnectivityState.ChooseDevice;
         }
 
-        private async Task ConnectDevice(object peripheral)
+        private async Task ConnectDevice(Peripheral peripheral)
         {
             State = ConnectivityState.ConnectingDevice;
-            _connectionService.Connect(peripheral);
-            await Task.Delay(500);
+            await _connectionService.Connect(peripheral);
+            //await Task.Delay(500);
             State = ConnectivityState.ConnectedDevice;
             // scan networks
+
+            await GetQBoxDetails();
+            var success = await CheckConnectionAsync();
+            if(success)
+            {
+                State = ConnectivityState.Success;
+            }
+            else
+            {
+                await Scan();
+            }
         }
 
         private async Task GetQBoxDetails()
         {
             State = ConnectivityState.GettingDetails;
-            _connectionService.GetQBoxDetails();
-            await Task.Delay(500);
+            await _connectionService.GetQBoxDetails();
+            //await Task.Delay(500);
             State = ConnectivityState.GotDetails;
         }
 
-        private async Task CheckConnectionAsync()
+        private async Task<bool> CheckConnectionAsync()
         {
             State = ConnectivityState.CheckingConnection;
             var success = await _connectionService.CheckConnection();
             Console.WriteLine(success);
-            await Task.Delay(500);
+            //await Task.Delay(500);
             State = ConnectivityState.CheckedConnection;
+
+            return success;
         }
 
         private async Task Scan()
         {
             State = ConnectivityState.ScanningNetworks;
-            _connectionService.ScanNetworks();
-            await Task.Delay(500);
+            await _connectionService.ScanNetworks();
+            //await Task.Delay(500);
             State = ConnectivityState.ChooseNetwork;
         }
 
         private async Task JoinNetwork(WiFiNetwork network)
         {
+            bool joinedSuccess = false;
             if (network.Auth == AuthType.None)
             {
                 State = ConnectivityState.ConnectingNetwork;
-                _connectionService.ConnectNetwork(network.SSID);
+                joinedSuccess = await _connectionService.ConnectNetwork(network.SSID);
             }
             else if(network.Auth == AuthType.Password)
             {
@@ -166,7 +187,7 @@ namespace TheQTablet.Core.ViewModels.Main
                 if (result.Ok)
                 {
                     State = ConnectivityState.ConnectingNetwork;
-                    _connectionService.ConnectNetwork(network.SSID, result.Text);
+                    joinedSuccess = await _connectionService.ConnectNetwork(network.SSID, result.Text);
                 }
             }
             else if(network.Auth == AuthType.UsernamePassword)
@@ -180,11 +201,20 @@ namespace TheQTablet.Core.ViewModels.Main
                 if (result.Ok)
                 {
                     State = ConnectivityState.ConnectingNetwork;
-                    _connectionService.ConnectToNetwork(network.SSID, result.LoginText, result.Password);
+                    joinedSuccess = await _connectionService.ConnectToNetwork(network.SSID, result.LoginText, result.Password);
                 }
             }
-            await Task.Delay(500);
+            //await Task.Delay(500);
             State = ConnectivityState.ConnectedNetwork;
+            if (joinedSuccess)
+            {
+                //State = ConnectivityState.Success;
+                var connectSuccess = await CheckConnectionAsync();
+                if (connectSuccess)
+                {
+                    State = ConnectivityState.Success;
+                }
+            }
         }
     }
 }

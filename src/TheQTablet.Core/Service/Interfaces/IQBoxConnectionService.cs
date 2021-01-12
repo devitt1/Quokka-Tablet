@@ -33,6 +33,12 @@ namespace TheQTablet.Core.Service.Interfaces
         }
     }
 
+    public class Peripheral
+    {
+        public string Identifier { get; set; }
+        public string Name { get; set; }
+    }
+
     public interface IQBoxConnectionService
     {
         BluetoothState BluetoothState { get; }
@@ -44,17 +50,17 @@ namespace TheQTablet.Core.Service.Interfaces
         event EventHandler QBoxIPChanged;
         ObservableCollection<WiFiNetwork> Networks { get; }
         event EventHandler NetworksChanged;
-        ObservableCollection<string> Devices { get; }
+        ObservableCollection<Peripheral> Devices { get; }
         event EventHandler DevicesChanged;
 
         void ScanDevices();
-        void Connect(object peripheral);
-        void ScanNetworks();
-        void EnsureBluetoothEnabled();
-        void GetQBoxDetails();
+        Task Connect(Peripheral peripheral);
+        Task ScanNetworks();
+        Task EnsureBluetoothEnabled();
+        Task GetQBoxDetails();
         Task<bool> CheckConnection();
-        void ConnectNetwork(string ssid);
-        void ConnectNetwork(string ssid, string password);
-        void ConnectToNetwork(string ssid, string username, string password);
+        Task<bool> ConnectNetwork(string ssid);
+        Task<bool> ConnectNetwork(string ssid, string password);
+        Task<bool> ConnectToNetwork(string ssid, string username, string password);
     }
 }

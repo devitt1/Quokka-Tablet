@@ -5,6 +5,8 @@ using Foundation;
 using MvvmCross.Binding.BindingContext;
 using MvvmCross.Platforms.Ios.Binding.Views;
 
+using TheQTablet.Core.Service.Interfaces;
+
 using UIKit;
 
 namespace TheQTablet.iOS.Views.Custom
@@ -41,8 +43,8 @@ namespace TheQTablet.iOS.Views.Custom
 
             this.DelayBind(() =>
             {
-                var set = this.CreateBindingSet<DeviceCell, string>();
-                set.Bind(_name).For(v => v.Text).To(vm => vm);
+                var set = this.CreateBindingSet<DeviceCell, Peripheral>();
+                set.Bind(_name).For(v => v.Text).To(vm => vm.Name);
                 set.Apply();
             });
         }

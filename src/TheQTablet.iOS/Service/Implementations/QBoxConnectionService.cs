@@ -1,4 +1,4 @@
-﻿#define MOCK_CONNECTION
+﻿//#define MOCK_CONNECTION
 
 using System;
 using System.Collections.ObjectModel;
@@ -85,8 +85,9 @@ namespace TheQTablet.iOS.Service.Implementations
         }
         public event EventHandler NetworksChanged;
 
-        private ObservableCollection<string> _devices;
-        public ObservableCollection<string> Devices
+        private ObservableCollection<CBPeripheral> _cbDevices;
+        private ObservableCollection<Peripheral> _devices;
+        public ObservableCollection<Peripheral> Devices
         {
             get => _devices;
             private set
@@ -103,7 +104,8 @@ namespace TheQTablet.iOS.Service.Implementations
             _simulatorService = simulatorService;
             _qsimClient = qsimClient;
 
-            _devices = new ObservableCollection<string>();
+            _devices = new ObservableCollection<Peripheral>();
+            _cbDevices = new ObservableCollection<CBPeripheral>();
 
             Console.WriteLine("BT INIT?");
             _centralManager = new CBCentralManager(this, null);
@@ -135,20 +137,40 @@ namespace TheQTablet.iOS.Service.Implementations
         {
             Console.WriteLine("Discovered: " + peripheral);
 
-            _devices.Add(peripheral.Name);
+            _devices.Add(new Peripheral
+            {
+                Identifier = peripheral.Identifier.AsString(),
+                Name = peripheral.Name,
+            });
+            _cbDevices.Add(peripheral);
             DevicesChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        //public override void ConnectedPeripheral(CBCentralManager central, CBPeripheral peripheral)
-        //{
-        //    Console.WriteLine("Connected: " + peripheral);
+        private TaskCompletionSource<bool> connectedTask;
+        public override void ConnectedPeripheral(CBCentralManager central, CBPeripheral peripheral)
+        {
+            Console.WriteLine("Connected: " + peripheral);
 
-        //    peripheral.DiscoverServices();
-        //}
+            peripheral.DiscoverServices();
+
+            void handler(object sender, EventArgs e)
+            {
+                _theQBox.CharacteristicsFound -= handler;
+                connectedTask.TrySetResult(true);
+            }
+            _theQBox.CharacteristicsFound += handler;
+        }
+
+        public override void FailedToConnectPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
+        {
+            base.FailedToConnectPeripheral(central, peripheral, error);
+
+            connectedTask.TrySetResult(false);
+        }
 
         public void ScanDevices()
         {
-            Devices = new ObservableCollection<string>();
+            Devices = new ObservableCollection<Peripheral>();
 
 #if MOCK_CONNECTION
             _devices.Add("A DEVICE");
@@ -159,21 +181,43 @@ namespace TheQTablet.iOS.Service.Implementations
 #endif
         }
 
-        public void Connect(object peripheral)
+        public async Task Connect(Peripheral peripheral)
         {
 #if MOCK_CONNECTION
             Console.WriteLine($"Fake connect: {peripheral}");
             QBoxBTName = peripheral as string;
 #else
+            connectedTask = new TaskCompletionSource<bool>();
+
             _centralManager.StopScan();
 
-            _theQBox = new QBox(peripheral as CBPeripheral);
-            _theQBox.Peripheral.DiscoverServices();
-            QBoxBTName = _theQBox.Peripheral.Name;
+            CBPeripheral cbPeripheral = null;
+            foreach(var device in _cbDevices)
+            {
+                if(device.Identifier.AsString() == peripheral.Identifier)
+                {
+                    cbPeripheral = device;
+                    break;
+                }
+            }
+
+            if (cbPeripheral != null)
+            {
+                _theQBox = new QBox(cbPeripheral);
+                _centralManager.ConnectPeripheral(cbPeripheral);
+                //_theQBox.Peripheral.DiscoverServices();
+                QBoxBTName = _theQBox.Peripheral.Name;
+            }
+            else
+            {
+                Console.WriteLine("matching cbperipheral not found");
+            }
+
+            await connectedTask.Task;
 #endif
         }
 
-        public void ScanNetworks()
+        public async Task ScanNetworks()
         {
 #if MOCK_CONNECTION
             var encodedSSIDA = BitConverter.ToString(Encoding.Default.GetBytes("tim_open_w")).Replace("-", "");
@@ -183,11 +227,36 @@ namespace TheQTablet.iOS.Service.Implementations
             Console.WriteLine(encodedSSIDB);
             ScanDataReceived(null, $"networks:{encodedSSIDA}:none,{encodedSSIDB}:password,{encodedSSIDC}:usernamepassword");
 #else
+            var task = new TaskCompletionSource<bool>();
             if (_theQBox != null)
             {
                 _theQBox.Send("scan");
-                _theQBox.DataReceived += ScanDataReceived;
+
+                void handler(object sender, NSData e)
+                {
+                    _theQBox.DataReceived -= handler;
+
+                    Regex rx = new Regex(@"^networks:(?<networks>.+)$", RegexOptions.Compiled);
+                    var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
+                    if (match.Success)
+                    {
+                        var networkStrings = match.Groups["networks"].Value.Split(",");
+                        var networks = new Collection<WiFiNetwork>();
+                        foreach (var networkString in networkStrings)
+                        {
+                            var split = networkString.Split(":");
+                            var network = new WiFiNetwork(FromHex(split[0]), StringToAuth(split[1]));
+                            networks.Add(network);
+                        }
+                        Networks = new ObservableCollection<WiFiNetwork>(networks);
+                        task.TrySetResult(true);
+                    }
+                }
+                //_theQBox.DataReceived += DetailsDataReceived;
+                _theQBox.DataReceived += handler;
             }
+
+            await task.Task;
 #endif
         }
 
@@ -218,7 +287,7 @@ namespace TheQTablet.iOS.Service.Implementations
 
         private void ScanDataReceived(object sender, NSData e)
         {
-            Regex rx = new Regex(@"^networks:(?<networks>.*)$", RegexOptions.Compiled);
+            Regex rx = new Regex(@"^networks:(?<networks>.+)$", RegexOptions.Compiled);
             var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
             if (match.Success)
             {
@@ -238,7 +307,7 @@ namespace TheQTablet.iOS.Service.Implementations
 #endif
         }
 
-        public void EnsureBluetoothEnabled()
+        public async Task EnsureBluetoothEnabled()
         {
             if (BluetoothState == BluetoothState.Unsupported)
             {
@@ -271,36 +340,61 @@ namespace TheQTablet.iOS.Service.Implementations
                         OkText = "Done"
                     });
                 }
+
+                await Task.Delay(TimeSpan.FromSeconds(1));
             }
         }
 
-        public void GetQBoxDetails()
+        public async Task GetQBoxDetails()
         {
 #if MOCK_CONNECTION
             var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes("DODO-D45A")).Replace("-", "");
             DetailsDataReceived(null, $"ssid:{encodedSSID},ip:192.168.1.9");
 #else
+            var task = new TaskCompletionSource<bool>();
+
             if (_theQBox != null)
             {
                 _theQBox.Send("details");
-                _theQBox.DataReceived += DetailsDataReceived;
+
+                void handler(object sender, NSData e)
+                {
+                    _theQBox.DataReceived -= handler;
+
+                    Regex rx = new Regex(@"^ssid:(?<ssid>.*),ip:(?<ip>.*)$", RegexOptions.Compiled);
+                    var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
+                    if (match.Success)
+                    {
+                        QBoxSSID = FromHex(match.Groups["ssid"].Value);
+                        QBoxIP = match.Groups["ip"].Value;
+                        task.TrySetResult(true);
+                    }
+                    else
+                    {
+                        task.TrySetResult(false);
+                    }
+                }
+                //_theQBox.DataReceived += DetailsDataReceived;
+                _theQBox.DataReceived += handler;
             }
+
+            await task.Task;
 #endif
         }
 
-        private void DetailsDataReceived(object sender, NSData e)
-        {
-            Regex rx = new Regex(@"^ssid:(?<ssid>.*),ip:(?<ip>.*)$", RegexOptions.Compiled);
-            var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
-            if (match.Success)
-            {
-                QBoxSSID = FromHex(match.Groups["ssid"].Value);
-                QBoxIP = match.Groups["ip"].Value;
-            }
-#if !MOCK_CONNECTION
-            _theQBox.DataReceived -= DetailsDataReceived;
-#endif
-        }
+//        private void DetailsDataReceived(object sender, NSData e)
+//        {
+//            Regex rx = new Regex(@"^ssid:(?<ssid>.*),ip:(?<ip>.*)$", RegexOptions.Compiled);
+//            var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
+//            if (match.Success)
+//            {
+//                QBoxSSID = FromHex(match.Groups["ssid"].Value);
+//                QBoxIP = match.Groups["ip"].Value;
+//            }
+//#if !MOCK_CONNECTION
+//            _theQBox.DataReceived -= DetailsDataReceived;
+//#endif
+//        }
 
         public async Task<bool> CheckConnection()
         {
@@ -328,7 +422,36 @@ namespace TheQTablet.iOS.Service.Implementations
             }
         }
 
-        public void ConnectNetwork(string ssid)
+        private async Task<bool> ConnectToNetwork(string details)
+        {
+            var task = new TaskCompletionSource<bool>();
+
+            _theQBox.Send(details);
+
+            void handler(object sender, NSData e)
+            {
+                _theQBox.DataReceived -= handler;
+
+                Regex rx = new Regex(@"^(?<success>success,)ssid:(?<ssid>.*),ip:(?<ip>.*)$", RegexOptions.Compiled);
+                var match = rx.Match(e.ToString(NSStringEncoding.UTF8));
+                if (match.Success)
+                {
+                    QBoxSSID = FromHex(match.Groups["ssid"].Value);
+                    QBoxIP = match.Groups["ip"].Value;
+                    task.TrySetResult(match.Groups["success"].Success);
+                }
+                else
+                {
+                   task.TrySetResult(false);
+                }
+            }
+            //_theQBox.DataReceived += DetailsDataReceived;
+            _theQBox.DataReceived += handler;
+
+            return await task.Task;
+        }
+
+        public async Task<bool> ConnectNetwork(string ssid)
         {
             var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes(ssid)).Replace("-", "");
             var toSend = $"connect:{encodedSSID}";
@@ -337,12 +460,11 @@ namespace TheQTablet.iOS.Service.Implementations
 #if MOCK_CONNECTION
             ConnectToNetworkDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.9");
 #else
-            _theQBox.Send(toSend);
-            _theQBox.DataReceived += ConnectToNetworkDataReceived;
+            return await ConnectToNetwork(toSend);
 #endif
         }
 
-        public void ConnectNetwork(string ssid, string password)
+        public async Task<bool> ConnectNetwork(string ssid, string password)
         {
             var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes(ssid)).Replace("-", "");
             var toSend = $"connect:{encodedSSID},{password}";
@@ -351,12 +473,11 @@ namespace TheQTablet.iOS.Service.Implementations
 #if MOCK_CONNECTION
             ConnectToNetworkDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.20");
 #else
-            _theQBox.Send(toSend);
-            _theQBox.DataReceived += ConnectToNetworkDataReceived;
+            return await ConnectToNetwork(toSend);
 #endif
         }
 
-        public void ConnectToNetwork(string ssid, string username, string password)
+        public async Task<bool> ConnectToNetwork(string ssid, string username, string password)
         {
             var encodedSSID = BitConverter.ToString(Encoding.Default.GetBytes(ssid)).Replace("-", "");
             var toSend = $"connect:{encodedSSID},{username},{password}";
@@ -365,8 +486,7 @@ namespace TheQTablet.iOS.Service.Implementations
 #if MOCK_CONNECTION
             ConnectToNetworkDataReceived(null, $"success,ssid:{encodedSSID},ip:192.168.1.199");
 #else
-            _theQBox.Send(toSend);
-            _theQBox.DataReceived += ConnectToNetworkDataReceived;
+            return await ConnectToNetwork(toSend);
 #endif
         }
 

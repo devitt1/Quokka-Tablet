@@ -61,7 +61,7 @@ namespace TheQTablet.iOS.Views.Main
 
         public SourceType Source => _source;
 
-        public ItemTable()
+        public ItemTable(string title)
         {
             TranslatesAutoresizingMaskIntoConstraints = false;
 
@@ -70,7 +70,7 @@ namespace TheQTablet.iOS.Views.Main
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 TextColor = ColorPalette.SecondaryText,
                 Font = FontGenerator.GenerateFont(32, UIFontWeight.Regular),
-                Text = "Devices",
+                Text = title,
             };
             AddSubview(_title);
 
@@ -120,6 +120,8 @@ namespace TheQTablet.iOS.Views.Main
         private Divider _divider;
 
         private UIView _rightContainer;
+
+        private UILabel _success;
 
         private ItemTable<DeviceSource> _devicesContainer;
         //private UILabel _devicesTitle;
@@ -246,11 +248,20 @@ namespace TheQTablet.iOS.Views.Main
             };
             _container.AddSubview(_rightContainer);
 
-            _devicesContainer = new ItemTable<DeviceSource>();
-            _container.AddSubview(_devicesContainer);
+            _success = new UILabel
+            {
+                TranslatesAutoresizingMaskIntoConstraints = false,
+                TextColor = ColorPalette.PrimaryText,
+                Font = FontGenerator.GenerateFont(40, UIFontWeight.Regular),
+                Text = "Successfully connected to The Q server"
+            };
+            _rightContainer.AddSubview(_success);
 
-            _networksContainer = new ItemTable<NetworkSource>();
-            _container.AddSubview(_networksContainer);
+            _devicesContainer = new ItemTable<DeviceSource>("Devices");
+            _rightContainer.AddSubview(_devicesContainer);
+
+            _networksContainer = new ItemTable<NetworkSource>("Networks");
+            _rightContainer.AddSubview(_networksContainer);
 
             //_devicesTitle = new UILabel
             //{
@@ -347,6 +358,9 @@ namespace TheQTablet.iOS.Views.Main
             _rightContainer.BottomAnchor.ConstraintEqualTo(_container.BottomAnchor).Active = true;
             _rightContainer.LeftAnchor.ConstraintEqualTo(_divider.RightAnchor).Active = true;
 
+            _success.CenterXAnchor.ConstraintEqualTo(_rightContainer.CenterXAnchor).Active = true;
+            _success.CenterYAnchor.ConstraintEqualTo(_rightContainer.CenterYAnchor).Active = true;
+
             _devicesContainer.TopAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.TopAnchor).Active = true;
             _devicesContainer.BottomAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.BottomAnchor).Active = true;
             _devicesContainer.LeftAnchor.ConstraintEqualTo(_rightContainer.LayoutMarginsGuide.LeftAnchor).Active = true;
@@ -429,6 +443,9 @@ namespace TheQTablet.iOS.Views.Main
             });
             set.Bind(_networksContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.ChooseNetwork,
+            });
+            set.Bind(_success).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
+                ConnectivityState.Success,
             });
 
             set.Bind(_bluetoothEnabled).For("Tap").To(vm => vm.CheckBluetoothCommand);

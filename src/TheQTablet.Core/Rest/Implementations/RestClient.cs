@@ -29,7 +29,10 @@ namespace TheQTablet.Core.Rest.Implementations
             _jsonConverter = jsonConverter;
             _mvxLog = mvxLog;
             _qsimClient = qsimClient;
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient()
+            {
+                Timeout = TimeSpan.FromSeconds(15),
+            };
         }
 
         public async Task<TResult> MakeApiCallAsync<TResult>(string url, HttpMethod method, object data = null) where TResult : class
