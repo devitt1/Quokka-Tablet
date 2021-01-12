@@ -60,8 +60,8 @@ namespace TheQTablet.iOS.Views.Main
             switch (value)
             {
                 case ConnectivityState.ChooseDevice: return "Scanning for Bluetooth devices.\nPlease select your device on the right.";
-                case ConnectivityState.ChooseNetwork: return "Choose Wi-Fi network for The Q to connect to";
-                case ConnectivityState.ConnectedToNetworkNoAPI: return "Connected to Wi-Fi but unable to communicate with server, please choose another network";
+                case ConnectivityState.ChooseNetwork: return "Choose Wi-Fi network for The Q to connect to.";
+                case ConnectivityState.ConnectedToNetworkNoAPI: return "Connected to Wi-Fi but unable to communicate with server, please make sure you are on the same network or choose another network.";
                 default:
                     return null;
             }
