@@ -105,8 +105,15 @@ namespace TheQTablet.Core.ViewModels.Main
         private async Task CheckBluetooth()
         {
             State = ConnectivityState.Loading;
-            await _connectionService.EnsureBluetoothEnabled();
-            State = ConnectivityState.Loaded;
+            var success = await _connectionService.EnsureBluetoothEnabled();
+            if (!success)
+            {
+                await Close();
+            }
+            else
+            {
+                State = ConnectivityState.Loaded;
+            }
         }
 
         private async Task ScanDevices()
@@ -201,8 +208,6 @@ namespace TheQTablet.Core.ViewModels.Main
                     joinedSuccess = await _connectionService.ConnectToNetwork(network.SSID, result.LoginText, result.Password);
                 }
             }
-            //await Task.Delay(500);
-            State = ConnectivityState.ConnectedToNetworkNoAPI;
             if (joinedSuccess)
             {
                 //State = ConnectivityState.Success;

@@ -56,7 +56,7 @@ namespace TheQTablet.Core.Service.Interfaces
         void ScanDevices();
         Task Connect(Peripheral peripheral);
         Task ScanNetworks();
-        Task EnsureBluetoothEnabled();
+        Task<bool> EnsureBluetoothEnabled();
         Task GetQBoxDetails();
         Task<bool> CheckConnection();
         Task<bool> ConnectNetwork(string ssid);

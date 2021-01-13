@@ -62,7 +62,7 @@ namespace TheQTablet.iOS.Views.Custom
             _lock.AspectRatioConstraint().Active = true;
 
             _ssid.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor).Active = true;
-            _ssid.LeadingAnchor.ConstraintEqualTo(_lock.TrailingAnchor).Active = true;
+            _ssid.LeadingAnchor.ConstraintEqualTo(_lock.TrailingAnchor, 10).Active = true;
             _ssid.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor).Active = true;
             _ssid.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor).Active = true;
 

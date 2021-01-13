@@ -61,7 +61,10 @@ namespace TheQTablet.iOS.Views.Main
             {
                 case ConnectivityState.ChooseDevice: return "Scanning for Bluetooth devices.\nPlease select your device on the right.";
                 case ConnectivityState.ChooseNetwork: return "Choose Wi-Fi network for The Q to connect to.";
-                case ConnectivityState.ConnectedToNetworkNoAPI: return "Connected to Wi-Fi but unable to communicate with server, please make sure you are on the same network or choose another network.";
+                case ConnectivityState.ConnectedToNetworkNoAPI: return (
+                    "Device connected to Wi-Fi but unable to communicate with server, " +
+                    "please make sure this device is on the same network or choose another network."
+                );
                 default:
                     return null;
             }
@@ -169,10 +172,10 @@ namespace TheQTablet.iOS.Views.Main
                 TranslatesAutoresizingMaskIntoConstraints = false,
                 DirectionalLayoutMargins = new NSDirectionalEdgeInsets
                 {
-                    Leading = 10,
-                    Trailing = 10,
-                    Top = 10,
-                    Bottom = 10,
+                    Leading = 20,
+                    Trailing = 20,
+                    Top = 20,
+                    Bottom = 20,
                 },
             };
             _contentContainer.AddSubview(_rightContainer);
@@ -245,7 +248,7 @@ namespace TheQTablet.iOS.Views.Main
 
             _instructions.CenterYAnchor.ConstraintEqualTo(_leftContainer.CenterYAnchor).Active = true;
             _instructions.CenterXAnchor.ConstraintEqualTo(_leftContainer.CenterXAnchor).Active = true;
-            _instructions.WidthAnchor.ConstraintLessThanOrEqualTo(_leftContainer.LayoutMarginsGuide.WidthAnchor).Active = true;
+            _instructions.WidthAnchor.ConstraintLessThanOrEqualTo(_leftContainer.LayoutMarginsGuide.WidthAnchor, 0.75f).Active = true;
 
             _divider.CenterXAnchor.ConstraintEqualTo(_contentContainer.CenterXAnchor).Active = true;
             _divider.CenterYAnchor.ConstraintEqualTo(_contentContainer.CenterYAnchor).Active = true;
