@@ -26,7 +26,7 @@ namespace TheQTablet.iOS.Views.Main
     public partial class TelescopeSearchViewController : Lesson01BaseViewController<TelescopeSearchViewModel>
     {
         private UIImageView _background;
-        private MaskedView _lensMask;
+        private OvalMaskedView _lensMask;
         private UIImageView _highlightedBackground;
         private DraggableView _lens;
         private UIImageView _lensImage;
@@ -51,7 +51,7 @@ namespace TheQTablet.iOS.Views.Main
             };
             View.AddSubview(_background);
 
-            _lensMask = new MaskedView
+            _lensMask = new OvalMaskedView
             {
                 TranslatesAutoresizingMaskIntoConstraints = false,
             };

@@ -12,6 +12,7 @@ namespace TheQTablet.iOS
         public static UIColor Accent => FromHexString("#E6AF2E"); // sepia
         public static UIColor AccentDark => FromHexString("#F47527"); // orange
         public static UIColor AccentLight => FromHexString("#b3c7d4"); // light blue
+        public static UIColor AccentDarker => FromHexString("#036ba0"); // light blue
 
         public static UIColor PrimaryText => FromHexString("#FFFFFF"); // white
         public static UIColor SecondaryText => FromHexString("#E69975"); // light salmon

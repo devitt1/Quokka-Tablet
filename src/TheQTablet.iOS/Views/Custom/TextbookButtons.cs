@@ -128,12 +128,13 @@ namespace TheQTablet.iOS.Views.Custom
             AddSubview(_malusLawButton);
 
             _divider.LeftAnchor.ConstraintEqualTo(LeftAnchor).Active = true;
-            _divider.HeightAnchor.ConstraintEqualTo(HeightAnchor).Active = true;
+            _divider.CenterYAnchor.ConstraintEqualTo(_malusLawButton.CenterYAnchor).Active = true;
+            _divider.HeightAnchor.ConstraintEqualTo(_malusLawButton.HeightAnchor).Active = true;
 
             _malusLawButton.LeftAnchor.ConstraintEqualTo(_divider.RightAnchor, 40).Active = true;
             _malusLawButton.RightAnchor.ConstraintEqualTo(RightAnchor, -30).Active = true;
-            _malusLawButton.TopAnchor.ConstraintEqualTo(TopAnchor).Active = true;
-            _malusLawButton.BottomAnchor.ConstraintEqualTo(BottomAnchor).Active = true;
+            _malusLawButton.TopAnchor.ConstraintEqualTo(TopAnchor, 5).Active = true;
+            _malusLawButton.BottomAnchor.ConstraintEqualTo(BottomAnchor, -5).Active = true;
         }
     }
 }

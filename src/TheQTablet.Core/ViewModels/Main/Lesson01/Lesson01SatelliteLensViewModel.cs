@@ -15,7 +15,7 @@ namespace TheQTablet.Core.ViewModels.Main.Lesson01
 
         private async Task NextPage()
         {
-            await NavigationService.Navigate<PlotViewModel>();
+            await NavigationService.Navigate<Lesson01ProfessorViewModel>();
         }
 
         private async Task Back()

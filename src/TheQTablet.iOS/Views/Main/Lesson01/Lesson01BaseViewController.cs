@@ -55,7 +55,6 @@ namespace TheQTablet.iOS
             base.ViewDidLoad();
 
             _textbookButtons = new TextbookButtons();
-            View.AddSubview(_textbookButtons);
 
             NavigationItem.RightBarButtonItem = new UIBarButtonItem(_textbookButtons);
 

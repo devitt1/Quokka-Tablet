@@ -48,5 +48,15 @@ namespace TheQTablet.iOS
 
             return button;
         }
+
+        public static UIButton TertiaryButton(string title = _defaultTitle, float height = _defaultHeight)
+        {
+            var button = UnstyledButton(title, height);
+
+            button.BackgroundColor = ColorPalette.AccentDarker;
+            button.SetTitleColor(ColorPalette.PrimaryText, UIControlState.Normal);
+
+            return button;
+        }
     }
 }

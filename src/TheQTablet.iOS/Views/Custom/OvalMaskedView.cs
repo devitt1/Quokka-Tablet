@@ -3,11 +3,11 @@ using UIKit;
 
 namespace TheQTablet.iOS.Views.Custom
 {
-    public class MaskedView: UIView
+    public class OvalMaskedView: UIView
     {
         private CAShapeLayer _maskLayer;
 
-        public MaskedView()
+        public OvalMaskedView()
         {
             _maskLayer = new CAShapeLayer();
             Layer.Mask = _maskLayer;

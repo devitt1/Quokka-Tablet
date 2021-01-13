@@ -7,16 +7,21 @@ using UIKit;
 
 namespace TheQTablet.iOS.Views.Main
 {
-    public class Rotaty : SCNSceneRendererDelegate
+    public class InitialSceneRotation : SCNSceneRendererDelegate
     {
         private bool _initialRotationDone = false;
+        private SCNQuaternion _initialRotation;
+
+        public InitialSceneRotation(SCNQuaternion rotation)
+        {
+            _initialRotation = rotation;
+        }
 
         public override void WillRenderScene(ISCNSceneRenderer renderer, SCNScene scene, double timeInSeconds)
         {
             if (!_initialRotationDone)
             {
-                scene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitY, MathHelpers.ToRadF(60)));
-                scene.RootNode.LocalRotate(SCNQuaternion.FromAxisAngle(SCNVector3.UnitX, MathHelpers.ToRadF(-30)));
+                scene.RootNode.LocalRotate(_initialRotation);
                 _initialRotationDone = true;
             }
         }
@@ -84,7 +89,7 @@ namespace TheQTablet.iOS.Views.Main
             };
             _infoTextContainer.AddSubview(_infoText);
 
-            _continue = ButtonGenerator.PrimaryButton("Continue");
+            _continue = ButtonGenerator.PrimaryButton("Go to Simulation");
             View.AddSubview(_continue);
 
             _lensScene = SCNScene.FromFile("Art.scnassets/happyIdleProf.dae");
@@ -96,7 +101,10 @@ namespace TheQTablet.iOS.Views.Main
             _lensSceneView.BackgroundColor = UIColor.Clear;
             _lensSceneView.AutoresizingMask = UIViewAutoresizing.All;
             _lensSceneView.Scene = _lensScene;
-            _lensSceneView.SceneRendererDelegate = new Rotaty();
+            _lensSceneView.SceneRendererDelegate = new InitialSceneRotation(
+                SCNQuaternion.FromAxisAngle(SCNVector3.UnitY, MathHelpers.ToRadF(60)) *
+                SCNQuaternion.FromAxisAngle(SCNVector3.UnitX, MathHelpers.ToRadF(-30))
+            );
 
             View.AddSubview(_lensSceneView);
         }
