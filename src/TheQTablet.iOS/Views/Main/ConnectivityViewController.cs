@@ -61,6 +61,7 @@ namespace TheQTablet.iOS.Views.Main
             {
                 case ConnectivityState.ChooseDevice: return "Scanning for Bluetooth devices.\nPlease select your device on the right.";
                 case ConnectivityState.ChooseNetwork: return "Choose Wi-Fi network for The Q to connect to.";
+                case ConnectivityState.ConnectToNetworkFailed: return "Wi-Fi connection failed, please try again.";
                 case ConnectivityState.ConnectedToNetworkNoAPI: return (
                     "Device connected to Wi-Fi but unable to communicate with server, " +
                     "please make sure this device is on the same network or choose another network."
@@ -91,6 +92,7 @@ namespace TheQTablet.iOS.Views.Main
         private UIView _rightContainer;
         private ConnectivityTableView<DeviceSource> _devicesContainer;
         private ConnectivityTableView<NetworkSource> _networksContainer;
+        private UIButton _rescanNetworksButton;
 
         private UIView _successContainer;
         private UIView _successText;
@@ -159,6 +161,9 @@ namespace TheQTablet.iOS.Views.Main
                 LineBreakMode = UILineBreakMode.WordWrap,
             };
             _leftContainer.AddSubview(_instructions);
+
+            _rescanNetworksButton = ButtonGenerator.PrimaryButton("Rescan");
+            _leftContainer.AddSubview(_rescanNetworksButton);
 
             _divider = new Divider
             {
@@ -250,6 +255,9 @@ namespace TheQTablet.iOS.Views.Main
             _instructions.CenterXAnchor.ConstraintEqualTo(_leftContainer.CenterXAnchor).Active = true;
             _instructions.WidthAnchor.ConstraintLessThanOrEqualTo(_leftContainer.LayoutMarginsGuide.WidthAnchor, 0.75f).Active = true;
 
+            _rescanNetworksButton.CenterXAnchor.ConstraintEqualTo(_instructions.CenterXAnchor).Active = true;
+            _rescanNetworksButton.TopAnchor.ConstraintEqualTo(_instructions.BottomAnchor, 20).Active = true;
+
             _divider.CenterXAnchor.ConstraintEqualTo(_contentContainer.CenterXAnchor).Active = true;
             _divider.CenterYAnchor.ConstraintEqualTo(_contentContainer.CenterYAnchor).Active = true;
             _divider.TopAnchor.ConstraintEqualTo(_contentContainer.LayoutMarginsGuide.TopAnchor).Active = true;
@@ -297,6 +305,7 @@ namespace TheQTablet.iOS.Views.Main
                 ConnectivityState.GotDetails,
                 ConnectivityState.CheckedConnection,
                 ConnectivityState.ChooseNetwork,
+                ConnectivityState.ConnectToNetworkFailed,
                 ConnectivityState.ConnectedToNetworkNoAPI,
             });
             set.Bind(_loadingContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
@@ -313,15 +322,19 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(_devicesContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.ChooseDevice,
             });
-            set.Bind(_networksContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
+            var networkListStates = new ConnectivityState[] {
                 ConnectivityState.ChooseNetwork,
+                ConnectivityState.ConnectToNetworkFailed,
                 ConnectivityState.ConnectedToNetworkNoAPI,
-            });
+            };
+            set.Bind(_networksContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(networkListStates);
+            set.Bind(_rescanNetworksButton).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(networkListStates);
             set.Bind(_successContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.Success,
             });
 
             set.Bind(_instructions).To(vm => vm.State).WithConversion<InstructionsTextConverter>();
+            set.Bind(_rescanNetworksButton).For("Tap").To(vm => vm.ScanNetworksCommand);
             set.Bind(_networksContainer.Source).For(v => v.ItemsSource).To(vm => vm.Networks).WithConversion<TestConverter>();
             set.Bind(_networksContainer.Source).For(v => v.SelectionChangedCommand).To(vm => vm.JoinNetworkCommand);
             set.Bind(_devicesContainer.Source).For(v => v.ItemsSource).To(vm => vm.Devices);

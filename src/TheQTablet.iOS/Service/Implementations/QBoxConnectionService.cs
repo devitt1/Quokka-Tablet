@@ -1,4 +1,4 @@
-﻿#define MOCK_CONNECTION
+﻿//#define MOCK_CONNECTION
 
 using System;
 using System.Collections.ObjectModel;
@@ -391,24 +391,39 @@ namespace TheQTablet.iOS.Service.Implementations
         }
 
 #if MOCK_CONNECTION
-        private int _attempts = 0;
+        private int _mockAttempts = 0;
 #endif
         public async Task<bool> CheckConnection()
         {
-            var result = await _simulatorService.RunQASMAsync(0, 0);
 #if MOCK_CONNECTION
             if (QBoxSSID == "AAA")
             {
-                if (_attempts % 2 == 1)
+                if (_mockAttempts % 2 == 1)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(1));
                     return true;
                 }
-                _attempts++;
+                _mockAttempts++;
+            }
+            return false;
+#else
+            // Sometimes RPi responds with IP moments before it can actually be
+            // communicated with over the network, so try connecting multiple
+            // times with a small delay
+            var attempts = 5;
+            while (attempts > 0)
+            {
+                var result = await _simulatorService.RunQASMAsync(0, 0);
+                var success = result.Error.Equals("no error");
+                if(success)
+                {
+                    return true;
+                }
+                attempts--;
+                await Task.Delay(TimeSpan.FromSeconds(3));
             }
             return false;
 #endif
-            return result.Error.Equals("no error");
         }
 
         private static BluetoothState CBStateToBTState(CBCentralManagerState state)

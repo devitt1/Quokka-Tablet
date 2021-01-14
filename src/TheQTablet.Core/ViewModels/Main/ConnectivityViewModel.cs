@@ -31,6 +31,7 @@ namespace TheQTablet.Core.ViewModels.Main
         ScanningNetworks,
         ChooseNetwork,
         ConnectingNetwork,
+        ConnectToNetworkFailed,
         ConnectedToNetworkNoAPI,
 
         Success,
@@ -42,12 +43,8 @@ namespace TheQTablet.Core.ViewModels.Main
         private readonly IUserDialogs _userDialogs;
 
         public MvxAsyncCommand CloseCommand { get; }
-        public MvxAsyncCommand CheckBluetoothCommand { get; }
-        public MvxAsyncCommand ScanDevicesCommand { get; }
         public MvxAsyncCommand<Peripheral> ConnectDeviceCommand { get; }
-        public MvxAsyncCommand QBoxDetailsCommand { get; }
-        public MvxAsyncCommand CheckConnectionCommand { get; }
-        public MvxAsyncCommand ScanCommand { get; }
+        public MvxAsyncCommand ScanNetworksCommand { get; }
         public MvxAsyncCommand<WiFiNetwork> JoinNetworkCommand { get; }
 
         private ConnectivityState _state;
@@ -74,12 +71,8 @@ namespace TheQTablet.Core.ViewModels.Main
             _userDialogs = userDialogs;
 
             CloseCommand = new MvxAsyncCommand(Close);
-            CheckBluetoothCommand = new MvxAsyncCommand(CheckBluetooth);
-            ScanDevicesCommand = new MvxAsyncCommand(ScanDevices);
             ConnectDeviceCommand = new MvxAsyncCommand<Peripheral>(ConnectDevice);
-            QBoxDetailsCommand = new MvxAsyncCommand(GetQBoxDetails);
-            CheckConnectionCommand = new MvxAsyncCommand(CheckConnectionAsync);
-            ScanCommand = new MvxAsyncCommand(Scan);
+            ScanNetworksCommand = new MvxAsyncCommand(ScanNetworks);
             JoinNetworkCommand = new MvxAsyncCommand<WiFiNetwork>(JoinNetwork);
 
             _connectionService.QBoxBTNameChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(QBoxBTName));
@@ -142,7 +135,7 @@ namespace TheQTablet.Core.ViewModels.Main
             }
             if(doScan)
             {
-                await Scan();
+                await ScanNetworks();
             }
         }
 
@@ -163,7 +156,7 @@ namespace TheQTablet.Core.ViewModels.Main
             return success;
         }
 
-        private async Task Scan()
+        private async Task ScanNetworks()
         {
             State = ConnectivityState.ScanningNetworks;
             await _connectionService.ScanNetworks();
@@ -210,7 +203,6 @@ namespace TheQTablet.Core.ViewModels.Main
             }
             if (joinedSuccess)
             {
-                //State = ConnectivityState.Success;
                 var connectSuccess = await CheckConnectionAsync();
                 if (connectSuccess)
                 {
@@ -220,6 +212,10 @@ namespace TheQTablet.Core.ViewModels.Main
                 {
                     State = ConnectivityState.ConnectedToNetworkNoAPI;
                 }
+            }
+            else
+            {
+                State = ConnectivityState.ConnectToNetworkFailed;
             }
         }
     }

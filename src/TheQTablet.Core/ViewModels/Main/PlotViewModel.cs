@@ -36,6 +36,8 @@ namespace TheQTablet.Core.ViewModels.Main
         private ISimulatorService _simulatorService;
         private readonly IUserDialogs _userDialogs;
 
+        private bool _errorDialogVisible;
+
         public MvxAsyncCommand TriggerOneTimeRunCommand { get; private set; }
         public MvxCommand CloseModalCommand { get; private set; }
 
@@ -211,15 +213,21 @@ namespace TheQTablet.Core.ViewModels.Main
             if (!result.Error.Equals("no error"))
             {
                 _runTimer.Stop();
-              await _userDialogs.AlertAsync(new AlertConfig()
-                {
-                    Title = "Connection Error",
-                    Message = "Sorry, something went wrong.\nPlease check the connection with your Quantum Computer.",
-                    OkText = "OK, Start Again"
-                    
-                });
 
-                CloseModalCommand.Execute();
+                if(!_errorDialogVisible)
+                {
+                    _errorDialogVisible = true;
+                    await _userDialogs.AlertAsync(new AlertConfig()
+                    {
+                        Title = "Connection Error",
+                        Message = "Sorry, something went wrong.\nPlease check the connection with your Quantum Computer.",
+                        OkText = "OK, Start Again"
+
+                    });
+                    _errorDialogVisible = false;
+
+                    CloseModalCommand.Execute();
+                }
             }
             else
             {

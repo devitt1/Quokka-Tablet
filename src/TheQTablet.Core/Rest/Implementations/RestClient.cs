@@ -31,7 +31,7 @@ namespace TheQTablet.Core.Rest.Implementations
             _qsimClient = qsimClient;
             _httpClient = new HttpClient()
             {
-                Timeout = TimeSpan.FromSeconds(15),
+                Timeout = TimeSpan.FromSeconds(5),
             };
         }
 
