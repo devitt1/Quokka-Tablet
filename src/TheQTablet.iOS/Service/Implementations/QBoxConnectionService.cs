@@ -111,24 +111,13 @@ namespace TheQTablet.iOS.Service.Implementations
             _centralManager = new CBCentralManager(this, null);
         }
 
+        public override void DisconnectedPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
+        {
+            //base.DisconnectedPeripheral(central, peripheral, error);
+        }
+
         public override void UpdatedState(CBCentralManager central)
         {
-            switch(central.State)
-            {
-                case CBCentralManagerState.Unknown:
-                    break;
-                case CBCentralManagerState.Resetting:
-                    break;
-                case CBCentralManagerState.Unsupported:
-                    break;
-                case CBCentralManagerState.PoweredOff:
-                    break;
-                case CBCentralManagerState.PoweredOn:
-                    break;
-                case CBCentralManagerState.Unauthorized:
-                    break;
-            }
-
             Console.WriteLine(central.State);
             BluetoothStateChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -326,21 +315,31 @@ namespace TheQTablet.iOS.Service.Implementations
                 }
                 else if (BluetoothState == BluetoothState.Unauthorized)
                 {
-                    await _userDialogs.AlertAsync(new AlertConfig()
+                    var ok = await _userDialogs.ConfirmAsync(new ConfirmConfig()
                     {
                         Title = "Bluetooth Unauthorized",
                         Message = "Please allow The Q app to use Bluetooth.",
-                        OkText = "Ok"
+                        OkText = "Done",
+                        CancelText = "Exit",
                     });
+                    if (!ok)
+                    {
+                        return false;
+                    }
                 }
                 else if (BluetoothState == BluetoothState.PoweredOff)
                 {
-                    await _userDialogs.AlertAsync(new AlertConfig()
+                    var ok = await _userDialogs.ConfirmAsync(new ConfirmConfig()
                     {
                         Title = "Connection Error",
                         Message = "Please enable Bluetooth",
-                        OkText = "Done"
+                        OkText = "Done",
+                        CancelText = "Exit",
                     });
+                    if(!ok)
+                    {
+                        return false;
+                    }
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(1));

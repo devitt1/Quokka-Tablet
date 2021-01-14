@@ -95,6 +95,21 @@ namespace TheQTablet.Core.ViewModels.Main
             await NavigationService.Close(this);
         }
 
+        private async Task BluetoothStateChanged(object sender, EventArgs e)
+        {
+            if(_connectionService.BluetoothState != BluetoothState.PoweredOn)
+            {
+                await _userDialogs.AlertAsync(new AlertConfig()
+                {
+                    Title = "Bluetooth Unavailable",
+                    Message = "Bluetooth has been disabled, please enable.",
+                    OkText = "Exit"
+
+                });
+                await NavigationService.Close(this);
+            }
+        }
+
         private async Task CheckBluetooth()
         {
             State = ConnectivityState.Loading;
@@ -105,6 +120,7 @@ namespace TheQTablet.Core.ViewModels.Main
             }
             else
             {
+                _connectionService.BluetoothStateChanged += async (sender, e) => await BluetoothStateChanged(sender, e);
                 State = ConnectivityState.Loaded;
             }
         }
