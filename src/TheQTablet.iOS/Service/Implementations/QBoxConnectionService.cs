@@ -188,11 +188,12 @@ namespace TheQTablet.iOS.Service.Implementations
 #endif
         }
 
-        public async Task Connect(Peripheral peripheral)
+        public async Task<bool> Connect(Peripheral peripheral)
         {
 #if MOCK_CONNECTION
             Console.WriteLine($"Fake connect: {peripheral}");
             QBoxBTName = peripheral.Name;
+            return true;
 #else
             connectedTask = new TaskCompletionSource<bool>();
 
@@ -214,13 +215,27 @@ namespace TheQTablet.iOS.Service.Implementations
                 _centralManager.ConnectPeripheral(cbPeripheral);
                 //_theQBox.Peripheral.DiscoverServices();
                 QBoxBTName = _theQBox.Peripheral.Name;
+
+                Console.WriteLine($"Connecting to {QBoxBTName}");
+
+                // ConnectPeripheral has no timeout, so add one manually
+                if (await Task.WhenAny(connectedTask.Task, Task.Delay(TimeSpan.FromSeconds(60))) == connectedTask.Task)
+                {
+                    return true;
+                }
+                else
+                {
+                    // Cancel connection attempt
+                    _centralManager.CancelPeripheralConnection(cbPeripheral);
+                    return false;
+                }
             }
             else
             {
                 Console.WriteLine("matching cbperipheral not found");
             }
 
-            await connectedTask.Task;
+            return false;
 #endif
         }
 

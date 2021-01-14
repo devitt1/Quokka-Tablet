@@ -21,6 +21,7 @@ namespace TheQTablet.Core.ViewModels.Main
         ScanningDevices,
         ChooseDevice,
         ConnectingDevice,
+        ConnectDeviceFailed,
         ConnectedDevice,
 
         GettingDetails,
@@ -167,23 +168,30 @@ namespace TheQTablet.Core.ViewModels.Main
         private async Task ConnectDevice(Peripheral peripheral)
         {
             State = ConnectivityState.ConnectingDevice;
-            await _connectionService.Connect(peripheral);
-            State = ConnectivityState.ConnectedDevice;
-
-            await GetQBoxDetails();
-            var doScan = true;
-            if(QBoxIP != null)
+            var connected = await _connectionService.Connect(peripheral);
+            if(connected)
             {
-                var success = await CheckConnectionAsync();
-                if (success)
+                State = ConnectivityState.ConnectedDevice;
+
+                await GetQBoxDetails();
+                var doScan = true;
+                if (QBoxIP != null)
                 {
-                    State = ConnectivityState.Success;
-                    doScan = false;
+                    var success = await CheckConnectionAsync();
+                    if (success)
+                    {
+                        State = ConnectivityState.Success;
+                        doScan = false;
+                    }
+                }
+                if (doScan)
+                {
+                    await ScanNetworks();
                 }
             }
-            if(doScan)
+            else
             {
-                await ScanNetworks();
+                State = ConnectivityState.ConnectDeviceFailed;
             }
         }
 

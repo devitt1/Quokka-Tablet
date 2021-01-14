@@ -57,7 +57,7 @@ namespace TheQTablet.Core.Service.Interfaces
         event EventHandler DevicesChanged;
 
         void ScanDevices();
-        Task Connect(Peripheral peripheral);
+        Task<bool> Connect(Peripheral peripheral);
         Task ScanNetworks();
         Task<bool> EnsureBluetoothEnabled();
         Task GetQBoxDetails();

@@ -60,6 +60,7 @@ namespace TheQTablet.iOS.Views.Main
             switch (value)
             {
                 case ConnectivityState.ChooseDevice: return "Scanning for Bluetooth devices.\nPlease select your device on the right.";
+                case ConnectivityState.ConnectDeviceFailed: return "Device connection failed, please try again.";
                 case ConnectivityState.ChooseNetwork: return "Choose Wi-Fi network for The Q to connect to.";
                 case ConnectivityState.ConnectToNetworkFailed: return "Wi-Fi connection failed, please try again.";
                 case ConnectivityState.ConnectedToNetworkNoAPI: return (
@@ -301,6 +302,7 @@ namespace TheQTablet.iOS.Views.Main
             set.Bind(_contentContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.Loaded,
                 ConnectivityState.ChooseDevice,
+                ConnectivityState.ConnectDeviceFailed,
                 ConnectivityState.ConnectedDevice,
                 ConnectivityState.GotDetails,
                 ConnectivityState.CheckedConnection,
@@ -321,6 +323,7 @@ namespace TheQTablet.iOS.Views.Main
 
             set.Bind(_devicesContainer).For("Visible").To(vm => vm.State).WithConversion<ShowDuringStateConverter>(new ConnectivityState[] {
                 ConnectivityState.ChooseDevice,
+                ConnectivityState.ConnectDeviceFailed,
             });
             var networkListStates = new ConnectivityState[] {
                 ConnectivityState.ChooseNetwork,
