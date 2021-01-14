@@ -60,6 +60,9 @@ namespace TheQTablet.Core.ViewModels.Main
         public ObservableCollection<WiFiNetwork> Networks => _connectionService.Networks;
         public ObservableCollection<Peripheral> Devices => _connectionService.Devices;
 
+        private EventHandler _bluetoothDeviceDisconnectedEventHandler;
+        private EventHandler _bluetoothStateChangedEventHandler;
+
         public ConnectivityViewModel(
             IMvxLogProvider logProvider,
             IMvxNavigationService navigationService,
@@ -80,6 +83,9 @@ namespace TheQTablet.Core.ViewModels.Main
             _connectionService.QBoxIPChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(QBoxIP));
             _connectionService.NetworksChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(Networks));
             _connectionService.DevicesChanged += (object sender, EventArgs e) => RaisePropertyChanged(nameof(Devices));
+
+            _bluetoothDeviceDisconnectedEventHandler = new EventHandler(async (sender, e) => await BluetoothDeviceDisconnected(sender, e));
+            _connectionService.QBoxDisconnected += _bluetoothDeviceDisconnectedEventHandler;
         }
 
         public override async Task Initialize()
@@ -88,6 +94,20 @@ namespace TheQTablet.Core.ViewModels.Main
 
             await CheckBluetooth();
             await ScanDevices();
+        }
+
+        public override void ViewDisappearing()
+        {
+            base.ViewDisappearing();
+
+            if (_bluetoothDeviceDisconnectedEventHandler != null)
+            {
+                _connectionService.QBoxDisconnected -= _bluetoothDeviceDisconnectedEventHandler;
+            }
+            if (_bluetoothStateChangedEventHandler != null)
+            {
+                _connectionService.BluetoothStateChanged -= _bluetoothStateChangedEventHandler;
+            }
         }
 
         private async Task Close()
@@ -106,8 +126,19 @@ namespace TheQTablet.Core.ViewModels.Main
                     OkText = "Exit"
 
                 });
-                await NavigationService.Close(this);
+                await Close();
             }
+        }
+
+        private async Task BluetoothDeviceDisconnected(object sender, EventArgs e)
+        {
+            await _userDialogs.AlertAsync(new AlertConfig()
+            {
+                Title = "Disconnected",
+                Message = "The Q device has disconnected, please ensure it is powered on.",
+                OkText = "Exit"
+            });
+            await Close();
         }
 
         private async Task CheckBluetooth()
@@ -120,7 +151,8 @@ namespace TheQTablet.Core.ViewModels.Main
             }
             else
             {
-                _connectionService.BluetoothStateChanged += async (sender, e) => await BluetoothStateChanged(sender, e);
+                _bluetoothStateChangedEventHandler = new EventHandler(async (sender, e) => await BluetoothStateChanged(sender, e));
+                _connectionService.BluetoothStateChanged += _bluetoothStateChangedEventHandler;
                 State = ConnectivityState.Loaded;
             }
         }

@@ -43,6 +43,8 @@ namespace TheQTablet.Core.Service.Interfaces
     {
         BluetoothState BluetoothState { get; }
         event EventHandler BluetoothStateChanged;
+        event EventHandler QBoxDisconnected;
+
         string QBoxBTName { get; }
         event EventHandler QBoxBTNameChanged;
         string QBoxSSID { get; }

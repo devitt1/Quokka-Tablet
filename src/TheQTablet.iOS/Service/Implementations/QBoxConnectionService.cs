@@ -35,6 +35,7 @@ namespace TheQTablet.iOS.Service.Implementations
 
         public BluetoothState BluetoothState => CBStateToBTState(_centralManager.State);
         public event EventHandler BluetoothStateChanged;
+        public event EventHandler QBoxDisconnected;
 
         private string _qBoxBTName;
         public string QBoxBTName
@@ -113,7 +114,10 @@ namespace TheQTablet.iOS.Service.Implementations
 
         public override void DisconnectedPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
         {
-            //base.DisconnectedPeripheral(central, peripheral, error);
+            if(_theQBox != null && _theQBox.Peripheral.Identifier == peripheral.Identifier)
+            {
+                QBoxDisconnected?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public override void UpdatedState(CBCentralManager central)
