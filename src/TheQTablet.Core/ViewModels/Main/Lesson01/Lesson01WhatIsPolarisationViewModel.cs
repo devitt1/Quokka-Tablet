@@ -2,7 +2,7 @@
 using MvvmCross.Commands;
 using MvvmCross.Logging;
 using MvvmCross.Navigation;
-
+using TheQTablet.Core.ViewModels.Main;
 namespace TheQTablet.Core.ViewModels.Main.Lesson01
 {
     public class Lesson01WhatIsPolarisationViewModel : Lesson01BaseViewModel
@@ -15,7 +15,7 @@ namespace TheQTablet.Core.ViewModels.Main.Lesson01
 
         private async Task NextPage()
         {
-            await NavigationService.Navigate<TelescopeSearchViewModel>();
+            await NavigationService.Navigate<StoryContainerViewModel>();
         }
 
         private async Task Back()

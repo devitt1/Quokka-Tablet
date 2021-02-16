@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="NbK-23-BZu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="NbK-23-BZu">
     <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -39,19 +39,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="253" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="Gcl-yJ-mHH">
-                                <rect key="frame" x="477" y="90" width="240" height="286"/>
+                                <rect key="frame" x="477" y="90" width="240" height="651"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="BPW-6U-hYf"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Lesson 1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8fI-Ib-xFI">
-                                <rect key="frame" x="32" y="387" width="1130" height="42"/>
+                                <rect key="frame" x="32" y="752" width="1130" height="42"/>
                                 <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="36"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Polarisation of Light " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rpn-9l-HFq">
-                                <rect key="frame" x="32" y="444" width="1130" height="67"/>
+                                <rect key="frame" x="32" y="809" width="1130" height="42"/>
                                 <fontDescription key="fontDescription" name="Roboto-Regular" family="Roboto" pointSize="36"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -147,107 +147,6 @@ Using the Q we can investigate how photons change through a polarised lens.</str
             </objects>
             <point key="canvasLocation" x="1702" y="540"/>
         </scene>
-        <!--Story Container View-->
-        <scene sceneID="NnX-HF-N65">
-            <objects>
-                <viewController storyboardIdentifier="StoryContainerView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4JV-0j-5TL" customClass="StoryContainerView" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="kXW-Zh-NkB"/>
-                        <viewControllerLayoutGuide type="bottom" id="Df2-8Y-Rqa"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="4Jq-sa-hOC">
-                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="story_background" translatesAutoresizingMaskIntoConstraints="NO" id="9hO-fc-lBM">
-                                <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emma" translatesAutoresizingMaskIntoConstraints="NO" id="etx-c9-5JH">
-                                <rect key="frame" x="283" y="464" width="221" height="233"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="233" id="Q34-L1-1uf"/>
-                                    <constraint firstAttribute="width" constant="221" id="mo9-ia-sa6"/>
-                                </constraints>
-                            </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cS6-lh-Lny">
-                                <rect key="frame" x="32" y="40" width="1130" height="76"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text_background" translatesAutoresizingMaskIntoConstraints="NO" id="03h-Ny-Ua4">
-                                        <rect key="frame" x="0.0" y="0.0" width="1130" height="76"/>
-                                    </imageView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="7Hp-qG-NyU">
-                                        <rect key="frame" x="50" y="10" width="1060" height="56"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmf-Tx-aAp">
-                                                <rect key="frame" x="0.0" y="0.0" width="1014" height="56"/>
-                                                <attributedString key="attributedText">
-                                                    <fragment>
-                                                        <string key="content">The telescope has a polarisation filter and quantum circuit built in, it can record the photons that 
-hit the lens</string>
-                                                        <attributes>
-                                                            <color key="NSColor" red="0.97647058819999999" green="0.98431372549999996" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <font key="NSFont" size="18" name="Roboto-Medium"/>
-                                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                        </attributes>
-                                                    </fragment>
-                                                </attributedString>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eu6-Ve-01B">
-                                                <rect key="frame" x="1014" y="0.0" width="46" height="56"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="46" id="O3x-RO-EDY"/>
-                                                </constraints>
-                                                <state key="normal">
-                                                    <attributedString key="attributedTitle">
-                                                        <fragment content="NEXT">
-                                                            <attributes>
-                                                                <color key="NSColor" red="0.90196078431372551" green="0.68627450980392157" blue="0.1803921568627451" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <font key="NSFont" size="18" name="Roboto-Medium"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
-                                                </state>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="7Hp-qG-NyU" secondAttribute="bottom" constant="10" id="2zC-Ve-Gxi"/>
-                                    <constraint firstItem="7Hp-qG-NyU" firstAttribute="top" secondItem="cS6-lh-Lny" secondAttribute="top" constant="10" id="Bdj-ZM-NcO"/>
-                                    <constraint firstAttribute="height" constant="76" id="Ctx-NT-cnW"/>
-                                    <constraint firstItem="03h-Ny-Ua4" firstAttribute="leading" secondItem="cS6-lh-Lny" secondAttribute="leading" id="KXT-n8-vqK"/>
-                                    <constraint firstAttribute="trailing" secondItem="03h-Ny-Ua4" secondAttribute="trailing" id="RXn-af-heN"/>
-                                    <constraint firstItem="7Hp-qG-NyU" firstAttribute="leading" secondItem="cS6-lh-Lny" secondAttribute="leading" constant="50" id="SYJ-tQ-BNJ"/>
-                                    <constraint firstAttribute="bottom" secondItem="03h-Ny-Ua4" secondAttribute="bottom" id="fXv-2q-gZH"/>
-                                    <constraint firstAttribute="trailing" secondItem="7Hp-qG-NyU" secondAttribute="trailing" constant="20" id="iDn-Ye-Syp"/>
-                                    <constraint firstItem="03h-Ny-Ua4" firstAttribute="top" secondItem="cS6-lh-Lny" secondAttribute="top" id="srV-2n-A88"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="etx-c9-5JH" firstAttribute="bottom" secondItem="9hO-fc-lBM" secondAttribute="bottom" constant="-137" id="LpG-Fh-9c5"/>
-                            <constraint firstItem="9hO-fc-lBM" firstAttribute="leading" secondItem="etx-c9-5JH" secondAttribute="trailing" constant="-504" id="Pb8-8x-a2Y"/>
-                            <constraint firstAttribute="trailing" secondItem="cS6-lh-Lny" secondAttribute="trailing" constant="32" id="XLF-3c-MQb"/>
-                            <constraint firstItem="cS6-lh-Lny" firstAttribute="top" secondItem="kXW-Zh-NkB" secondAttribute="bottom" constant="40" id="bQa-4A-rd6"/>
-                            <constraint firstItem="9hO-fc-lBM" firstAttribute="top" secondItem="kXW-Zh-NkB" secondAttribute="bottom" id="fPq-OU-FCd"/>
-                            <constraint firstItem="9hO-fc-lBM" firstAttribute="leading" secondItem="4Jq-sa-hOC" secondAttribute="leading" id="fcB-gr-uB8"/>
-                            <constraint firstAttribute="trailing" secondItem="9hO-fc-lBM" secondAttribute="trailing" id="hvT-my-lYN"/>
-                            <constraint firstAttribute="bottom" secondItem="9hO-fc-lBM" secondAttribute="bottom" id="uZB-jO-H38"/>
-                            <constraint firstItem="cS6-lh-Lny" firstAttribute="leading" secondItem="4Jq-sa-hOC" secondAttribute="leading" constant="32" id="wdt-Xc-d90"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="nextButton" destination="Eu6-Ve-01B" id="qWj-OV-bFW"/>
-                        <outlet property="storyLabel" destination="cmf-Tx-aAp" id="WJ1-2S-hHZ"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lbu-pj-fxK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="741" y="540"/>
-        </scene>
         <!--Light Polaritation Story View-->
         <scene sceneID="D7Z-7u-mhy">
             <objects>
@@ -291,7 +190,7 @@ hit the lens</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rxl-Oy-sEc">
-                                        <rect key="frame" x="0.0" y="35" width="1094" height="170.5"/>
+                                        <rect key="frame" x="0.0" y="35" width="1094" height="68.5"/>
                                         <string key="text">A light wave is an electromagnetic wave that consists of vibrating electric and magnetic fields.  A single particle of light - called a photon - is a very small pulse of vibrating electric and magnetic fields that travel at the speed of light (299 792 kilometers per second).
 
 The electric and magnetic fields that make up a photon of light vibrate at 90 degrees to each other.  The wavelength of the light - its colour - is determined by the distance between two peaks in the electric field and the polarisation of light is determined by where the electric field points. 
@@ -302,19 +201,19 @@ Play with the dial and see how you can rotate the polarisation of this light wav
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="top" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="aKC-38-abQ">
-                                        <rect key="frame" x="0.0" y="210.5" width="1094" height="503.5"/>
+                                        <rect key="frame" x="0.0" y="108.5" width="1094" height="605.5"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="Bxa-wg-DDs">
-                                                <rect key="frame" x="0.0" y="0.0" width="854" height="405"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="854" height="404.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Light wave" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8W5-FY-y5v">
-                                                        <rect key="frame" x="0.0" y="0.0" width="854" height="25"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="854" height="24.5"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="24"/>
                                                         <color key="textColor" red="0.062745098039215685" green="0.11764705882352941" blue="0.3411764705882353" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="light_graph" translatesAutoresizingMaskIntoConstraints="NO" id="FWT-h4-Egi">
-                                                        <rect key="frame" x="0.0" y="55" width="854" height="350"/>
+                                                        <rect key="frame" x="0.0" y="54.5" width="854" height="350"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" relation="lessThanOrEqual" constant="350" id="vbx-u8-KLh"/>
                                                         </constraints>
@@ -322,16 +221,16 @@ Play with the dial and see how you can rotate the polarisation of this light wav
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="vSz-xh-Z0X">
-                                                <rect key="frame" x="874" y="0.0" width="220" height="315"/>
+                                                <rect key="frame" x="874" y="0.0" width="220" height="605.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Theta Angle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lu9-dI-ECm">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Theta Angle" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lu9-dI-ECm">
                                                         <rect key="frame" x="0.0" y="0.0" width="220" height="28"/>
                                                         <fontDescription key="fontDescription" name="Roboto-Bold" family="Roboto" pointSize="24"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dial_background" translatesAutoresizingMaskIntoConstraints="NO" id="Yyw-fj-uSe">
-                                                        <rect key="frame" x="0.0" y="58" width="220" height="257"/>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="dial_background" translatesAutoresizingMaskIntoConstraints="NO" id="Yyw-fj-uSe">
+                                                        <rect key="frame" x="0.0" y="58" width="220" height="547.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="220" id="Cxa-6w-Cib"/>
                                                         </constraints>
@@ -342,7 +241,7 @@ Play with the dial and see how you can rotate the polarisation of this light wav
                                     </stackView>
                                 </subviews>
                             </stackView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dial_top" translatesAutoresizingMaskIntoConstraints="NO" id="c1e-mx-0Cf">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="dial_top" translatesAutoresizingMaskIntoConstraints="NO" id="c1e-mx-0Cf">
                                 <rect key="frame" x="944" y="354" width="180" height="180"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="180" id="BRF-AI-wVP"/>
@@ -425,12 +324,10 @@ We can model this by a simple quantum program.  We can think of a quantum bit - 
     </scenes>
     <resources>
         <image name="circuit" width="386" height="45"/>
-        <image name="dial_background" width="257" height="257"/>
-        <image name="dial_top" width="195" height="209"/>
-        <image name="emma" width="222" height="233"/>
+        <image name="dial_background" width="1218" height="1218"/>
+        <image name="dial_top" width="686" height="753"/>
         <image name="light_graph" width="602" height="399"/>
-        <image name="logo" width="286" height="286"/>
-        <image name="story_background" width="1112" height="834"/>
+        <image name="logo" width="655" height="651"/>
         <image name="text_background" width="1057" height="213"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

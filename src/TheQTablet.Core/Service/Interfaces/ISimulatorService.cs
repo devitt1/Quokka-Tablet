@@ -27,6 +27,15 @@ namespace TheQTablet.Core.Service.Interfaces
         /// <returns></returns>
         Task<QASMServiceResults> RunQASMAsync(float atmospheric_rot, float telescope_rot, int number_of_experiments = 1);
 
+        /// <summary>
+        /// Run QASM Simulation
+        /// </summary>
+        /// <param name="atmospheric_rot"></param>
+        /// <param name="telescope_rot"></param>
+        /// <param name="satelite_rot"></param>
+        /// <param name="number_of_simulations"></param>
+        /// <returns></returns>
+        Task<QASMServiceResults> RunQASMAsync(float atmospheric_rot, float telescope_rot, float satelite_rot, int number_of_simulations = 1);
 
         /// <summary>
         /// Start a new Circuit

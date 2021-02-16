@@ -33,8 +33,6 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Resources/Media.xcassets/AppIcons.appiconset</string>
-	<key>XSLaunchImageAssets</key>
-	<string>Resources/Media.xcassets/LaunchImages.launchimage</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIAppFonts</key>

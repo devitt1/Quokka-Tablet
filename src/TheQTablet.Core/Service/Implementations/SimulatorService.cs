@@ -179,7 +179,57 @@ namespace TheQTablet.Core.Service.Implementations
                 var ret = new QASMServiceResults("no error");
                 foreach (List<int> element in res.Result.C)
                 {
-                    ret.Results.Add(element[0] == 0);
+                    var results = new List<bool>();
+                    foreach (var number in element)
+                    {
+                        results.Add(number == 0);
+                    }
+                    ret.Results.Add(results);
+                }
+                return ret;
+
+            }
+            catch (Exception ex)
+            {
+                _log.Trace("Error: {0}", ex);
+                return new QASMServiceResults("API call failed");
+            }
+        }
+
+        public async Task<QASMServiceResults> RunQASMAsync(float atmospheric_rot, float telescope_rot, float satelite_rot, int number_of_simulations = 1)
+        {
+            _log.Trace("SimulatorService:RunQASM()");
+
+            // 2x to emulate Malus' law
+            var atm_rot_rad = 2 * MathHelpers.ToRadF(atmospheric_rot);
+            var tel_rot_rad = 2 * MathHelpers.ToRadF(telescope_rot);
+            var sat_rot_rad = 2 * MathHelpers.ToRadF(satelite_rot);
+            var QasmScript = string.Format("OPENQASM 2.0;\nqreg q[2];\ncreg c[2];\nrx({0}) q[0];\nrx({1}) q[0];\nmeasure q[0] -> c[0];\nrx({2}) q[1];\nmeasure q[1] -> c[1];", atm_rot_rad, tel_rot_rad, sat_rot_rad);
+
+            try
+            {
+                object data = new
+                {
+                    script = QasmScript,
+                    count = number_of_simulations,
+                    state_vector = false
+                };
+
+                QsamOperationResult res = await _restClient.MakeApiCallAsync<QsamOperationResult>("qasm", HttpMethod.Post, data);
+                if (res != null)
+                {
+                    _log.Trace("SimulatorService:RunQASM(): result = " + res.Result.ToString());
+                }
+
+                var ret = new QASMServiceResults("no error");
+                foreach (List<int> element in res.Result.C)
+                {
+                    var results = new List<bool>();
+                    foreach (var number in element)
+                    {
+                       results.Add(number == 0);
+                    }
+                    ret.Results.Add(results);
                 }
                 return ret;
 

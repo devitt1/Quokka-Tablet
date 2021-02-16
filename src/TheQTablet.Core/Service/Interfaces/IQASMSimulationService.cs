@@ -10,6 +10,10 @@ namespace TheQTablet.Core.Service.Interfaces
         //Run Single XRotation using QASM
         Task<QsamOperationResult> XRotation(float firstAngle, float secondAngle);
 
+        //Run Single XRotation using QASM 
+        Task<QsamOperationResult> XRotation(float firstAngle, float secondAngle, float satelliteAngle);
+
+
         //Run More of one XRotation using QASM
         Task<List<QsamOperationResult>> XRotation(float firstAngle, float secondAngle, int simulations);
     }

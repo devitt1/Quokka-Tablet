@@ -7,12 +7,12 @@ namespace TheQTablet.Core.DataModel
     public class QASMServiceResults
     {
         public string Error { set; get; }
-        public List<bool> Results { set; get; }
+        public List<List<bool>> Results { set; get; }
 
         public QASMServiceResults(string error = "")
         {
             Error = error;
-            Results = new List<bool>();
+            Results = new List<List<bool>>();
         }
     }
 

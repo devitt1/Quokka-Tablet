@@ -120,8 +120,6 @@
     </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Entitlements.plist" />
-    <ITunesArtwork Include="iTunesArtwork" />
-    <ITunesArtwork Include="iTunesArtwork%402x" />
     <Compile Include="Views\!Base\BaseViewController.cs" />
     <InterfaceDefinition Include="LaunchScreen.storyboard">
       <SubType>Designer</SubType>
@@ -149,10 +147,6 @@
     <Compile Include="Views\Main\StartLessonScreenView.designer.cs">
       <DependentUpon>StartLessonScreenView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Main\StoryContainerView.cs" />
-    <Compile Include="Views\Main\StoryContainerView.designer.cs">
-      <DependentUpon>StoryContainerView.cs</DependentUpon>
-    </Compile>
     <ImageAsset Include="Resources\Media.xcassets\logo.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\light_graph.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\light_graph.imageset\Group 1308.pdf" />
@@ -176,14 +170,10 @@
     <BundleResource Include="Resources\Fonts\Roboto-Thin.ttf" />
     <Compile Include="Styles\FontGenerator.cs" />
     <Compile Include="Styles\ButtonGenerator.cs" />
-    <ImageAsset Include="Resources\Media.xcassets\circuit.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\circuit.imageset\Group 1298.pdf" />
     <Compile Include="Views\Main\QuantumComputingInfoView.cs" />
     <Compile Include="Views\Main\QuantumComputingInfoView.designer.cs">
       <DependentUpon>QuantumComputingInfoView.cs</DependentUpon>
     </Compile>
-    <ImageAsset Include="Resources\Media.xcassets\emma.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\emma.imageset\Group 1322.pdf" />
     <ImageAsset Include="Resources\Media.xcassets\text_background.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\text_background.imageset\Rectangle 181.pdf" />
     <Compile Include="Views\Main\PlotViewController.cs" />
@@ -237,7 +227,6 @@
     <Compile Include="Views\Main\Lesson01\Lesson01StartViewController.cs" />
     <Compile Include="Views\Main\Lesson01\Lesson01WhatIsPolarisationViewController.cs" />
     <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\lesson01_field_graph.pdf" />
     <Compile Include="Views\Custom\ExitLessonButton.cs" />
     <Compile Include="Views\Main\Lesson01\Lesson01BaseViewController.cs" />
     <Compile Include="Views\Main\Lesson01\TelescopeSearchViewController.cs" />
@@ -276,6 +265,29 @@
     <Compile Include="Views\Custom\TriangleMaskedView.cs" />
     <ImageAsset Include="Resources\Media.xcassets\plot_preview.imageset\Contents.json" />
     <ImageAsset Include="Resources\Media.xcassets\plot_preview.imageset\Screen Shot 2021-01-13 at 5.33.36 pm.png" />
+    <Compile Include="Views\Main\Lesson01\Lesson01StaticIntroductionViewController.cs" />
+    <Compile Include="Views\Main\Lesson01\Lesson01SatellitePlotSatelliteViewController.cs" />
+    <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\12-layers.png" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1%403x.png" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1%402x.png" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_40pt.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_40pt-1.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_76pt%402x.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_76pt.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_83.5%402x.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_20pt%402x.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_29pt.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_29pt%402x.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_20pt.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_40pt%402x-1.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\Icon.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\Icon-1.png" />
+    <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_20pt-1.png" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1-1.png" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1%402x-1.png" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1%403x-1.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

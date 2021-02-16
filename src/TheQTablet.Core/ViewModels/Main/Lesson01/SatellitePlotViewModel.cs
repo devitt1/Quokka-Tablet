@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Timers;
@@ -13,25 +13,9 @@ using OxyPlot.Series;
 using TheQTablet.Core.Service.Interfaces;
 using TheQTablet.Core.Utils;
 
-namespace TheQTablet.Core.ViewModels.Main
+namespace TheQTablet.Core.ViewModels.Main.Lesson01
 {
-    public class Result
-    {
-        public int count;
-        public float total;
-        public float Averaged
-        {
-            get => (count > 0) ? (total / count) : 0;
-        }
-
-        public Result()
-        {
-            count = 0;
-            total = 0;
-        }
-    }
-
-    public class PlotViewModel : MvxNavigationViewModel
+    public class SatellitePlotViewModel : MvxNavigationViewModel
     {
         private ISimulatorService _simulatorService;
         private readonly IUserDialogs _userDialogs;
@@ -41,17 +25,24 @@ namespace TheQTablet.Core.ViewModels.Main
         public MvxAsyncCommand TriggerOneTimeRunCommand { get; private set; }
         public MvxCommand CloseModalCommand { get; private set; }
 
-        public PlotViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService, ISimulatorService simulatorService, IUserDialogs userDialogs) : base(logProvider, navigationService)
+        public SatellitePlotViewModel(IMvxLogProvider logProvider, IMvxNavigationService navigationService, ISimulatorService simulatorService, IUserDialogs userDialogs) : base(logProvider, navigationService)
         {
             _simulatorService = simulatorService;
             _userDialogs = userDialogs;
-            _results = new Result[360];
-            for (var i = 0; i < _results.Length; i++)
+            _results_telescope = new Result[360];
+            for (var i = 0; i < _results_telescope.Length; i++)
             {
-                _results[i] = new Result();
+                _results_telescope[i] = new Result();
+            }
+
+            _results_satellite = new Result[360];
+            for (var i = 0; i < _results_satellite.Length; i++)
+            {
+                _results_satellite[i] = new Result();
             }
             Step = 10;
             _telescopeAngle = 0;
+            _satelliteAngle = 0;
             _atmosphereAngle = 30;
             _showCosOverlay = false;
 
@@ -63,6 +54,7 @@ namespace TheQTablet.Core.ViewModels.Main
         {
             var FadedOrange = OxyColor.Parse("#E69975");
             var BrightOrange = OxyColor.Parse("#F47527");
+            var BlueColor = OxyColor.Parse("#9AB5D9");
 
             var model = new PlotModel()
             {
@@ -118,7 +110,7 @@ namespace TheQTablet.Core.ViewModels.Main
             };
             model.Axes.Add(yAxis);
 
-            if(_showCosOverlay)
+            if (_showCosOverlay)
             {
                 model.Series.Add(new FunctionSeries(PlotCosSquaredFunction, 0, 359, 0.1)
                 {
@@ -129,11 +121,11 @@ namespace TheQTablet.Core.ViewModels.Main
             }
 
             var points = new Collection<ScatterPoint>();
-            for(var i = 0; i < _results.Length; i++)
+            for (var i = 0; i < _results_telescope.Length; i++)
             {
-                if (_results[i].count > 0)
+                if (_results_telescope[i].count > 0)
                 {
-                    points.Add(new ScatterPoint(i, _results[i].Averaged * 100));
+                    points.Add(new ScatterPoint(i, _results_telescope[i].Averaged * 100));
                 }
             }
             var scatterSeries = new ScatterSeries()
@@ -146,12 +138,32 @@ namespace TheQTablet.Core.ViewModels.Main
             };
             model.Series.Add(scatterSeries);
 
+            var poinSatellites = new Collection<ScatterPoint>();
+            for (var i = 0; i < _results_satellite.Length; i++)
+            {
+                if (_results_satellite[i].count > 0)
+                {
+                    poinSatellites.Add(new ScatterPoint(i, _results_satellite[i].Averaged * 100));
+                }
+            }
+
+            var scatterSatelliteSeries = new ScatterSeries()
+            {
+                ItemsSource = poinSatellites,
+                MarkerType = MarkerType.Circle,
+                MarkerSize = 4,
+                MarkerFill = BlueColor,
+                //Title = "Photons",
+            };
+
+            model.Series.Add(scatterSatelliteSeries);
             return model;
         }
 
         public PlotModel PhotonPlotModel => CreatePlotModel();
 
-        private Result[] _results;
+        private Result[] _results_telescope;
+        private Result[] _results_satellite;
         public int Step;
 
         private int _telescopeAngle;
@@ -159,6 +171,13 @@ namespace TheQTablet.Core.ViewModels.Main
         {
             get => _telescopeAngle;
             set => SetProperty(ref _telescopeAngle, AsAngle(value));
+        }
+
+        private int _satelliteAngle;
+        public int SatelliteAngle
+        {
+            get => _satelliteAngle;
+            set => SetProperty(ref _satelliteAngle, AsAngle(value));
         }
 
         private int _atmosphereAngle;
@@ -208,13 +227,14 @@ namespace TheQTablet.Core.ViewModels.Main
 
         private async Task RunOneTime()
         {
-            var result = await _simulatorService.RunQASMAsync(AtmosphereAngle, TelescopeAngle);
+            var result = await _simulatorService.RunQASMAsync(AtmosphereAngle, TelescopeAngle,SatelliteAngle,1);
 
+           
             if (!result.Error.Equals("no error"))
             {
                 _runTimer.Stop();
 
-                if(!_errorDialogVisible)
+                if (!_errorDialogVisible)
                 {
                     _errorDialogVisible = true;
                     await _userDialogs.AlertAsync(new AlertConfig()
@@ -232,24 +252,40 @@ namespace TheQTablet.Core.ViewModels.Main
             else
             {
                 var resultValue = result.Results[0];
-                _results[TelescopeAngle].total += resultValue[0] ? 1 : 0;
-                _results[TelescopeAngle].count++;
+                _results_telescope[TelescopeAngle].total += resultValue[0] ? 1 : 0;
+                _results_telescope[TelescopeAngle].count++;
 
                 int filledCount = 0;
-                int fillableCount = _results.Length / Step;
-                for (var i = 0; i < _results.Length; i++)
+                int fillableCount = _results_telescope.Length / Step;
+                for (var i = 0; i < _results_telescope.Length; i++)
                 {
-                    if (_results[i].count > 0)
+                    if (_results_telescope[i].count > 0)
                     {
                         filledCount++;
                     }
                 }
+
+                var resultSatelliteValue = result.Results[0];
+                _results_satellite[SatelliteAngle].total += resultValue[1] ? 1 : 0;
+                _results_satellite[SatelliteAngle].count++;
+
+                int filledSatellite = 0;
+                int fillableSatellite = _results_satellite.Length / Step;
+                for (var i = 0; i < _results_satellite.Length; i++)
+                {
+                    if (_results_satellite[i].count > 0)
+                    {
+                        filledSatellite++;
+                    }
+                }
+
+
                 Progress = (float)filledCount / fillableCount;
 
-                if(Progress == 1)
+                if (Progress == 1)
                 {
                     _runTimer.Stop();
-                       
+
                     await _userDialogs.AlertAsync(new AlertConfig()
                     {
                         Title = "Collection Completed",
@@ -259,7 +295,7 @@ namespace TheQTablet.Core.ViewModels.Main
                     });
 
                     CloseModalCommand.Execute();
-                    
+
                 }
 
                 await RaisePropertyChanged(() => PhotonPlotModel);
@@ -293,3 +329,5 @@ namespace TheQTablet.Core.ViewModels.Main
         }
     }
 }
+
+

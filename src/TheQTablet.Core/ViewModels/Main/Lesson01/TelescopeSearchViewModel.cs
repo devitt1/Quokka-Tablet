@@ -95,7 +95,7 @@ namespace TheQTablet.Core.ViewModels.Main.Lesson01
 
         private async Task Continue()
         {
-            await NavigationService.Navigate<Lesson01SatelliteLensViewModel>();
+            await NavigationService.Navigate<Lesson01ProfessorViewModel>();
         }
     }
 }
