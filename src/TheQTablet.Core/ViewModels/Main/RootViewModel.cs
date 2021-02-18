@@ -55,7 +55,7 @@ namespace TheQTablet.Core.ViewModels.Main
 
             Lessons = new ObservableCollection<Lesson>
             {
-                new Lesson(1, "LIGHT POLARISATION", typeof(Lesson01StartViewModel)),
+                new Lesson(1, "LIGHT POLARISATION", typeof(Lesson01ProfessorViewModel)),
             };
         }
 

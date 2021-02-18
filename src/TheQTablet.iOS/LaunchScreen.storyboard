@@ -19,16 +19,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="1080" height="810"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lunchLogo" translatesAutoresizingMaskIntoConstraints="NO" id="9jl-Pz-qnd">
-                                <rect key="frame" x="0.0" y="0.0" width="1080" height="810"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dark_logo" translatesAutoresizingMaskIntoConstraints="NO" id="9jl-Pz-qnd">
+                                <rect key="frame" x="135.5" y="161" width="809" height="488"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="9jl-Pz-qnd" secondAttribute="height" multiplier="383:231" id="Srf-n7-xqr"/>
+                                </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.78431372549019607" green="0.85098039215686272" blue="0.90588235294117647" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.76989436150000001" green="0.84960228199999999" blue="0.90981429820000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
-                            <constraint firstItem="9jl-Pz-qnd" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" id="0pU-jo-IHb"/>
-                            <constraint firstItem="9jl-Pz-qnd" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="akQ-GJ-LAl"/>
-                            <constraint firstItem="9jl-Pz-qnd" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="kF9-gS-gx6"/>
-                            <constraint firstItem="9jl-Pz-qnd" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="svz-s7-uZV"/>
+                            <constraint firstItem="9jl-Pz-qnd" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Ryh-4O-mcR"/>
+                            <constraint firstItem="9jl-Pz-qnd" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Zf1-bx-8Ar"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -38,6 +39,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="lunchLogo" width="2160" height="1620"/>
+        <image name="dark_logo" width="558" height="488"/>
     </resources>
 </document>

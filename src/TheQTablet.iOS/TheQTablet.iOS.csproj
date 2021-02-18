@@ -68,9 +68,6 @@
     <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\launch_image.png" />
-    <BundleResource Include="Resources\launch_image%402x.png" />
-    <BundleResource Include="Resources\launch_image%403x.png" />
     <Compile Include="Linker\LinkerPleaseInclude.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
@@ -281,11 +278,13 @@
     <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\Icon.png" />
     <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\Icon-1.png" />
     <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_20pt-1.png" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\lastImgAnim 1.pdf" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\lastImgAnim.png" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\lastImgAnim%402x.png" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\lastImgAnim%403x.png" />
+    <BundleResource Include="Resources\LaunchImage%403x.png" />
+    <BundleResource Include="Resources\LaunchImage%402x.png" />
+    <BundleResource Include="Resources\LaunchImage.png" />
+    <ImageAsset Include="Resources\Media.xcassets\uts_logo.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\uts_logo.imageset\uts_logo%403x.png" />
+    <ImageAsset Include="Resources\Media.xcassets\uts_logo.imageset\uts_logo%402x.png" />
+    <ImageAsset Include="Resources\Media.xcassets\uts_logo.imageset\uts_logo.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -411,6 +410,7 @@
     <Folder Include="Resources\Media.xcassets\professor_scene.imageset\" />
     <Folder Include="Resources\Media.xcassets\plot_preview.imageset\" />
     <Folder Include="Resources\Media.xcassets\lunchLogo.imageset\" />
+    <Folder Include="Resources\Media.xcassets\uts_logo.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\environement.dae" />

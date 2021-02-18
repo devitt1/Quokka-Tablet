@@ -46,7 +46,5 @@
 	<string>We need Bluetooth to connect The Q box to the Internet.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>We need Bluetooth to connect The Q box to the Internet.</string>
-	<key>XSLaunchImageAssets</key>
-	<string>Resources/Media.xcassets/LaunchImages.launchimage</string>
 </dict>
 </plist>

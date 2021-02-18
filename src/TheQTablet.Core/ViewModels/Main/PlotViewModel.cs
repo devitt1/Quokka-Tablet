@@ -12,6 +12,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using TheQTablet.Core.Service.Interfaces;
 using TheQTablet.Core.Utils;
+using TheQTablet.Core.ViewModels.Main.Lesson01;
 
 namespace TheQTablet.Core.ViewModels.Main
 {
@@ -31,6 +32,7 @@ namespace TheQTablet.Core.ViewModels.Main
         }
     }
 
+   
     public class PlotViewModel : MvxNavigationViewModel
     {
         private ISimulatorService _simulatorService;
@@ -259,7 +261,6 @@ namespace TheQTablet.Core.ViewModels.Main
                     });
 
                     CloseModalCommand.Execute();
-                    
                 }
 
                 await RaisePropertyChanged(() => PhotonPlotModel);
