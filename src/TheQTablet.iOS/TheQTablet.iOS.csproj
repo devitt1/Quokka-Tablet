@@ -268,10 +268,6 @@
     <Compile Include="Views\Main\Lesson01\Lesson01StaticIntroductionViewController.cs" />
     <Compile Include="Views\Main\Lesson01\Lesson01SatellitePlotSatelliteViewController.cs" />
     <ImageAsset Include="Resources\Media.xcassets\lesson01_field_graph.imageset\12-layers.png" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\Contents.json" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1%403x.png" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1%402x.png" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1.png" />
     <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_40pt.png" />
     <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_40pt-1.png" />
     <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_76pt%402x.png" />
@@ -285,9 +281,11 @@
     <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\Icon.png" />
     <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\Icon-1.png" />
     <ImageAsset Include="Resources\Media.xcassets\AppIcons.appiconset\icon_20pt-1.png" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1-1.png" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1%402x-1.png" />
-    <ImageAsset Include="Resources\Media.xcassets\lunchscreen.imageset\lastImgAnim 1%403x-1.png" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\lastImgAnim 1.pdf" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\lastImgAnim.png" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\lastImgAnim%402x.png" />
+    <ImageAsset Include="Resources\Media.xcassets\lunchLogo.imageset\lastImgAnim%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -412,6 +410,7 @@
     <Folder Include="Resources\Media.xcassets\lock.imageset\" />
     <Folder Include="Resources\Media.xcassets\professor_scene.imageset\" />
     <Folder Include="Resources\Media.xcassets\plot_preview.imageset\" />
+    <Folder Include="Resources\Media.xcassets\lunchLogo.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <SceneKitAsset Include="Art.scnassets\environement.dae" />
